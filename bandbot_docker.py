@@ -17,7 +17,7 @@ def bothelp(msgWrite, isWrong):
 		msgWrite.send_keys("[" + param.NAME + "] 잘못된 명령어입니다.")
 		msgWrite.send_keys(Keys.ENTER)
 	else:
-		msgWrite.send_keys("[" + param.NAME + "]  " + param.version)
+		msgWrite.send_keys("[" + param.NAME + "] " + param.version)
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
@@ -51,20 +51,20 @@ if __name__ == "__main__":
 			str_i_pre = list_input[-1].text		#str_i가 최신 채팅 내용(!param.NAME으로 시작하는)
 			print(str_i_pre)
 
-			str_i = str_i_pre[len(param.NAME)+1:]
+			str_i = str_i_pre[len(param.NAME)+2:]
 
 			if(len(str_i) == 0):			#!param.NAME
 				bothelp(msgWrite, False)
 
-			elif(str_i[1:5] == "밀리이벤"):												#!param.NAME 밀리이벤~
-				if len(str_i) == 5:														#!param.NAME 밀리이벤
+			elif(str_i[0:4] == "밀리이벤"):												#!param.NAME 밀리이벤~
+				if len(str_i) == 4:														#!param.NAME 밀리이벤
 					try:
 						events.Info(msgWrite)
 					except:
 						msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
 						msgWrite.send_keys(Keys.ENTER)
 
-				elif len(str_i) == 6 and str_i[5] == "컷":								#!param.NAME 밀리이벤컷
+				elif len(str_i) == 5 and str_i[4] == "컷":								#!param.NAME 밀리이벤컷
 					try:
 						events.Cut(msgWrite, 0)
 					except:
@@ -72,7 +72,7 @@ if __name__ == "__main__":
 						msgWrite.send_keys(Keys.ENTER)
 				else:																	#!param.NAME 밀리이벤컷~
 					try:
-						res = parse(" 밀리이벤컷 {}", str_i)
+						res = parse("밀리이벤컷 {}", str_i)
 						res = int(res[0])
 						if res == 100:
 							events.Cut(msgWrite, 1)
@@ -91,9 +91,9 @@ if __name__ == "__main__":
 					except:
 						bothelp(msgWrite, True)
 			
-			elif(str_i[1:4] == "주사위"):
+			elif(str_i[0:3] == "주사위"):
 				try:
-					res = parse(" 주사위 {}", str_i)
+					res = parse("주사위 {}", str_i)
 					res_parse = parse("{numdice}D{maxdice}", res[0])
 					if int(res_parse["numdice"]) >= 11 or int(res_parse["maxdice"]) > 99999999:
 						raise ValueError
@@ -103,17 +103,17 @@ if __name__ == "__main__":
 				except:
 					dice.Err(msgWrite, False)
 
-			elif(str_i[1:3] == "투어"):
+			elif(str_i[0:2] == "투어"):
 				try:
-					res = parse(" 투어 {isWork} {Stamina} {Score}", str_i)
+					res = parse("투어 {isWork} {Stamina} {Score}", str_i)
 					workdic = {"영업런":True, "라이브런":False}
 					isWork = workdic[res["isWork"]]
 					pstcalc.Tour(msgWrite, int(res["Stamina"]), int(res["Score"]), isWork)
 				except:
 					pstcalc.Err(msgWrite)
-			elif(str_i[1:4] == "시어터"):
+			elif(str_i[0:3] == "시어터"):
 				try:
-					res = parse(" 시어터 {isWork} {Stamina} {Score}", str_i)
+					res = parse("시어터 {isWork} {Stamina} {Score}", str_i)
 					workdic = {"영업런":True, "라이브런":False}
 					isWork = workdic[res["isWork"]]
 					pstcalc.Theater(msgWrite, int(res["Stamina"]), int(res["Score"]), isWork)
