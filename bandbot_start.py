@@ -10,7 +10,7 @@ import param
 import bandbot_events as events
 import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
-from bandbot_login import *
+from bandbot_init import *
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
