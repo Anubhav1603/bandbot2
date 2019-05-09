@@ -19,6 +19,8 @@ def bothelp(msgWrite, isWrong):
 	else:
 		msgWrite.send_keys("[" + param.NAME + "] " + param.version)
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+		msgWrite.send_keys("https://github.com/kohs100/bandbot2")
+		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 라이브런")
