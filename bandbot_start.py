@@ -23,7 +23,7 @@ def bothelp(msgWrite, isWrong):
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 라이브런")
+		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 투어")
 		msgWrite.send_keys(Keys.ENTER)
 
 
