@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 
 import re
 from parse import parse
-from time import strftime
+from time import strftime,sleep
 
 import param
 import bandbot_events as events
@@ -139,10 +139,11 @@ if __name__ == "__main__":
 		list_input = soup.find_all("span", class_="txt", string=compiled_regex)
 
 		if(len(list_input) > recent_chat):
-			recent_chat = len(list_input)
-			str_i = list_input[-1].text		#str_i가 최신 채팅 내용(!param.NAME으로 시작하는)
-			print(str_i)
-			paramnum, params = bandparse(str_i)
-			CommandSel(paramnum, params)
-		else:
-			recent_chat = len(list_input)
+			for str_i_pre in list_input[recent_chat-len(list_input):]:
+				recent_chat = len(list_input)
+				str_i = list_input[-1].text		#str_i가 최신 채팅 내용(!param.NAME으로 시작하는)
+				print(str_i)
+				paramnum, params = bandparse(str_i)
+				CommandSel(paramnum, params)
+
+		sleep(1)

@@ -12,10 +12,7 @@ def loginRefresh(doSilent):
 	print("Driver initialized.")
 	driver.get(param.chatURL)
 	print("Driver get completed.")
-	print("Commencing Sleep.....")
-	sleep(1)
-	print("Commencing Sleep....")
-	sleep(1)
+	
 	print("Commencing Sleep...")
 	sleep(1)
 	print("Commencing Sleep..")
