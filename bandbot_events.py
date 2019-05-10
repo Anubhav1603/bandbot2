@@ -90,22 +90,22 @@ def Cut(msgWrite, border):
 		event_name=json_info["name"]
 		msgWrite.send_keys("PSTheater "+event_name[event_name.find("～")+1:-1])
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 1 or border == 0:
+		if border == 100 or border == 0:
 			msgWrite.send_keys("100위 : "+cut100)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 2 or border == 0:
+		if border == 2500 or border == 0:
 			msgWrite.send_keys("2500위 : "+cut2500)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 3 or border == 0:
+		if border == 5000 or border == 0:
 			msgWrite.send_keys("5000위 : "+cut5000)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 4 or border == 0:
+		if border == 10000 or border == 0:
 			msgWrite.send_keys("10000위 : "+cut10000)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 5 or border == 0:
+		if border == 25000 or border == 0:
 			msgWrite.send_keys("25000위 : "+cut25000)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		if border == 6 or border == 0:
+		if border == 50000 or border == 0:
 			msgWrite.send_keys("50000위 : "+cut50000)
 			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys(timedata+" 기준")
