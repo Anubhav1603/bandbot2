@@ -33,7 +33,7 @@ if __name__ == "__main__":
 	driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
 	print("Driver initialized.")
 
-	driver.get(chatURL)
+	driver.get(param.chatURL)
 	print("Get login page completed.")
 	driver.find_element_by_css_selector(".uBtn.-icoType.-phone").click()
 	print("Get PhonenumberPage completed.")
