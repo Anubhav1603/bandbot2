@@ -109,7 +109,6 @@ def CommandSel(paramnum, params):
 			pstcalc.Err(msgWrite)
 	elif params[1] == "개그":
 		if paramnum == 2:
-
 			gag.Gag(msgWrite)
 	else:
 		bothelp(msgWrite,False)
