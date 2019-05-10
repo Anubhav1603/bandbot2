@@ -131,7 +131,6 @@ if __name__ == "__main__":
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
 			timeFlag = not timeFlag
-			start_flag = True
 			driver, msgWrite = init.loginRefresh(True)
 
 		soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -145,4 +144,4 @@ if __name__ == "__main__":
 				paramnum, params = bandparse(str_i)
 				CommandSel(paramnum, params)
 
-		sleep(1)
+		sleep(0.5)
