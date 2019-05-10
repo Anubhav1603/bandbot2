@@ -11,6 +11,7 @@ import bandbot_events as events
 import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
+import bandbot_gag as gag
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
@@ -23,7 +24,7 @@ def bothelp(msgWrite, isWrong):
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 투어")
+		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 투어, 개그")
 		msgWrite.send_keys(Keys.ENTER)
 
 def bandparse(str_i):
@@ -106,6 +107,12 @@ def CommandSel(paramnum, params):
 				pstcalc.Err(msgWrite)
 		else:
 			pstcalc.Err(msgWrite)
+	elif params[1] == "개그":
+		if paramnum == 2:
+
+			gag.Gag(msgWrite)
+	else:
+		bothelp(msgWrite,False)
 
 
 if __name__ == "__main__":
