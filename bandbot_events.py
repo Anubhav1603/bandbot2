@@ -16,6 +16,10 @@ def timeparser(dateinfo):
 	minute = dateinfo[14:16]
 	return month+'월'+day+'일 '+hour+":"+minute
 
+def Err(msgWrite):
+	msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
+	msgWrite.send_keys(Keys.ENTER)
+
 def Info(msgWrite):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]

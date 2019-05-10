@@ -19,12 +19,37 @@ def bothelp(msgWrite, isWrong):
 	else:
 		msgWrite.send_keys("[" + param.NAME + "] " + param.version)
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("https://github.com/kohs100/bandbot2")
+		msgWrite.send_keys("https://github.com/kohs100/bandbot2\r\n")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 투어")
 		msgWrite.send_keys(Keys.ENTER)
+
+def bandparse(str_i):
+	str_i = str_i + ' '
+
+	isBlank = True
+	paramctr = 0
+	word = ''
+	words = []
+
+	for ptr in range(len(str_i)):
+		if isBlank and str_i[ptr] == ' ':
+			isBlank = True
+		elif not isBlank and str_i[ptr] == ' ':
+			isBlank = True
+			words.append(word)
+			word = ''
+		elif isBlank and str_i[ptr] != ' ':
+			isBlank = False
+			paramctr = paramctr + 1
+			word = word + str_i[ptr]
+		elif not isBlank and str_i[ptr] != ' ':
+			isBlank = False
+			word = word + str_i[ptr]
+
+	return paramctr, words
 
 
 if __name__ == "__main__":
@@ -40,6 +65,7 @@ if __name__ == "__main__":
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
 	list_input = soup.find_all("span", class_="txt", string=compiled_regex)
 	recent_chat = len(list_input)
+
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
 			timeFlag = not timeFlag
@@ -48,34 +74,26 @@ if __name__ == "__main__":
 
 		soup = BeautifulSoup(driver.page_source, 'html.parser')
 		list_input = soup.find_all("span", class_="txt", string=compiled_regex)
+
 		if(len(list_input) > recent_chat):
 			recent_chat = len(list_input)
 			str_i_pre = list_input[-1].text		#str_i가 최신 채팅 내용(!param.NAME으로 시작하는)
 			print(str_i_pre)
 
-			str_i = str_i_pre[len(param.NAME)+2:]
+			paramnum, params = bandparse(str_i_pre)
 
-			if(len(str_i) == 0):			#!param.NAME
+			if paramnum == 1:
 				bothelp(msgWrite, False)
 
-			elif(str_i[0:4] == "밀리이벤"):												#!param.NAME 밀리이벤~
-				if len(str_i) == 4:														#!param.NAME 밀리이벤
+			elif params[1] == '밀리이벤':
+				try:
+					events.Info(msgWrite)
+				except:
+					events.Err(msgWrite)
+			elif params[1] == '밀리이벤컷':
+				if paramnum == 3:
+					res = int(params[2])
 					try:
-						events.Info(msgWrite)
-					except:
-						msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
-						msgWrite.send_keys(Keys.ENTER)
-
-				elif len(str_i) == 5 and str_i[4] == "컷":								#!param.NAME 밀리이벤컷
-					try:
-						events.Cut(msgWrite, 0)
-					except:
-						msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
-						msgWrite.send_keys(Keys.ENTER)
-				else:																	#!param.NAME 밀리이벤컷~
-					try:
-						res = parse("밀리이벤컷 {}", str_i)
-						res = int(res[0])
 						if res == 100:
 							events.Cut(msgWrite, 1)
 						elif res == 2500:
@@ -92,36 +110,45 @@ if __name__ == "__main__":
 							raise ValueError
 					except:
 						bothelp(msgWrite, True)
-			
-			elif(str_i[0:3] == "주사위"):
-				try:
-					res = parse("주사위 {}", str_i)
-					res_parse = parse("{numdice}D{maxdice}", res[0])
-					if int(res_parse["numdice"]) >= 11 or int(res_parse["maxdice"]) > 99999999:
-						raise ValueError
-					dice.Roll(msgWrite, int(res_parse["maxdice"]), int(res_parse["numdice"]))
-				except ValueError:
-					dice.Err(msgWrite, True)
-				except:
+				elif paramnum == 2:
+					try:
+						events.Cut(msgWrite, 0)
+					except:
+						events.Err(msgWrite)
+				else:
+					bothelp(msgWrite, True)
+			elif params[1] == "주사위":
+				if paramnum == 3:
+					try:
+						res = parse("{}D{}", params[2])
+						if int(res[0]) >= 11 or int(res[1]) > 99999999:
+							raise ValueError
+						dice.Roll(msgWrite, int(res[0]), int(res[1]))
+					except ValueError:
+						dice.Err(msgWrite, True)
+					except:
+						dice.Err(msgWrite, False)
+				else:
 					dice.Err(msgWrite, False)
-
-			elif(str_i[0:2] == "투어"):
-				try:
-					res = parse("투어 {isWork} {Stamina} {Score}", str_i)
-					workdic = {"영업런":True, "라이브런":False}
-					isWork = workdic[res["isWork"]]
-					pstcalc.Tour(msgWrite, int(res["Stamina"]), int(res["Score"]), isWork)
-				except:
+			elif params[1] == "시어터":	#EX) !botname 시어터 영업런 160 300000
+				if paramnum == 5:
+					try:
+						workdic = {"영업런":True, "라이브런":False}
+						isWork = workdic[params[2]]
+						pstcalc.Theater(msgWrite, int(params[3]), int(params[4]), isWork)
+					except:
+						pstcalc.Err(msgWrite)
+				else:
 					pstcalc.Err(msgWrite)
-			elif(str_i[0:3] == "시어터"):
-				try:
-					res = parse("시어터 {isWork} {Stamina} {Score}", str_i)
-					workdic = {"영업런":True, "라이브런":False}
-					isWork = workdic[res["isWork"]]
-					pstcalc.Theater(msgWrite, int(res["Stamina"]), int(res["Score"]), isWork)
-				except:
+			elif params[1] == "투어":	#EX) !botname 시어터 영업런 160 300000
+				if paramnum == 5:
+					try:
+						workdic = {"영업런":True, "라이브런":False}
+						isWork = workdic[params[2]]
+						pstcalc.Tour(msgWrite, int(params[3]), int(params[4]), isWork)
+					except:
+						pstcalc.Err(msgWrite)
+				else:
 					pstcalc.Err(msgWrite)
-			else:
-				bothelp(msgWrite, True)
 		else:
 			recent_chat = len(list_input)
