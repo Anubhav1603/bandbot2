@@ -111,7 +111,7 @@ def CommandSel(paramnum, params):
 		if paramnum == 2:
 			gag.Gag(msgWrite)
 	else:
-		bothelp(msgWrite,False)
+		bothelp(msgWrite,True)
 
 
 if __name__ == "__main__":
