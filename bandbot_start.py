@@ -138,10 +138,9 @@ if __name__ == "__main__":
 
 		if(len(list_input) > recent_chat):
 			for str_i_pre in list_input[recent_chat-len(list_input):]:
-				recent_chat = len(list_input)
-				str_i = list_input[-1].text		#str_i가 최신 채팅 내용(!param.NAME으로 시작하는)
-				print(str_i)
-				paramnum, params = bandparse(str_i)
+				print(str_i_pre.text)
+				paramnum, params = bandparse(str_i_pre.text)
 				CommandSel(paramnum, params)
+		recent_chat = len(list_input)
 
 		sleep(0.5)
