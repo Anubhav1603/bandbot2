@@ -1,8 +1,25 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from time import sleep
+from time import sleep, strftime, time
 
+import datetime
 import param
+
+def loadingWait(driver):
+	startsec = time()
+	while(True):
+		try:
+			msgWrite = driver.find_element_by_class_name("commentWrite")
+		except:
+			if(time() > startsec+10):
+				now = datetime.datetime.now()
+				print("CHAT LOAD ERROR at " + now.isoformat())
+				raise ChatError
+				exit()
+			continue
+		break
+	sleep(1)
+	return msgWrite
 
 def loginRefresh(doSilent):
 	chromeOptions = {"debuggerAddress":"127.0.0.1:"+param.ChromeDevPort}
@@ -12,15 +29,10 @@ def loginRefresh(doSilent):
 	print("Driver initialized.")
 	driver.get(param.chatURL)
 	print("Driver get completed.")
-	
-	print("Commencing Sleep...")
-	sleep(1)
-	print("Commencing Sleep..")
-	sleep(1)
-	print("Commencing Sleep.")
-	sleep(1)
+	msgWrite = loadingWait(driver)
+
 	print("[" + param.NAME + "] " + param.version + " boot success")
-	msgWrite = driver.find_element_by_class_name("commentWrite")
+	
 	if not doSilent:
 		msgWrite.send_keys("[" + param.NAME + "] " + param.version + " login success")
 		msgWrite.send_keys(Keys.ENTER)
@@ -51,15 +63,7 @@ if __name__ == "__main__":
 	driver.find_element_by_id("code").send_keys(str(pw_band))
 	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click();
 	print("Driver get completed.")
-	print("Commencing Sleep.....")
-	sleep(1)
-	print("Commencing Sleep....")
-	sleep(1)
-	print("Commencing Sleep...")
-	sleep(1)
-	print("Commencing Sleep..")
-	sleep(1)
-	print("Commencing Sleep.")
-	sleep(1)
+
+	msgWrite = loadingWait(driver)
+
 	print("[" + param.NAME + "] " + param.version + " boot success")
-	msgWrite = driver.find_element_by_class_name("commentWrite")

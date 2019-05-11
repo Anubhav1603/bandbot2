@@ -62,7 +62,7 @@ def CommandSel(paramnum, params):
 		try:
 			events.Info(msgWrite)
 		except:
-			events.Err(msgWrite)
+			events.Err(msgWrite, True)
 
 	elif params[1] == '밀리이벤컷':
 		try:
@@ -72,8 +72,10 @@ def CommandSel(paramnum, params):
 				events.Cut(msgWrite, 0)
 			else:
 				bothelp(msgWrite, True)
+		except ValueError:
+			events.Err(msgWrite, False)
 		except:
-			events.Err(msgWrite)
+			events.Err(msgWrite, True)
 		
 	elif params[1] == "주사위":
 		if paramnum == 3:
@@ -120,7 +122,7 @@ def CommandSel(paramnum, params):
 		bothelp(msgWrite, True)
 
 def HTMLget(driver, regex):
-	soup = BeautifulSoup(driver.page_source, 'html_parser')
+	soup = BeautifulSoup(driver.page_source, 'html.parser')
 	return soup.find_all("span", class_="txt", string = regex)
 
 if __name__ == "__main__":

@@ -16,9 +16,15 @@ def timeparser(dateinfo):
 	minute = dateinfo[14:16]
 	return month+'월'+day+'일 '+hour+":"+minute
 
-def Err(msgWrite):
-	msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
-	msgWrite.send_keys(Keys.ENTER)
+def Err(msgWrite, isComm):
+	if isComm:
+		msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
+		msgWrite.send_keys(Keys.ENTER)
+	else:
+		msgWrite.send_keys("[" + param.NAME + "] 잘못된 명령어입니다.")
+		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+		msgWrite.send_keys("지원 컷 : 100,2500,5000,10000,25000,50000")
+		msgWrite.send_keys(Keys.ENTER)
 
 def Info(msgWrite):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
