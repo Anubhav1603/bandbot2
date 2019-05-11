@@ -63,6 +63,7 @@ def CommandSel(paramnum, params):
 			events.Info(msgWrite)
 		except:
 			events.Err(msgWrite)
+
 	elif params[1] == '밀리이벤컷':
 		try:
 			if paramnum == 3:
@@ -87,6 +88,7 @@ def CommandSel(paramnum, params):
 				dice.Err(msgWrite, False)
 		else:
 			dice.Err(msgWrite, False)
+
 	elif params[1] == "시어터":	#EX) !botname 시어터 영업런 160 300000
 		if paramnum == 5:
 			try:
@@ -97,6 +99,7 @@ def CommandSel(paramnum, params):
 				pstcalc.Err(msgWrite)
 		else:
 			pstcalc.Err(msgWrite)
+
 	elif params[1] == "투어":	#EX) !botname 시어터 영업런 160 300000
 		if paramnum == 5:
 			try:
@@ -107,40 +110,42 @@ def CommandSel(paramnum, params):
 				pstcalc.Err(msgWrite)
 		else:
 			pstcalc.Err(msgWrite)
+
 	elif params[1] == "개그":
 		if paramnum == 2:
 			gag.Gag(msgWrite)
+		else:
+			bothelp(msgWrite, True)
 	else:
-		bothelp(msgWrite,True)
+		bothelp(msgWrite, True)
 
+def HTMLget(driver, regex):
+	soup = BeautifulSoup(driver.page_source, 'html_parser')
+	return soup.find_all("span", class_="txt", string = regex)
 
 if __name__ == "__main__":
-	timeFlag = True
-	if int(strftime("%M")) >= 30:
-		timeFlag = False
-	else:
-		timeFlag = True
+	timeFlag = int(strftime("%M")) < 30
+
 	driver, msgWrite = init.loginRefresh(True)
 
 	compiled_regex = re.compile("^!"+param.NAME)
 
-	soup = BeautifulSoup(driver.page_source, 'html.parser')
-	list_input = soup.find_all("span", class_="txt", string=compiled_regex)
-	recent_chat = len(list_input)
+	inputs = HTMLget(driver, compiled_regex)
+	recent_chat = len(inputs)
 
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
 			timeFlag = not timeFlag
 			driver, msgWrite = init.loginRefresh(True)
 
-		soup = BeautifulSoup(driver.page_source, 'html.parser')
-		list_input = soup.find_all("span", class_="txt", string=compiled_regex)
+		inputs = HTMLget(driver, compiled_regex)
 
-		if(len(list_input) > recent_chat):
-			for str_i_pre in list_input[recent_chat-len(list_input):]:
-				print(str_i_pre.text)
-				paramnum, params = bandparse(str_i_pre.text)
+		if(len(inputs) > recent_chat):
+			for str_i in inputs[recent_chat-len(inputs):]:
+				print(str_i.text)
+				paramnum, params = bandparse(str_i.text)
 				CommandSel(paramnum, params)
-		recent_chat = len(list_input)
+
+		recent_chat = len(inputs)
 
 		sleep(0.5)
