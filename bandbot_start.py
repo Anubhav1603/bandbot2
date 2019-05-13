@@ -15,10 +15,10 @@ import teletoken
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
-		msgWrite.send_keys("[" + param.NAME + "] 잘못된 명령어입니다.")
+		msgWrite.send_keys("잘못된 명령어입니다.")
 		msgWrite.send_keys(Keys.ENTER)
 	else:
-		msgWrite.send_keys("[" + param.NAME + "] " + param.version)
+		msgWrite.send_keys(param.version)
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("https://github.com/kohs100/bandbot2")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
 			paramnum, params = bandparse(str_i)
 			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
-				msgWrite.send_keys("[" + param.BOT_NICK + "] ")
+				msgWrite.send_keys("[" + param.NAME + "] ")
 				if usr_i == param.BOT_NICK:
 					msgWrite.send_keys("@ADMIN")
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
