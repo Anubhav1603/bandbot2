@@ -3,25 +3,96 @@ from selenium.webdriver.common.keys import Keys
 
 import json
 import requests
-import param
+import parse
+import time
 
+import param
+import teletoken
 
 def reqjson(URL):
 	return requests.get(URL).json()
 
 def timeparser(dateinfo):
+	year = dateinfo[0:4]
 	month = dateinfo[5:7]
 	day = dateinfo[8:10]
 	hour = dateinfo[11:13]
 	minute = dateinfo[14:16]
 	return month+'월'+day+'일 '+hour+":"+minute
 
+def timeparser_int(dateinfo):
+	year = dateinfo[0:4]
+	month = dateinfo[5:7]
+	day = dateinfo[8:10]
+	hour = dateinfo[11:13]
+	minute = dateinfo[14:16]
+	return int(year+month+day+hour+minute)
+
+def PreCut(msgWrite, border = 0):
+	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
+	json_info = json_info[-1]
+
+	event_type = json_info["type"]
+	#event_type = 3
+
+	event_name = json_info["name"]
+	event_name = event_name[event_name.find("～")+1:-1]
+	#event_name = "プリムラ"
+
+
+	if event_type == 3 or event_type == 4:
+		time_now = int(time.strftime("%Y%m%d%H%M"))
+		boost_event = timeparser_int(json_info["schedule"]["boostBeginDate"])
+		end_event = timeparser_int(json_info["schedule"]["endDate"])
+		#boost_event = 201905140152
+		#end_event = 202005140152
+		if time_now < end_event and time_now > boost_event:
+			bot = teletoken.getBot()
+			msg = bot.getUpdates()[-1].message
+			res = parse.parse("예측컷\n{}\n{}\n{}\n{}\n{}\n{}", msg.text)
+
+			if res is None or res[0] != event_name:
+				msgWrite.send_keys("아직 예측컷 정보가 없습니다.")
+				msgWrite.send_keys(Keys.ENTER)
+			else:
+				cut2500 = res[1][5:]
+				cut5000 = res[2][5:]
+				cut10000 = res[3][6:]
+				cut25000 = res[4][6:]
+				cut50000 = res[5][7:]
+				msgWrite.send_keys("PSTheater "+event_name)
+				msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				if border == 2500 or border == 0:
+					msgWrite.send_keys("2500위 : "+cut2500)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				if border == 5000 or border == 0:
+					msgWrite.send_keys("5000위 : "+cut5000)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				if border == 10000 or border == 0:
+					msgWrite.send_keys("10000위 : "+cut10000)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				if border == 25000 or border == 0:
+					msgWrite.send_keys("25000위 : "+cut25000)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				if border == 50000 or border == 0:
+					msgWrite.send_keys("50000위 : "+cut50000)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				msgWrite.send_keys(msg.date.strftime("%m.%d %H:%M")+" 기준")
+				msgWrite.send_keys(Keys.ENTER)
+		else:
+			msgWrite.send_keys("후반전이 시작하지 않았거나 이미 끝난 이벤트입니다.")
+			msgWrite.send_keys(Keys.ENTER)
+	else:
+		msgWrite.send_keys("현재 PST이벤트 진행중이 아닙니다.")
+		msgWrite.send_keys(Keys.ENTER)
+
+
 def Err(msgWrite, isComm):
 	if isComm:
 		msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
 		msgWrite.send_keys(Keys.ENTER)
 	else:
-		msgWrite.send_keys("[" + param.NAME + "] 잘못된 명령어입니다.")
+		msgWrite.send_keys("잘못된 명령어입니다.")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원 컷 : 100,2500,5000,10000,25000,50000")
 		msgWrite.send_keys(Keys.ENTER)
@@ -30,7 +101,7 @@ def Info(msgWrite):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
 
-	msgWrite.send_keys("[" + param.NAME + "] 밀리이벤트 정보")
+	msgWrite.send_keys("밀리이벤트 정보")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 	event_name=json_info["name"]
 	if(json_info["type"] == 3):
@@ -82,7 +153,7 @@ def Cut(msgWrite, border = 0):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
 
-	msgWrite.send_keys("[" + param.NAME + "] 밀리이벤트 현재컷 정보")
+	msgWrite.send_keys("밀리이벤트 현재컷 정보")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 	if(json_info["type"] == 3):
 		json_cut = reqjson("https://api.matsurihi.me/mltd/v1/events/"+str(json_info["id"])+"/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000")

@@ -5,28 +5,13 @@ from selenium.webdriver.common.keys import Keys
 from parse import parse
 from time import strftime,sleep
 
-import sys
-
-
 import param
 import bandbot_events as events
 import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
 import bandbot_gag as gag
-
-#예측컷을 위한 텔레그램 모듈
-'''
-isTele = True
-bot = []
-try:
-	import telegram
-	import tele_token
-	bot = telegram.Bot(token = tele_token.token)
-except ImportError:
-	isTele = False
-'''
-#예측컷을 위한 텔레그램 모듈 
+import teletoken
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
@@ -39,7 +24,7 @@ def bothelp(msgWrite, isWrong):
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 주사위 , 시어터, 투어, 개그")
+		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 밀리예측컷, 주사위 , 시어터, 투어, 개그")
 		msgWrite.send_keys(Keys.ENTER)
 
 def bandparse(str_i):
@@ -87,8 +72,17 @@ def CommandSel(paramnum, params):
 				events.Cut(msgWrite)
 			else:
 				bothelp(msgWrite, True)
-		except ValueError:
-			events.Err(msgWrite, False)
+		except:
+			events.Err(msgWrite, True)
+
+	elif params[1] == "밀리예측컷":
+		try:
+			if paramnum == 3:
+				events.PreCut(msgWrite, int(params[2]))
+			elif paramnum == 2:
+				events.PreCut(msgWrite)
+			else:
+				bothelp(msgWrite, True)
 		except:
 			events.Err(msgWrite, True)
 		
@@ -133,24 +127,9 @@ def CommandSel(paramnum, params):
 			gag.Gag(msgWrite)
 		else:
 			bothelp(msgWrite, True)
-	'''
-	elif params[1] == "밀리예상컷":
-		if isTele:
-			try:
-				if paramnum == 3:
-					events.Predict(msgWrite, bot, int(params[2]))
-				elif paramnum == 2:
-					events.Predict(msgWrite, bot)
-				else:
-					bothelp(msgWrite, True)
-			except ValueError:
-				events.Err(msgWrite, False)
-			except:
-				events.Err(msgWrite, True)
-		else:
-			print("시스템이 텔레그램 계정과 연동되지 않았습니다.")
-			bothelp(msgWrite, True)
-	'''
+
+	
+
 	else:
 		bothelp(msgWrite, True)
 
@@ -183,21 +162,21 @@ if __name__ == "__main__":
 
 			paramnum, params = bandparse(str_i)
 			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
+				msgWrite.send_keys("[" + param.BOT_NICK + "] ")
 				if usr_i == param.BOT_NICK:
-					msgWrite.send_keys("@"+usr_i)
+					msgWrite.send_keys("@ADMIN")
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				else:
 					msgWrite.send_keys("@"+usr_i)
 					sleep(0.1)
 					msgWrite.send_keys(Keys.ENTER)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+
 				CommandSel(paramnum, params)
-			'''
-			if isTele:
-				if param.BOT_NICK in str_i:
-					tele_msg = strftime("%H:%M ")+ usr_i + " is calling you."
-					bot.sendMessage(chat_id = tele_token.chat_id, text=tele_msg)
-			'''
+			if param.BOT_NICK in str_i:
+				bot = teletoken.getBot()
+				msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
+				teletoken.sendChat(bot, msg)
 
 		recent_chat = len_chat
 

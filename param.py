@@ -1,5 +1,5 @@
 NAME = "촉수봇"
-version = "Beta 0.6.7"
+version = "Beta 0.8.10"
 
 BOT_NICK = "ㅎㅅㅋ"
 
