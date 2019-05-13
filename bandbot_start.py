@@ -4,7 +4,9 @@ from selenium.webdriver.common.keys import Keys
 
 from parse import parse
 from time import strftime,sleep
+import telegram
 
+import tele_token
 import param
 import bandbot_events as events
 import bandbot_dice as dice
@@ -127,6 +129,8 @@ def HTMLget(driver):
 	return len(chatlist), chatlist, userlist
 
 if __name__ == "__main__":
+	bot = telegram.Bot(token = tele_token.token)
+
 	timeFlag = int(strftime("%M")) < 30
 
 	driver, msgWrite = init.loginRefresh(True)
@@ -142,19 +146,25 @@ if __name__ == "__main__":
 		len_chat, i_chat, i_user = HTMLget(driver)
 
 		for i in range(recent_chat-len_chat,0):
-			print(i_user[i].text + ":" + i_chat[i].text)
+			str_i = i_chat[i].text
+			usr_i = i_user[i].text
+			print(usr_i + ":" + str_i)
 
-			paramnum, params = bandparse(i_chat[i].text)
-			if i_chat[i].text[:len(param.NAME)+1] == "!"+param.NAME:
-				if i_user[i].text == param.BOT_NICK:
-					msgWrite.send_keys("@"+i_user[i].text)
+			paramnum, params = bandparse(str_i)
+			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
+				if str_i == param.BOT_NICK:
+					msgWrite.send_keys("@"+usr_i)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				else:
-					msgWrite.send_keys("@"+i_user[i].text)
+					msgWrite.send_keys("@"+usr_i)
 					sleep(0.1)
 					msgWrite.send_keys(Keys.ENTER)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				CommandSel(paramnum, params)
+			if "ㅎㅅㅋ" in str_i:
+				tele_msg = usr_i + " is Calling you."
+				bot.sendMessage(chat_id = tele_token.chat_id, text=tele_msg)
+
 		recent_chat = len_chat
 
 		sleep(0.4)
