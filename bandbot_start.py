@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
 			paramnum, params = bandparse(str_i)
 			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
-				if str_i == param.BOT_NICK:
+				if usr_i == param.BOT_NICK:
 					msgWrite.send_keys("@"+usr_i)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				else:
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				CommandSel(paramnum, params)
 			if "ㅎㅅㅋ" in str_i:
-				tele_msg = usr_i + " is Calling you."
+				tele_msg = strftime("%H:%M ")+ usr_i + " is calling you."
 				bot.sendMessage(chat_id = tele_token.chat_id, text=tele_msg)
 
 		recent_chat = len_chat
