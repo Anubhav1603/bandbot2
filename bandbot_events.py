@@ -3,8 +3,8 @@ from selenium.webdriver.common.keys import Keys
 
 import json
 import requests
-
 import param
+
 
 def reqjson(URL):
 	return requests.get(URL).json()
@@ -78,7 +78,7 @@ def Info(msgWrite):
 		msgWrite.send_keys("알려지지 않은 이벤트 진행중")
 		msgWrite.send_keys(Keys.ENTER)
 
-def Cut(msgWrite, border):
+def Cut(msgWrite, border = 0):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
 

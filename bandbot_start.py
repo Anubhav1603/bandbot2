@@ -4,15 +4,29 @@ from selenium.webdriver.common.keys import Keys
 
 from parse import parse
 from time import strftime,sleep
-import telegram
 
-import tele_token
+import sys
+
+
 import param
 import bandbot_events as events
 import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
 import bandbot_gag as gag
+
+#예측컷을 위한 텔레그램 모듈
+'''
+isTele = True
+bot = []
+try:
+	import telegram
+	import tele_token
+	bot = telegram.Bot(token = tele_token.token)
+except ImportError:
+	isTele = False
+'''
+#예측컷을 위한 텔레그램 모듈 
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
@@ -70,7 +84,7 @@ def CommandSel(paramnum, params):
 			if paramnum == 3:
 				events.Cut(msgWrite, int(params[2]))
 			elif paramnum == 2:
-				events.Cut(msgWrite, 0)
+				events.Cut(msgWrite)
 			else:
 				bothelp(msgWrite, True)
 		except ValueError:
@@ -119,8 +133,27 @@ def CommandSel(paramnum, params):
 			gag.Gag(msgWrite)
 		else:
 			bothelp(msgWrite, True)
+	'''
+	elif params[1] == "밀리예상컷":
+		if isTele:
+			try:
+				if paramnum == 3:
+					events.Predict(msgWrite, bot, int(params[2]))
+				elif paramnum == 2:
+					events.Predict(msgWrite, bot)
+				else:
+					bothelp(msgWrite, True)
+			except ValueError:
+				events.Err(msgWrite, False)
+			except:
+				events.Err(msgWrite, True)
+		else:
+			print("시스템이 텔레그램 계정과 연동되지 않았습니다.")
+			bothelp(msgWrite, True)
+	'''
 	else:
 		bothelp(msgWrite, True)
+
 
 def HTMLget(driver):
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -129,8 +162,6 @@ def HTMLget(driver):
 	return len(chatlist), chatlist, userlist
 
 if __name__ == "__main__":
-	bot = telegram.Bot(token = tele_token.token)
-
 	timeFlag = int(strftime("%M")) < 30
 
 	driver, msgWrite = init.loginRefresh(True)
@@ -161,9 +192,12 @@ if __name__ == "__main__":
 					msgWrite.send_keys(Keys.ENTER)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				CommandSel(paramnum, params)
-			if "ㅎㅅㅋ" in str_i:
-				tele_msg = strftime("%H:%M ")+ usr_i + " is calling you."
-				bot.sendMessage(chat_id = tele_token.chat_id, text=tele_msg)
+			'''
+			if isTele:
+				if param.BOT_NICK in str_i:
+					tele_msg = strftime("%H:%M ")+ usr_i + " is calling you."
+					bot.sendMessage(chat_id = tele_token.chat_id, text=tele_msg)
+			'''
 
 		recent_chat = len_chat
 
