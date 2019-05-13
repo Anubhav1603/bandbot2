@@ -30,7 +30,7 @@ def Info(msgWrite):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
 
-	msgWrite.send_keys("[" + param.NAME + "]밀리이벤트 정보")
+	msgWrite.send_keys("[" + param.NAME + "] 밀리이벤트 정보")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 	event_name=json_info["name"]
 	if(json_info["type"] == 3):
@@ -82,7 +82,7 @@ def Cut(msgWrite, border):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
 
-	msgWrite.send_keys("[" + param.NAME + "]밀리이벤트 현재컷 정보")
+	msgWrite.send_keys("[" + param.NAME + "] 밀리이벤트 현재컷 정보")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 	if(json_info["type"] == 3):
 		json_cut = reqjson("https://api.matsurihi.me/mltd/v1/events/"+str(json_info["id"])+"/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000")

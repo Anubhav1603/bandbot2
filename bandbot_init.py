@@ -11,7 +11,7 @@ def loadingWait(driver):
 		try:
 			msgWrite = driver.find_element_by_class_name("commentWrite")
 		except:
-			if(time() > startsec+10):
+			if(time() > startsec+20):
 				now = datetime.datetime.now()
 				print("CHAT LOAD ERROR at " + now.isoformat())
 				raise ChatError

@@ -1,5 +1,7 @@
 NAME = "촉수봇"
-version = "Beta 0.4.5"
+version = "Beta 0.6.7"
+
+BOT_NICK = "ㅎㅅㅋ"
 
 #BandchatURL = "https://band.us/band/55800178/chat/C6HumD"
 #TestchatURL = "https://band.us/band/55800178/chat/CNhhG4"

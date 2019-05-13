@@ -2,7 +2,6 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 
-import re
 from parse import parse
 from time import strftime,sleep
 
@@ -121,33 +120,41 @@ def CommandSel(paramnum, params):
 	else:
 		bothelp(msgWrite, True)
 
-def HTMLget(driver, regex):
+def HTMLget(driver):
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
-	return soup.find_all("span", class_="txt", string = regex)
+	chatlist = soup.find_all("span", class_="txt")
+	userlist = soup.find_all("button", class_="author")
+	return len(chatlist), chatlist, userlist
 
 if __name__ == "__main__":
 	timeFlag = int(strftime("%M")) < 30
 
 	driver, msgWrite = init.loginRefresh(True)
 
-	compiled_regex = re.compile("^!"+param.NAME)
-
-	inputs = HTMLget(driver, compiled_regex)
-	recent_chat = len(inputs)
+	len_chat, i_chat, i_user = HTMLget(driver)
+	recent_chat = len(i_chat)
 
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
 			timeFlag = not timeFlag
 			driver, msgWrite = init.loginRefresh(True)
 
-		inputs = HTMLget(driver, compiled_regex)
+		len_chat, i_chat, i_user = HTMLget(driver)
 
-		if(len(inputs) > recent_chat):
-			for str_i in inputs[recent_chat-len(inputs):]:
-				print(str_i.text)
-				paramnum, params = bandparse(str_i.text)
+		for i in range(recent_chat-len_chat,0):
+			print(i_user[i].text + ":" + i_chat[i].text)
+
+			paramnum, params = bandparse(i_chat[i].text)
+			if i_chat[i].text[:len(param.NAME)+1] == "!"+param.NAME:
+				if i_user[i].text == param.BOT_NICK:
+					msgWrite.send_keys("@"+i_user[i].text)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				else:
+					msgWrite.send_keys("@"+i_user[i].text)
+					sleep(0.1)
+					msgWrite.send_keys(Keys.ENTER)
+					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				CommandSel(paramnum, params)
+		recent_chat = len_chat
 
-		recent_chat = len(inputs)
-
-		sleep(0.5)
+		sleep(0.4)
