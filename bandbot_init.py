@@ -19,6 +19,7 @@ def loadingWait(driver):
 			continue
 		break
 	sleep(1)
+	print("[" + param.NAME + "] " + param.version + " boot success")
 	return msgWrite
 
 def loginRefresh(doSilent):
@@ -30,8 +31,6 @@ def loginRefresh(doSilent):
 	driver.get(param.chatURL)
 	print("Driver get completed.")
 	msgWrite = loadingWait(driver)
-
-	print("[" + param.NAME + "] " + param.version + " boot success")
 	
 	if not doSilent:
 		msgWrite.send_keys("[" + param.NAME + "] " + param.version + " login success")
@@ -65,5 +64,3 @@ if __name__ == "__main__":
 	print("Driver get completed.")
 
 	msgWrite = loadingWait(driver)
-
-	print("[" + param.NAME + "] " + param.version + " boot success")

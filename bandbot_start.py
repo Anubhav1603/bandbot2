@@ -82,7 +82,7 @@ def CommandSel(paramnum, params):
 				res = parse("{}D{}", params[2])
 				if int(res[0]) >= 11 or int(res[1]) > 99999999:
 					raise ValueError
-				dice.Roll(msgWrite, int(res[0]), int(res[1]))
+				dice.Roll(msgWrite, int(res[1]), int(res[0]))
 			except ValueError:
 				dice.Err(msgWrite, True)
 			except:
