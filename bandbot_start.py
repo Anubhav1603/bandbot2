@@ -128,10 +128,13 @@ def CommandSel(paramnum, params):
 		else:
 			bothelp(msgWrite, True)
 
-	
+	elif params[1] == "새로고침":
+		return True
 
 	else:
 		bothelp(msgWrite, True)
+
+	return False
 
 
 def HTMLget(driver):
@@ -172,7 +175,9 @@ if __name__ == "__main__":
 					msgWrite.send_keys(Keys.ENTER)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
-				CommandSel(paramnum, params)
+				if CommandSel(paramnum, params):
+					driver, msgWrite = init.loginRefresh(False)
+					
 			if param.BOT_NICK in str_i:
 				bot = teletoken.getBot()
 				msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i

@@ -33,7 +33,7 @@ def loginRefresh(doSilent):
 	msgWrite = loadingWait(driver)
 	
 	if not doSilent:
-		msgWrite.send_keys("[" + param.NAME + "] " + param.version + " login success")
+		msgWrite.send_keys("[" + param.NAME + "] 새로고침 완료")
 		msgWrite.send_keys(Keys.ENTER)
 	return driver, msgWrite
 
