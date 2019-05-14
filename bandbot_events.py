@@ -7,7 +7,7 @@ import parse
 import time
 
 import param
-import teletoken
+import initprog.teletoken as teletoken
 
 def reqjson(URL):
 	return requests.get(URL).json()

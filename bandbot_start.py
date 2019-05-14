@@ -11,7 +11,7 @@ import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
 import bandbot_gag as gag
-import teletoken
+import initprog.teletoken as teletoken
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
