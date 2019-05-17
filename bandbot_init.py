@@ -31,7 +31,7 @@ def loginRefresh(doSilent):
 	driver.get(param.chatURL)
 	print("Driver get completed.")
 	msgWrite = loadingWait(driver)
-	
+	driver.implicitly_wait(30)
 	if not doSilent:
 		msgWrite.send_keys("[" + param.NAME + "] 새로고침 완료")
 		msgWrite.send_keys(Keys.ENTER)

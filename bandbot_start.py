@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 
 from parse import parse
 from time import strftime,sleep
+import pathlib
 
 import param
 import bandbot_events as events
@@ -11,7 +12,10 @@ import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
 import bandbot_gag as gag
+import bandbot_song as song
 import initprog.teletoken as teletoken
+
+dir_user = {}
 
 def bothelp(msgWrite, isWrong):
 	if isWrong:
@@ -54,7 +58,7 @@ def bandparse(str_i):
 #	|
 #	|
 #	V
-def CommandSel(paramnum, params):
+def CommandSel(driver, msgWrite, paramnum, params, usr_i):
 	if paramnum == 1:
 		bothelp(msgWrite, False)
 
@@ -131,6 +135,26 @@ def CommandSel(paramnum, params):
 	elif params[1] == "새로고침":
 		return True
 
+	elif params[1] == "음악":
+		if not usr_i in dir_user:
+			dir_user[usr_i] = pathlib.Path(param.MUSIC_FOLDER)
+
+		if paramnum == 2:
+			song.Err(msgWrite, False)
+		elif paramnum >= 3:
+			if params[2] == "cd":
+				dir_user[usr_i] = song.cd(dir_user[usr_i], msgWrite, params[2:])
+			elif params[2] == "ls":
+				song.ls(dir_user[usr_i], msgWrite)
+			elif params[2] == "dl":
+				song.dl(dir_user[usr_i], msgWrite, driver, params[2:])
+			elif params[2] == "pwd":
+				song.pwd(dir_user[usr_i], msgWrite)
+			else:
+				song.Err(msgWrite, True)
+		else:
+			song.Err(msgWrite, True)
+
 	else:
 		bothelp(msgWrite, True)
 
@@ -175,7 +199,7 @@ if __name__ == "__main__":
 					msgWrite.send_keys(Keys.ENTER)
 					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
-				if CommandSel(paramnum, params):
+				if CommandSel(driver, msgWrite, paramnum, params, usr_i):
 					driver, msgWrite = init.loginRefresh(False)
 					
 			if param.BOT_NICK in str_i:
