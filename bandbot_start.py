@@ -155,6 +155,7 @@ def CommandSel(driver, msgWrite, paramnum, params, usr_i):
 		else:
 			song.Err(msgWrite, True)
 
+
 	else:
 		bothelp(msgWrite, True)
 
