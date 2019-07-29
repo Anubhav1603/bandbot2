@@ -46,20 +46,31 @@ if __name__ == "__main__":
 
 	driver.get(param.chatURL)
 	print("Get login page completed.")
+	driver.implicitly_wait(3)
+
 	driver.find_element_by_css_selector(".uBtn.-icoType.-phone").click()
 	print("Get PhonenumberPage completed.")
+	driver.implicitly_wait(3)
+
 	Phonenumber = input("전화번호 입력 :")
 	driver.find_element_by_id("input_local_phone_number").send_keys(Phonenumber)
 	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click()
 	print("Get PasswordPage completed.")
+	driver.implicitly_wait(3)
+
 	Password = input("비밀번호 입력 :")
 	driver.find_element_by_id("pw").send_keys(Password)
 	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click()
 	print("Get SMSPage completed.")
-	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm.gMat28").click()
-	print("Get SMSWaitPage completed.")
+	driver.implicitly_wait(8)
+
+	#driver.find_element_by_css_selector(".uBtn.-tcType.-confirm.gMat28").click()
+	#print("Get SMSWaitPage completed.")
+	#driver.implicitly_wait(8)
+
 	pw_band=input("인증번호: ")
 	driver.find_element_by_id("code").send_keys(str(pw_band))
+	driver.implicitly_wait(8)
 	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click();
 	print("Driver get completed.")
 
