@@ -38,10 +38,10 @@ def loginRefresh(doSilent):
 	return driver, msgWrite
 
 if __name__ == "__main__":
-	chromeOptions = {"debuggerAddress":"127.0.0.1:9222"}
+	chromeOptions = {"debuggerAddress":"127.0.0.1:"+param.ChromeDevPort}
 	capabilities = {"chromeOptions":chromeOptions}
 	print("Driver initializing...")
-	driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
+	driver = webdriver.Remote("http://127.0.0.1:"+param.WebdriverPort, capabilities)
 	print("Driver initialized.")
 
 	driver.get(param.chatURL)

@@ -12,7 +12,6 @@ import bandbot_dice as dice
 import bandbot_pstcalc as pstcalc
 import bandbot_init as init
 import bandbot_gag as gag
-import bandbot_song as song
 import initprog.teletoken as teletoken
 
 dir_user = {}
