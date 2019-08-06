@@ -70,6 +70,8 @@ if __name__ == "__main__":
 
 	#pw_band=input("인증번호: ")
 	#driver.find_element_by_id("code").send_keys(str(pw_band))
+	print(driver.find_element_by_id("hintNumberDiv").text)
+
 	sleep(20)
 	#driver.find_element_by_css_selector("button.uBtn.-tcType.-confirm").click();
 	#print("Driver get completed.")
