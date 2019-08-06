@@ -68,10 +68,10 @@ if __name__ == "__main__":
 	#print("Get SMSWaitPage completed.")
 	#driver.implicitly_wait(8)
 
-	pw_band=input("인증번호: ")
-	driver.find_element_by_id("code").send_keys(str(pw_band))
-	driver.implicitly_wait(8)
-	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click();
-	print("Driver get completed.")
+	#pw_band=input("인증번호: ")
+	#driver.find_element_by_id("code").send_keys(str(pw_band))
+	sleep(20)
+	#driver.find_element_by_css_selector("button.uBtn.-tcType.-confirm").click();
+	#print("Driver get completed.")
 
 	msgWrite = loadingWait(driver)
