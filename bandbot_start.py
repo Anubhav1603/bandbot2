@@ -190,14 +190,8 @@ if __name__ == "__main__":
 			paramnum, params = bandparse(str_i)
 			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
 				msgWrite.send_keys("[" + param.NAME + "] ")
-				if usr_i == param.BOT_NICK:
-					msgWrite.send_keys("@ADMIN")
-					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-				else:
-					msgWrite.send_keys("@"+usr_i)
-					sleep(0.1)
-					msgWrite.send_keys(Keys.ENTER)
-					msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+				msgWrite.send_keys(usr_i)
+				msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
 				if CommandSel(driver, msgWrite, paramnum, params, usr_i):
 					driver, msgWrite = init.loginRefresh(False)
