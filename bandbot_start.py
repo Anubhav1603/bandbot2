@@ -206,7 +206,7 @@ if __name__ == "__main__":
 				bot = teletoken.getBot()
 				msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
 				teletoken.sendChat(bot, msg)
-			if "레몬" in usr_i:
+			if "레몬" == usr_i:
 				bot = teletoken.getBot()
 				msg = "senpai alert" + strftime("%H:%M ") + str_i
 				teletoken.sendChat(bot, msg)
