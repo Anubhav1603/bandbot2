@@ -175,6 +175,7 @@ if __name__ == "__main__":
 	len_chat, i_chat, i_user = HTMLget(driver)
 	recent_chat = len(i_chat)
 
+
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
 			timeFlag = not timeFlag
@@ -200,7 +201,7 @@ if __name__ == "__main__":
 				bot = teletoken.getBot()
 				msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
 				teletoken.sendChat(bot, msg)
-			if "레몬" == usr_i:
+			if "레몬스타" == usr_i:
 				bot = teletoken.getBot()
 				msg = "senpai alert" + strftime("%H:%M ") + str_i
 				teletoken.sendChat(bot, msg)
