@@ -5,7 +5,7 @@ import random
 
 import param
 
-def RollComm(msgWrite, paramnum, params):
+def RollCom(msgWrite, paramnum, params):
 	if paramnum == 2:
 		try:
 			res = parse("{}D{}", params[1])
