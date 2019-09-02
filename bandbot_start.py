@@ -16,19 +16,15 @@ import initprog.teletoken as teletoken
 
 dir_user = {}
 
-def bothelp(msgWrite, isWrong):
-	if isWrong:
-		msgWrite.send_keys("잘못된 명령어입니다.")
-		msgWrite.send_keys(Keys.ENTER)
-	else:
-		msgWrite.send_keys(param.version)
-		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("https://github.com/kohs100/bandbot2")
-		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("지원되는 명령어 : ")
-		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 밀리예측컷, 주사위 , 시어터, 투어, 개그")
-		msgWrite.send_keys(Keys.ENTER)
+def bothelp(msgWrite):
+	msgWrite.send_keys(param.version)
+	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+	msgWrite.send_keys("https://github.com/kohs100/bandbot2")
+	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+	msgWrite.send_keys("지원되는 명령어 : ")
+	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+	msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 밀리예측컷, 주사위 , 시어터, 투어, 개그")
+	msgWrite.send_keys(Keys.ENTER)
 
 def bandparse(str_i):
 	str_i = str_i + ' '
@@ -82,8 +78,11 @@ def CommandSel(driver, msgWrite, paramnum, params, usr_i):
 	elif params[0] == "!개그":
 		gag.Gag(msgWrite)
 
+	elif params[0] == "!촉수봇":
+		bothelp()
+
 	else:
-		bothelp(msgWrite, True)
+		bothelp(msgWrite)
 
 
 def HTMLget(driver):
