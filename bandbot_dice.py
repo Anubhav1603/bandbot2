@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 import random
-
+from parse import parse
 import param
 
 def RollCom(msgWrite, paramnum, params):

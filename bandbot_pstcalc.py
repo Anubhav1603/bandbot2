@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 
 import param
 
-def Calc(msgWrite, paramnum, param):
+def Calc(msgWrite, paramnum, params):
 	if paramnum == 5:
 		if params[1] == "시어터":	#EX) !계산 시어터 영업런 160 300000
 			try:
