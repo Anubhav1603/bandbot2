@@ -61,104 +61,26 @@ def CommandSel(driver, msgWrite, paramnum, params, usr_i):
 	if paramnum == 1:
 		bothelp(msgWrite, False)
 
-	elif params[1] == '밀리이벤':
-		try:
-			events.Info(msgWrite)
-		except:
-			events.Err(msgWrite, True)
+	elif params[0] == '!밀리이벤':
+		events.InfoCom(msgWrite)
 
-	elif params[1] == '밀리이벤컷':
-		try:
-			if paramnum == 3:
-				events.Cut(msgWrite, int(params[2]))
-			elif paramnum == 2:
-				events.Cut(msgWrite)
-			else:
-				bothelp(msgWrite, True)
-		except:
-			events.Err(msgWrite, True)
+	elif params[0] == '!밀리이벤컷':
+		events.CutCom(msgWrite, paramnum, params)
 
-	elif params[1] == "밀리예측컷":
-		try:
-			if paramnum == 3:
-				events.PreCut(msgWrite, int(params[2]))
-			elif paramnum == 2:
-				events.PreCut(msgWrite)
-			else:
-				bothelp(msgWrite, True)
-		except:
-			events.Err(msgWrite, True)
+	elif params[0] == "!밀리예측컷":
+		events.PreCutCom(msgWrite, paramnum, params)
 		
-	elif params[1] == "주사위":
-		if paramnum == 3:
-			try:
-				res = parse("{}D{}", params[2])
-				if int(res[0]) >= 11 or int(res[1]) > 99999999:
-					raise ValueError
-				dice.Roll(msgWrite, int(res[1]), int(res[0]))
-			except ValueError:
-				dice.Err(msgWrite, True)
-			except:
-				dice.Err(msgWrite, False)
-		else:
-			dice.Err(msgWrite, False)
+	elif params[0] == "!주사위":
+		dice.RollCom(msgWrite, paramnum, params)
+		
+	elif params[0] == "!계산":
+		 pstcalc.Calc(msgWrite, paramnum, params)
 
-	elif params[1] == "시어터":	#EX) !botname 시어터 영업런 160 300000
-		if paramnum == 5:
-			try:
-				workdic = {"영업런":True, "라이브런":False}
-				isWork = workdic[params[2]]
-				pstcalc.Theater(msgWrite, int(params[3]), int(params[4]), isWork)
-			except:
-				pstcalc.Err(msgWrite)
-		else:
-			pstcalc.Err(msgWrite)
-
-	elif params[1] == "투어":	#EX) !botname 시어터 영업런 160 300000
-		if paramnum == 5:
-			try:
-				workdic = {"영업런":True, "라이브런":False}
-				isWork = workdic[params[2]]
-				pstcalc.Tour(msgWrite, int(params[3]), int(params[4]), isWork)
-			except:
-				pstcalc.Err(msgWrite)
-		else:
-			pstcalc.Err(msgWrite)
-
-	elif params[1] == "개그":
-		if paramnum == 2:
-			gag.Gag(msgWrite)
-		else:
-			bothelp(msgWrite, True)
-
-	elif params[1] == "새로고침":
-		return True
-
-	elif params[1] == "음악":
-		if not usr_i in dir_user:
-			dir_user[usr_i] = pathlib.Path(param.MUSIC_FOLDER)
-
-		if paramnum == 2:
-			song.Err(msgWrite, False)
-		elif paramnum >= 3:
-			if params[2] == "cd":
-				dir_user[usr_i] = song.cd(dir_user[usr_i], msgWrite, params[2:])
-			elif params[2] == "ls":
-				song.ls(dir_user[usr_i], msgWrite)
-			elif params[2] == "dl":
-				song.dl(dir_user[usr_i], msgWrite, driver, params[2:])
-			elif params[2] == "pwd":
-				song.pwd(dir_user[usr_i], msgWrite)
-			else:
-				song.Err(msgWrite, True)
-		else:
-			song.Err(msgWrite, True)
-
+	elif params[0] == "!개그":
+		gag.Gag(msgWrite)
 
 	else:
 		bothelp(msgWrite, True)
-
-	return False
 
 
 def HTMLget(driver):
@@ -187,20 +109,22 @@ if __name__ == "__main__":
 			str_i = i_chat[i].text
 			usr_i = i_user[i].text
 			print(usr_i + ":" + str_i)
-
-			paramnum, params = bandparse(str_i)
-			if str_i[:len(param.NAME)+1] == "!"+param.NAME:
+		
+			if str_i[0] == "!":
+				paramnum, params = bandparse(str_i)
 				msgWrite.send_keys("[" + param.NAME + "] ")
 				msgWrite.send_keys(usr_i)
 				msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
-				if CommandSel(driver, msgWrite, paramnum, params, usr_i):
-					driver, msgWrite = init.loginRefresh(False)
-					
-			if param.BOT_NICK in str_i:
-				bot = teletoken.getBot()
-				msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
-				teletoken.sendChat(bot, msg)
+				CommandSel(driver, msgWrite, paramnum, params, usr_i)
+			
+			alarm_keywords=["촉수","ㅎㅅㅋ"]
+			for keyword in alarm_keywords:
+				if keyword in str_i:
+					bot = teletoken.getBot()
+					msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
+					teletoken.sendChat(bot, msg)
+
 			if "레몬스타" == usr_i:
 				bot = teletoken.getBot()
 				msg = "senpai alert" + strftime("%H:%M ") + str_i

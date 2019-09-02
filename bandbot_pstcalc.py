@@ -3,6 +3,28 @@ from selenium.webdriver.common.keys import Keys
 
 import param
 
+def Calc(msgWrite, paramnum, param):
+	if paramnum == 5:
+		if params[1] == "시어터":	#EX) !계산 시어터 영업런 160 300000
+			try:
+				workdic = {"영업런":True, "라이브런":False}
+				isWork = workdic[params[2]]
+				Theater(msgWrite, int(params[3]), int(params[4]), isWork)
+			except:
+				Err(msgWrite)
+
+		elif params[1] == "투어":	#EX) !계산 시어터 영업런 160 300000
+			try:
+				workdic = {"영업런":True, "라이브런":False}
+				isWork = workdic[params[2]]
+				Tour(msgWrite, int(params[3]), int(params[4]), isWork)
+			except:
+				Err(msgWrite)
+		else:
+			Err(msgWrite)
+	else:
+		Err(msgWrite)
+
 def Theater(msgWrite, Stamina, Score, isWork):
 	if isWork:
 		WorkResult = (Score/((170.0/60.0*0.7)+(170.0/60.0*0.7)*1074.0/360.0)/Stamina*50.0)
@@ -44,9 +66,10 @@ def Tour(msgWrite, Stamina, Score, isWork):
 		msgWrite.send_keys(Keys.ENTER)
 
 def Err(msgWrite):
+	msgWrite.send_keys("pstcalc.py:")
 	msgWrite.send_keys("잘못된 계산기 명령입니다.")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 	msgWrite.send_keys("사용법 : ")
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-	msgWrite.send_keys("!" + param.NAME + " [시어터|투어] [영업런|라이브런] [원기통] [목표점수]")
+	msgWrite.send_keys("!계산 [시어터|투어] [영업런|라이브런] [원기통] [목표점수]")
 	msgWrite.send_keys(Keys.ENTER)

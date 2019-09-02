@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep, strftime, time
+from selenium.common.exceptions import NoSuchElementException
 
 import datetime
 import param
@@ -63,17 +64,14 @@ if __name__ == "__main__":
 	driver.find_element_by_css_selector(".uBtn.-tcType.-confirm").click()
 	print("Get SMSPage completed.")
 	driver.implicitly_wait(8)
-
-	#driver.find_element_by_css_selector(".uBtn.-tcType.-confirm.gMat28").click()
-	#print("Get SMSWaitPage completed.")
-	#driver.implicitly_wait(8)
-
-	#pw_band=input("인증번호: ")
-	#driver.find_element_by_id("code").send_keys(str(pw_band))
-	print(driver.find_element_by_id("hintNumberDiv").text)
-
-	sleep(20)
-	#driver.find_element_by_css_selector("button.uBtn.-tcType.-confirm").click();
-	#print("Driver get completed.")
+	try:
+		print(driver.find_element_by_id("hintNumberDiv").text)
+		sleep(20)
+	except NoSuchElementException:
+		pw_band=input("인증번호: ")
+		driver.find_element_by_id("code").send_keys(str(pw_band))
+		driver.find_element_by_css_selector("button.uBtn.-tcType.-confirm").click();
+		print("Driver get completed.")
+	
 
 	msgWrite = loadingWait(driver)

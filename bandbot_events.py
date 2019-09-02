@@ -28,6 +28,28 @@ def timeparser_int(dateinfo):
 	minute = dateinfo[14:16]
 	return int(year+month+day+hour+minute)
 
+def Err(msgWrite, isComm):
+	msgWrite.send_keys("events.py:")
+	if isComm:
+		msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
+		msgWrite.send_keys(Keys.ENTER)
+	else:
+		msgWrite.send_keys("잘못된 명령어 사용")
+		msgWrite.send_keys(Keys.ENTER)
+
+
+
+def PreCutCom(msgWrite, paramnum, params):
+	try:
+		if paramnum == 2:
+			PreCut(msgWrite, int(params[1]))
+		elif paramnum == 1:
+			PreCut(msgWrite)
+		else:
+			Err(msgWrite, False)
+	except:
+		Err(msgWrite, True)
+
 def PreCut(msgWrite, border = 0):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 	json_info = json_info[-1]
@@ -87,15 +109,11 @@ def PreCut(msgWrite, border = 0):
 		msgWrite.send_keys(Keys.ENTER)
 
 
-def Err(msgWrite, isComm):
-	if isComm:
-		msgWrite.send_keys("matsurihi.me에서 응답하지 않습니다.")
-		msgWrite.send_keys(Keys.ENTER)
-	else:
-		msgWrite.send_keys("잘못된 명령어입니다.")
-		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("지원 컷 : 100,2500,5000,10000,25000,50000")
-		msgWrite.send_keys(Keys.ENTER)
+def InfoCom(msgWrite):
+	try:
+		Info(msgWrite)
+	except:
+		Err(msgWrite, True)
 
 def Info(msgWrite):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
@@ -148,6 +166,17 @@ def Info(msgWrite):
 	else:
 		msgWrite.send_keys("알려지지 않은 이벤트 진행중")
 		msgWrite.send_keys(Keys.ENTER)
+
+def CutCom(msgWrite, paramnum, params):
+	try:
+		if paramnum == 2:
+			Cut(msgWrite, int(params[1]))
+		elif paramnum == 1:
+			Cut(msgWrite)
+		else:
+			Err(msgWrite, False)
+	except:
+		Err(msgWrite, True)
 
 def Cut(msgWrite, border = 0):
 	json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
