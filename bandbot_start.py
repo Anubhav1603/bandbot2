@@ -58,10 +58,13 @@ def bandparse(str_i):
 #	|
 #	V
 def CommandSel(driver, msgWrite, paramnum, params, usr_i):
-	if paramnum == 1:
-		bothelp(msgWrite, False)
+	if params[0] == '!':
+		return
 
-	elif params[0] == '!밀리이벤':
+	msgWrite.send_keys("[" + param.NAME + "] ")
+	msgWrite.send_keys(usr_i)
+	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+	if params[0] == '!밀리이벤':
 		events.InfoCom(msgWrite)
 
 	elif params[0] == '!밀리이벤컷':
@@ -112,10 +115,6 @@ if __name__ == "__main__":
 		
 			if str_i[0] == "!":
 				paramnum, params = bandparse(str_i)
-				msgWrite.send_keys("[" + param.NAME + "] ")
-				msgWrite.send_keys(usr_i)
-				msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-
 				CommandSel(driver, msgWrite, paramnum, params, usr_i)
 			
 			alarm_keywords=["촉수","ㅎㅅㅋ"]
