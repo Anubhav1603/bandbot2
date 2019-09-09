@@ -7,7 +7,7 @@ import parse
 import time
 
 import param
-import initprog.teletoken as teletoken
+import teletoken
 
 command = ["밀리이벤","밀리이벤컷","밀리예측컷"]
 

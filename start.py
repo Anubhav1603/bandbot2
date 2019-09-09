@@ -7,6 +7,7 @@ from time import strftime,sleep
 
 import param
 import init
+import teletoken
 
 def Modules():
 	import glob
@@ -15,21 +16,12 @@ def Modules():
 	commands = []
 	modules = glob.glob("bandbot_*.py")
 	for module in modules:
-		module_name = parse(module,"{}.py")
-		mod = importlib.import_module(module_name)
+		module_name = parse("{}.py",module)
+		mod = importlib.import_module(module_name[0])
 		mods.append(mod)
 		commands.append(mod.command)
-	return commands, mods, isT
+	return commands, mods
 
-def isTelegram():
-	import glob
-	import importlib
-	isT = False
-	mod = None
-	if "teletoken.py" in glob.glob("*.py"):
-		isT = True
-		mod = importlib.import_module("teletoken")
-	return isT, mod
 
 def bothelp(msgWrite, isWrong, commands):
 	if(isWrong):
@@ -127,18 +119,17 @@ if __name__ == "__main__":
 				paramnum, params = bandparse(str_i)
 				CommandSel(commands, mods, driver, msgWrite, paramnum, params, usr_i)
 			
-			if isTele:
-				alarm_keywords=["촉수","ㅎㅅㅋ"]
-				for keyword in alarm_keywords:
-					if keyword in str_i:
-						bot = teletoken.getBot()
-						msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
-						teletoken.sendChat(bot, msg)
-
-				if "레몬스타" == usr_i:
+			alarm_keywords=["촉수","ㅎㅅㅋ"]
+			for keyword in alarm_keywords:
+				if keyword in str_i:
 					bot = teletoken.getBot()
-					msg = "senpai alert" + strftime("%H:%M ") + str_i
+					msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
 					teletoken.sendChat(bot, msg)
+
+			if "레몬스타" == usr_i:
+				bot = teletoken.getBot()
+				msg = "senpai alert" + strftime("%H:%M ") + str_i
+				teletoken.sendChat(bot, msg)
 
 		recent_chat = len_chat
 
