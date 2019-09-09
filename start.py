@@ -79,6 +79,7 @@ def bandparse(str_i):
 def CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods):
 	if params[0] == '!봇' and paramnum == 1:
 		bothelp(msgWrite, False, commands)
+		return
 
 	msgWrite.send_keys("[" + param.NAME + "] ")
 	msgWrite.send_keys(usr_i)

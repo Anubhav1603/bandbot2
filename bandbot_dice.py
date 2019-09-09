@@ -8,7 +8,7 @@ import param
 command = ["주사위"]
 
 def Com(driver, msgWrite, paramnum, params, usr_i):
-	if paramnum == 2:
+	if paramnum == 3:
 		try:
 			res = parse("{}D{}", params[1])
 			if int(res[0]) >= 11 or int(res[1]) > 99999999:

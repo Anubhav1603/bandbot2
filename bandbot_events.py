@@ -53,9 +53,9 @@ def Err(msgWrite, isComm):
 
 def PreCutCom(msgWrite, paramnum, params):
 	try:
-		if paramnum == 2:
-			PreCut(msgWrite, int(params[1]))
-		elif paramnum == 1:
+		if paramnum == 3:
+			PreCut(msgWrite, int(params[2]))
+		elif paramnum == 2:
 			PreCut(msgWrite)
 		else:
 			Err(msgWrite, False)
@@ -181,9 +181,9 @@ def Info(msgWrite):
 
 def CutCom(msgWrite, paramnum, params):
 	try:
-		if paramnum == 2:
-			Cut(msgWrite, int(params[1]))
-		elif paramnum == 1:
+		if paramnum == 3:
+			Cut(msgWrite, int(params[2]))
+		elif paramnum == 2:
 			Cut(msgWrite)
 		else:
 			Err(msgWrite, False)
