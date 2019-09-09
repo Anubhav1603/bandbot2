@@ -77,16 +77,20 @@ def bandparse(str_i):
 #	|
 #	V
 def CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods):
-	if params[0] == '!봇':
+	if params[0] == '!봇' and paramnum == 1:
 		bothelp(msgWrite, False, commands)
 
 	msgWrite.send_keys("[" + param.NAME + "] ")
 	msgWrite.send_keys(usr_i)
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
+	isCommand = False
 	for i in range(0, len(commands)):			#commands = list of module.command(list of commands)
 		if params[1] in commands[i]:
 			mods[i].Com(driver, msgWrite, paramnum, params, usr_i)
+			isCommand = True
+	if not isCommand:
+		bothelp(msgWrite, True, commands)
 
 
 
@@ -101,7 +105,6 @@ if __name__ == "__main__":
 	recent_chat = len(i_chat)
 
 	commands, mods = Modules()
-	isTele, teletoken = isTelegram()
 
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
@@ -117,7 +120,7 @@ if __name__ == "__main__":
 		
 			if str_i[:2] == "!봇":
 				paramnum, params = bandparse(str_i)
-				CommandSel(commands, mods, driver, msgWrite, paramnum, params, usr_i)
+				CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods)
 			
 			alarm_keywords=["촉수","ㅎㅅㅋ"]
 			for keyword in alarm_keywords:
