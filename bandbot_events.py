@@ -9,6 +9,18 @@ import time
 import param
 import initprog.teletoken as teletoken
 
+command = ["밀리이벤","밀리이벤컷","밀리예측컷"]
+
+def Com(driver, msgWrite, paramnum, params, usr_i):
+	if params[1] == '밀리이벤':
+		InfoCom(msgWrite)
+
+	elif params[1] == '밀리이벤컷':
+		CutCom(msgWrite, paramnum, params)
+
+	elif params[1] == "밀리예측컷":
+		PreCutCom(msgWrite, paramnum, params)
+
 def reqjson(URL):
 	return requests.get(URL).json()
 

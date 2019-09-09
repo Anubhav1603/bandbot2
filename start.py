@@ -6,25 +6,47 @@ from parse import parse
 from time import strftime,sleep
 
 import param
-import bandbot_events as events
-import bandbot_dice as dice
-import bandbot_pstcalc as pstcalc
-import bandbot_init as init
-import bandbot_gag as gag
-import initprog.teletoken as teletoken
+import init
 
-def bothelp(msgWrite, isWrong):
+def Modules():
+	import glob
+	import importlib
+	mods = []
+	commands = []
+	modules = glob.glob("bandbot_*.py")
+	for module in modules:
+		module_name = parse(module,"{}.py")
+		mod = importlib.import_module(module_name)
+		mods.append(mod)
+		commands.append(mod.command)
+	return commands, mods, isT
+
+def isTelegram():
+	import glob
+	import importlib
+	isT = False
+	mod = None
+	if "teletoken.py" in glob.glob("*.py"):
+		isT = True
+		mod = importlib.import_module("teletoken")
+	return isT, mod
+
+def bothelp(msgWrite, isWrong, commands):
 	if(isWrong):
 		msgWrite.send_keys("잘못된 명령어입니다.")
 		msgWrite.send_keys(Keys.ENTER)
 	else:
- 		msgWrite.send_keys(param.version)
+		msgWrite.send_keys(param.version)
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("https://github.com/kohs100/bandbot2")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("지원되는 명령어 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!" + param.NAME + " 밀리이벤, 밀리이벤컷, 밀리예측컷, 주사위 , 시어터, 투어, 개그")
+		msgWrite.send_keys("!봇 + ")
+		for command in commands:
+			for com in command:
+				msgWrite.send_keys(", "+com)
+
 		msgWrite.send_keys(Keys.ENTER)
 
 
@@ -62,37 +84,20 @@ def bandparse(str_i):
 #	|
 #	|
 #	V
-def CommandSel(driver, msgWrite, paramnum, params, usr_i):
-	if params[0] == '!':
-		return
+def CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods):
+	if params[0] == '!봇':
+		bothelp(msgWrite, False, commands)
 
 	msgWrite.send_keys("[" + param.NAME + "] ")
 	msgWrite.send_keys(usr_i)
 	msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
-	if params[0] == '!밀리이벤':
-		events.InfoCom(msgWrite)
+	for i in range(0, len(commands)):			#commands = list of module.command(list of commands)
+		if params[1] in commands[i]:
+			mods[i].Com(driver, msgWrite, paramnum, params, usr_i)
 
-	elif params[0] == '!밀리이벤컷':
-		events.CutCom(msgWrite, paramnum, params)
 
-	elif params[0] == "!밀리예측컷":
-		events.PreCutCom(msgWrite, paramnum, params)
-		
-	elif params[0] == "!주사위":
-		dice.RollCom(msgWrite, paramnum, params)
-		
-	elif params[0] == "!계산":
-		 pstcalc.Calc(msgWrite, paramnum, params)
 
-	elif params[0] == "!개그":
-		gag.Gag(msgWrite)
-
-	elif params[0] == "!정보":
-		bothelp(msgWrite, False)
-
-	else:
-		bothelp(msgWrite, True)
 
 
 if __name__ == "__main__":
@@ -103,6 +108,8 @@ if __name__ == "__main__":
 	len_chat, i_chat, i_user = HTMLget(driver)
 	recent_chat = len(i_chat)
 
+	commands, mods = Modules()
+	isTele, teletoken = isTelegram()
 
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
@@ -116,21 +123,22 @@ if __name__ == "__main__":
 			usr_i = i_user[i].text
 			print(usr_i + ":" + str_i)
 		
-			if str_i[0] == "!":
+			if str_i[:2] == "!봇":
 				paramnum, params = bandparse(str_i)
-				CommandSel(driver, msgWrite, paramnum, params, usr_i)
+				CommandSel(commands, mods, driver, msgWrite, paramnum, params, usr_i)
 			
-			alarm_keywords=["촉수","ㅎㅅㅋ"]
-			for keyword in alarm_keywords:
-				if keyword in str_i:
-					bot = teletoken.getBot()
-					msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
-					teletoken.sendChat(bot, msg)
+			if isTele:
+				alarm_keywords=["촉수","ㅎㅅㅋ"]
+				for keyword in alarm_keywords:
+					if keyword in str_i:
+						bot = teletoken.getBot()
+						msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
+						teletoken.sendChat(bot, msg)
 
-			if "레몬스타" == usr_i:
-				bot = teletoken.getBot()
-				msg = "senpai alert" + strftime("%H:%M ") + str_i
-				teletoken.sendChat(bot, msg)
+				if "레몬스타" == usr_i:
+					bot = teletoken.getBot()
+					msg = "senpai alert" + strftime("%H:%M ") + str_i
+					teletoken.sendChat(bot, msg)
 
 		recent_chat = len_chat
 

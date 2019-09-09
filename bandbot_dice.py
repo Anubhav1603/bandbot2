@@ -5,7 +5,9 @@ import random
 from parse import parse
 import param
 
-def RollCom(msgWrite, paramnum, params):
+command = ["주사위"]
+
+def Com(driver, msgWrite, paramnum, params, usr_i):
 	if paramnum == 2:
 		try:
 			res = parse("{}D{}", params[1])

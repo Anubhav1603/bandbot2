@@ -3,21 +3,26 @@ from selenium.webdriver.common.keys import Keys
 
 import param
 
+command=["계산"]
+
+def Com(driver, msgWrite, paramnum, params, usr_i):
+	Calc(msgWrite, paramnum, params)
+
 def Calc(msgWrite, paramnum, params):
-	if paramnum == 5:
-		if params[1] == "시어터":	#EX) !계산 시어터 영업런 160 300000
+	if paramnum == 6:
+		if params[2] == "시어터":	#EX) !봇 계산 시어터 영업런 160 300000
 			try:
 				workdic = {"영업런":True, "라이브런":False}
-				isWork = workdic[params[2]]
-				Theater(msgWrite, int(params[3]), int(params[4]), isWork)
+				isWork = workdic[params[3]]
+				Theater(msgWrite, int(params[4]), int(params[5]), isWork)
 			except:
 				Err(msgWrite)
 
-		elif params[1] == "투어":	#EX) !계산 시어터 영업런 160 300000
+		elif params[2] == "투어":	#EX) !계산 시어터 영업런 160 300000
 			try:
 				workdic = {"영업런":True, "라이브런":False}
-				isWork = workdic[params[2]]
-				Tour(msgWrite, int(params[3]), int(params[4]), isWork)
+				isWork = workdic[params[3]]
+				Tour(msgWrite, int(params[4]), int(params[5]), isWork)
 			except:
 				Err(msgWrite)
 		else:
