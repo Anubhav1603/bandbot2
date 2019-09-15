@@ -80,6 +80,8 @@ def CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods):
 	if params[0] == '!봇' and paramnum == 1:
 		bothelp(msgWrite, False, commands)
 		return
+	else
+		return
 
 	msgWrite.send_keys("[" + param.NAME + "] ")
 	msgWrite.send_keys(usr_i)
@@ -119,7 +121,7 @@ if __name__ == "__main__":
 			usr_i = i_user[i].text
 			print(usr_i + ":" + str_i)
 		
-			if str_i[:2] == "!봇":
+			if str_i[:2] == "!봇 ":
 				paramnum, params = bandparse(str_i)
 				CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods)
 			
