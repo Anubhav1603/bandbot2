@@ -22,10 +22,13 @@ def Com(driver, msgWrite, paramnum, params, usr_i):
 		Err(msgWrite, False)
 
 def Roll(msgWrite, dicemax, dicenum):
+	sum = 0
 	for i in range(dicenum):
 		dice=random.randrange(1,dicemax+1)
+		sum += dice
 		msgWrite.send_keys("[주사위]"+str(i+1)+" 값: "+str(dice))
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+	msgWrite.send_keys("[주사위]합계: "+str(sum))
 	msgWrite.send_keys(Keys.ENTER)
 
 def Err(msgWrite, isToomany):
