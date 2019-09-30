@@ -121,7 +121,7 @@ if __name__ == "__main__":
 			usr_i = i_user[i].text
 			print(usr_i + ":" + str_i)
 		
-			if str_i[:2] == "!봇 ":
+			if str_i[:2] == "!봇":
 				paramnum, params = bandparse(str_i)
 				CommandSel(driver, msgWrite, paramnum, params, usr_i, commands, mods)
 			

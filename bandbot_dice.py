@@ -10,7 +10,7 @@ command = ["주사위"]
 def Com(driver, msgWrite, paramnum, params, usr_i):
 	if paramnum == 3:
 		try:
-			res = parse("{}D{}", params[1])
+			res = parse("{}D{}", params[2])
 			if int(res[0]) >= 11 or int(res[1]) > 99999999:
 				raise ValueError
 			Roll(msgWrite, int(res[1]), int(res[0]))
@@ -38,5 +38,5 @@ def Err(msgWrite, isToomany):
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("사용법 : ")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-		msgWrite.send_keys("!주사위 (주사위갯수)D(최대값)")
+		msgWrite.send_keys("!봇 주사위 (주사위갯수)D(최대값)")
 		msgWrite.send_keys(Keys.ENTER)
