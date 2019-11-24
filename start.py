@@ -48,6 +48,15 @@ def HTMLget(driver):
 	userlist = soup.find_all("button", class_="author")
 	return len(chatlist), chatlist, userlist
 
+def chatPrint(str_i, msgWrite):
+	for i in str_i:
+		if i == "\n":
+			msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+		else:
+			msgWrite.send_keys(i)
+	msgWrite.send_keys(Keys.ENTER)
+		
+
 
 def bandparse(str_i):
 	str_i = str_i + ' '
