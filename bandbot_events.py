@@ -89,11 +89,11 @@ def PreCut(msgWrite, border = 0):
 				msgWrite.send_keys("아직 예측컷 정보가 없습니다.")
 				msgWrite.send_keys(Keys.ENTER)
 			else:
-				cut2500 = res[1][5:]
-				cut5000 = res[2][5:]
-				cut10000 = res[3][6:]
-				cut25000 = res[4][6:]
-				cut50000 = res[5][7:]
+				cut2500 = res[1].split()[1]
+				cut5000 = res[2].split()[1]
+				cut10000 = res[3].split()[1]
+				cut25000 = res[4].split()[1]
+				cut50000 = res[5].split()[1]
 				msgWrite.send_keys("PSTheater "+event_name)
 				msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 				if border == 2500 or border == 0:
