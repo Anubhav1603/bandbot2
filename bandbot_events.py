@@ -155,7 +155,7 @@ def Info(msgWrite):
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 		msgWrite.send_keys("종료시각 : "+timeparser(json_info["schedule"]["endDate"]))
 		msgWrite.send_keys(Keys.ENTER)
-	elif(json_info["type"] == 2):
+	elif(json_info["type"] == 2 or json_info["type"] == 9):
 		msgWrite.send_keys("MILLION LIVE COLLECTION")
 		msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
 
