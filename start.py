@@ -235,14 +235,14 @@ elif sys.argv[1] == "--simple-test":
 	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
 	print("this mode tests thirdparty extensions only")
 	print("test username is \"QwErTyTeSt\".")
-	print("type \"!봇 종료\" to exit")
+	print("type \"!exit\" to exit\n")
 
 	commands, mods = Modules()
 
 	while True:
 		str_i = input("test chat: ")
 		usr_i = "QwErTyTeSt"
-		if str_i == "!봇 종료": break
+		if str_i == "!exit": break
 
 		print("chatResponse start--------------------\n")
 		if str_i[:2] == "!봇":
