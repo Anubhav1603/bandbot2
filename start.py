@@ -236,6 +236,8 @@ elif sys.argv[1] == "--test":
 
 elif sys.argv[1] == "--simple-test":
 	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
+	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
+	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
 	print("this mode tests 3rd-party extensions only")
 	print("test username is \"QwErTyTeSt\".")
 	print("type \"!exit\" to exit\n")
