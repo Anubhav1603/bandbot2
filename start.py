@@ -71,7 +71,7 @@ class bandChat():
 		self.get_msgWrite()
 
 	def loginRefresh(self):
-		self.driver = get_driver()
+		self.get_driver()
 		print("Driver initialized.")
 
 		self.driver.get(self.chatURL)
