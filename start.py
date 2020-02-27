@@ -40,7 +40,7 @@ class bandChat():
 		self.get_driver()
 		print("Driver initialized.")
 
-		self.driver.get(param.testchatURL if isTest else param.chatURL)
+		self.driver.get(self.chatURL)
 		print("Get login page completed.")
 		self.driver.implicitly_wait(3)
 
@@ -67,19 +67,21 @@ class bandChat():
 			self.driver.find_element_by_id("code").send_keys(str(pw_band))
 			self.driver.find_element_by_css_selector("button.uBtn.-tcType.-confirm").click();
 			print("Driver get completed.")
-		self.get_msgWrite(driver)
+
+		self.get_msgWrite()
 
 	def loginRefresh(self):
 		self.driver = get_driver()
 		print("Driver initialized.")
+
 		self.driver.get(self.chatURL)
 		print("Driver get completed.")
+
 		self.get_msgWrite()
-		driver.implicitly_wait(30)
+		self.driver.implicitly_wait(30)
 
 		if self.isTest:
-			self.msgWrite.send_keys("[" + param.NAME + "] 새로고침 완료")
-			self.msgWrite.send_keys(Keys.ENTER)
+			self.chatPrint("[" + param.NAME + "] 새로고침 완료")
 
 	def chatPrint(self, str_i):
 		lines = str_i.split("\n")
