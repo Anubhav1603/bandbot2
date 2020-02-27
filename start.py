@@ -203,7 +203,7 @@ elif sys.argv[1] == "--test":
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
-	print("Auto refreshing and driver re-grab disabled.")
+	print("Auto refreshing and driver re-grabbing disabled for tests on Windows.")
 	print("Long-term operation cannot be guaranteed. Use at your own risk.")
 	cntQst()
 
