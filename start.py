@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
-import parse
 import datetime
 import param
 import teletoken
@@ -83,7 +82,12 @@ def loginRefresh(isTest = False):
 		msgWrite.send_keys(Keys.ENTER)
 	return driver, msgWrite
 
-
+def cntQst():
+	resp = input("Continue? (Y)")
+	if resp == "Y":
+		pass
+	else:
+		exit()
 
 def Modules():
 	import glob
@@ -92,7 +96,7 @@ def Modules():
 	commands = []
 	modules = glob.glob("bandbot_*.py")
 	for module in modules:
-		module_name = parse.parse("{}.py",module)
+		module_name = module[:-3]
 		mod = importlib.import_module(module_name[0])
 		mods.append(mod)
 		commands.append(mod.command)
@@ -161,7 +165,17 @@ def newChat(usr_i, str_i, commands, mods):
 
 	sendAlarm(usr_i, str_i)
 
-if __name__ == "__main__" and len(sys.argv) == 1:
+if not __name__ == "__main__":
+	pass
+
+elif len(sys.argv) == 1:
+	print("***BANDBOT STARTED IN SERVICE MODE***")
+	print("***BANDBOT STARTED IN SERVICE MODE***")
+	print("***BANDBOT STARTED IN SERVICE MODE***")
+	print("Auto refreshing and driver re-grab enabled.")
+	cntQst()
+	
+
 	timeFlag = int(strftime("%M")) < 30
 
 	driver, msgWrite = initLogin()
@@ -189,18 +203,13 @@ if __name__ == "__main__" and len(sys.argv) == 1:
 
 		sleep(0.5)
 
-if __name__ == "__main__" and len(sys.argv) >= 2:
+elif sys.argv[1] == "--test":
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("Auto refreshing and driver re-grab disabled.")
 	print("Long-term operation cannot be guaranteed. Use at your own risk.")
-	
-	resp = input("Continue? (Y)")
-	if resp == "Y":
-		pass
-	else:
-		exit()
+	cntQst()
 
 	driver, msgWrite = initLogin(True)
 
@@ -221,3 +230,18 @@ if __name__ == "__main__" and len(sys.argv) >= 2:
 		recent_chat = len_chat
 
 		sleep(0.5)
+
+elif sys.argv[1] == "--simple-test"
+	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
+	print("this mode tests thirdparty extensions only")
+	print("test username is \"QwErTyTeSt\".")
+	print("type \"!봇 종료\" to exit")
+
+	commands, mods = Modules()
+
+	while True:
+		chat = input("test chat: ")
+		if chat == "!봇 종료": break
+		print("chatResponse start:\n")
+		print(CommandSel(chat.split(), "QwErTyTeSt", commands, mods))
+		print("\nchatResponse end:\n\n")
