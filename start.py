@@ -7,6 +7,8 @@ import datetime
 import param
 import teletoken
 import sys
+import glob
+import importlib
 
 from time import sleep, strftime, time
 
@@ -96,6 +98,31 @@ class bandChat():
 		userlist = soup.find_all("button", class_="author")
 		return len(chatlist), chatlist, userlist
 
+class extnModules():
+	def __init__(self):
+		self.mods = []
+		self.commands = []
+		modules = glob.glob("bandbot_*.py")
+		for module in modules:
+			module_name = module[:-3]
+			mod = importlib.import_module(module_name)
+			self.mods.append(mod)
+			self.commands.append(mod.command)
+
+	def find_and_execute(self, command_i, params, usr_i):
+		for i, command in enumerate(self.commands):
+			if command_i in command:
+				return self.mods[i].Com(params, usr_i)
+
+		return "잘못된 명령어입니다."
+
+	def strfModules(self):
+		responseChat = ""
+		for command in self.commands:
+			for com in command:
+				responseChat += com + ", "
+		return responseChat[:-2]
+
 def cntQst():
 	resp = input("Continue? (Y)")
 	if resp == "Y":
@@ -103,43 +130,15 @@ def cntQst():
 	else:
 		exit()
 
-def Modules():
-	import glob
-	import importlib
-	mods = []
-	commands = []
-	modules = glob.glob("bandbot_*.py")
-	for module in modules:
-		module_name = module[:-3]
-		mod = importlib.import_module(module_name)
-		mods.append(mod)
-		commands.append(mod.command)
-	return commands, mods
-
-def bothelp(isWrong, commands):
-	if(isWrong):
-		return "잘못된 명령어입니다."
-	else:
-		responseChat = param.version
-		responseChat += "\nhttps://github.com/kohs100/bandbot2"
-		responseChat += "\n지원되는 명령어 : \n!봇 + "
-		for command in commands:
-			for com in command:
-				responseChat += (", "+com)
-
-		return responseChat
-
-def CommandSel(params, usr_i, commands, mods):
+def CommandSel(params, usr_i, loadedModules):
 	if len(params) == 1:
-		return bothelp(False, commands)
-
-	isCommand = False
-	for i in range(0, len(commands)):			#commands = list of module.command(list of commands)
-		if params[1] in commands[i]:
-			return mods[i].Com(params, usr_i)
-			isCommand = True
-	if not isCommand:
-		return bothelp(True, commands)
+		responseChat = "밴드봇 ver." + param.version + "\n" \
+		"https://github.com/kohs100/bandbot2\n" \
+		"지원되는 명령어 : \n!봇 + "
+		responseChat += loadedModules.strfModules()
+		return responseChat
+	else:
+		return loadedModules.find_and_execute(params[1], params, usr_i)
 
 def sendAlarm(usr_i, str_i):
 	alarm_keywords = ["촉수","ㅎㅅㅋ","히사코"]
@@ -167,13 +166,12 @@ elif len(sys.argv) == 1:
 	cntQst()
 	
 	chatRoom = bandChat(False)
+	loadedModules = extnModules()
 
 	timeFlag = int(strftime("%M")) < 30
 
 	len_chat, i_chat, i_user = chatRoom.HTMLget()
 	recent_chat = len(i_chat)
-
-	commands, mods = Modules()
 
 	while(True):
 		if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
@@ -191,7 +189,7 @@ elif len(sys.argv) == 1:
 				params = str_i.split(" ")
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-					responseChat = CommandSel(params, usr_i, commands, mods)
+					responseChat = CommandSel(params, usr_i, loadedModules)
 					chatRoom.chatPrint(prefixChat + responseChat)
 			sendAlarm(usr_i, str_i)
 
@@ -208,11 +206,10 @@ elif sys.argv[1] == "--test":
 	cntQst()
 
 	chatRoom = bandChat(True)
+	loadedModules = extnModules()
 
 	len_chat, i_chat, i_user = chatRoom.HTMLget()
 	recent_chat = len(i_chat)
-
-	commands, mods = Modules()
 
 	while(True):
 		len_chat, i_chat, i_user = chatRoom.HTMLget()
@@ -226,7 +223,7 @@ elif sys.argv[1] == "--test":
 				params = str_i.split(" ")
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-					responseChat = CommandSel(params, usr_i, commands, mods)
+					responseChat = CommandSel(params, usr_i, loadedModules)
 					chatRoom.chatPrint(prefixChat + responseChat)
 			sendAlarm(usr_i, str_i)
 
@@ -242,7 +239,7 @@ elif sys.argv[1] == "--simple-test":
 	print("test username is \"QwErTyTeSt\".")
 	print("type \"!exit\" to exit\n")
 
-	commands, mods = Modules()
+	loadedModules = extnModules()
 
 	while True:
 		str_i = input("test chat: ")
@@ -254,6 +251,6 @@ elif sys.argv[1] == "--simple-test":
 			params = str_i.split(" ")
 			if params[0] == "!봇":
 				prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-				responseChat = CommandSel(params, usr_i, commands, mods)
+				responseChat = CommandSel(params, usr_i, loadedModules)
 				print(prefixChat + responseChat)
 		print("\nchatResponse end:--------------------\n")
