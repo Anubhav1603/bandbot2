@@ -7,6 +7,7 @@ import parse
 import datetime
 import param
 import teletoken
+import sys
 
 from time import sleep, strftime, time
 
@@ -160,7 +161,7 @@ def newChat(usr_i, str_i, commands, mods):
 
 	sendAlarm(usr_i, str_i)
 
-if __name__ == "__main__":
+if __name__ == "__main__" and len(sys.argv) == 1:
 	timeFlag = int(strftime("%M")) < 30
 
 	driver, msgWrite = initLogin()
@@ -183,6 +184,39 @@ if __name__ == "__main__":
 			print(usr_i + ":" + str_i)
 
 			newChat(usr_i, str_i, commands, mods)
+
+		recent_chat = len_chat
+
+		sleep(0.5)
+
+if __name__ == "__main__" and len(sys.argv) >= 2:
+	print("***BANDBOT STARTED IN MODULE TEST MODE***")
+	print("***BANDBOT STARTED IN MODULE TEST MODE***")
+	print("***BANDBOT STARTED IN MODULE TEST MODE***")
+	print("Auto refreshing and driver re-grab disabled.")
+	print("Long-term operation cannot be guaranteed. Use at your own risk.")
+	
+	resp = input("Continue? (Y)")
+	if resp == "Y":
+		pass
+	else:
+		exit()
+
+	driver, msgWrite = initLogin(True)
+
+	len_chat, i_chat, i_user = HTMLget(driver)
+	recent_chat = len(i_chat)
+
+	commands, mods = Modules()
+	while(True):
+		len_chat, i_chat, i_user = HTMLget(driver)
+
+		for i in range(recent_chat-len_chat,0):
+			str_i = i_chat[i].text
+			usr_i = i_user[i].text
+			print(usr_i + ":" + str_i)
+		
+			newChat(usr_i, str_i)
 
 		recent_chat = len_chat
 
