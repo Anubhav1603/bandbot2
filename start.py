@@ -17,11 +17,11 @@ def getDriver():
 	driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
 	return driver
 
-def initLogin():
+def initLogin(isTest = False):
 	driver = getDriver()
 	print("Driver initialized.")
 
-	driver.get(param.chatURL)
+	driver.get(param.testchatURL if isTest else param.chatURL)
 	print("Get login page completed.")
 	driver.implicitly_wait(3)
 
@@ -70,14 +70,14 @@ def loadingWait(driver):
 	print("[" + param.NAME + "] " + param.version + " boot success")
 	return msgWrite
 
-def loginRefresh(doSilent = True):
+def loginRefresh(isTest = False):
 	driver = getDriver()
 	print("Driver initialized.")
-	driver.get(param.chatURL)
+	driver.get(param.testchatURL if isTest else param.chatURL)
 	print("Driver get completed.")
 	msgWrite = loadingWait(driver)
 	driver.implicitly_wait(30)
-	if not doSilent:
+	if isTest:
 		msgWrite.send_keys("[" + param.NAME + "] 새로고침 완료")
 		msgWrite.send_keys(Keys.ENTER)
 	return driver, msgWrite

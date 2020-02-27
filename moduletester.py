@@ -5,10 +5,8 @@ from time import sleep
 
 import start
 
-
-
 if __name__ == "__main__":
-	driver, msgWrite = start.initLogin()
+	driver, msgWrite = start.initLogin(True)
 
 	len_chat, i_chat, i_user = start.HTMLget(driver)
 	recent_chat = len(i_chat)
