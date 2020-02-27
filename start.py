@@ -97,14 +97,14 @@ def Modules():
 	modules = glob.glob("bandbot_*.py")
 	for module in modules:
 		module_name = module[:-3]
-		mod = importlib.import_module(module_name[0])
+		mod = importlib.import_module(module_name)
 		mods.append(mod)
 		commands.append(mod.command)
 	return commands, mods
 
 def bothelp(isWrong, commands):
 	if(isWrong):
-		return "잘못된 명령어입니다.\n"
+		return "잘못된 명령어입니다."
 	else:
 		responseChat = param.version
 		responseChat += "\nhttps://github.com/kohs100/bandbot2"
@@ -113,7 +113,7 @@ def bothelp(isWrong, commands):
 			for com in command:
 				responseChat += (", "+com)
 
-		return responseChat + "\n"
+		return responseChat
 
 def HTMLget(driver):
 	soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -122,7 +122,7 @@ def HTMLget(driver):
 	return len(chatlist), chatlist, userlist
 		
 def CommandSel(params, usr_i, commands, mods):
-	if paramnum == 1:
+	if len(params) == 1:
 		return bothelp(False, commands)
 
 	isCommand = False
@@ -231,7 +231,7 @@ elif sys.argv[1] == "--test":
 
 		sleep(0.5)
 
-elif sys.argv[1] == "--simple-test"
+elif sys.argv[1] == "--simple-test":
 	print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
 	print("this mode tests thirdparty extensions only")
 	print("test username is \"QwErTyTeSt\".")
@@ -240,8 +240,15 @@ elif sys.argv[1] == "--simple-test"
 	commands, mods = Modules()
 
 	while True:
-		chat = input("test chat: ")
-		if chat == "!봇 종료": break
-		print("chatResponse start:\n")
-		print(CommandSel(chat.split(), "QwErTyTeSt", commands, mods))
-		print("\nchatResponse end:\n\n")
+		str_i = input("test chat: ")
+		usr_i = "QwErTyTeSt"
+		if str_i == "!봇 종료": break
+
+		print("chatResponse start--------------------\n")
+		if str_i[:2] == "!봇":
+			params = str_i.split(" ")
+			if params[0] == "!봇":
+				prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
+				responseChat = CommandSel(params, usr_i, commands, mods)
+				print(prefixChat + responseChat)
+		print("\nchatResponse end:--------------------\n")
