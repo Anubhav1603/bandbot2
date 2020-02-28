@@ -99,15 +99,18 @@ class bandChat():
 		return len(chatlist), chatlist, userlist
 
 class extnModules():
-	def __init__(self):
+	def __init__(self, guide):
 		self.mods = []
 		self.commands = []
+
 		modules = glob.glob("bandbot_*.py")
 		for module in modules:
 			module_name = module[:-3]
 			mod = importlib.import_module(module_name)
 			self.mods.append(mod)
 			self.commands.append(mod.command)
+
+		self.guide = guide + self.strfModules()
 
 	def find_and_execute(self, command_i, params, usr_i):
 		for i, command in enumerate(self.commands):
@@ -123,22 +126,9 @@ class extnModules():
 				responseChat += com + ", "
 		return responseChat[:-2]
 
-def cntQst():
-	resp = input("Continue? (Y)")
-	if resp == "Y":
-		pass
-	else:
-		exit()
-
-def CommandSel(params, usr_i, loadedModules):
-	if len(params) == 1:
-		responseChat = "밴드봇 ver." + param.version + "\n" \
-		"https://github.com/kohs100/bandbot2\n" \
-		"지원되는 명령어 : \n!봇 + "
-		responseChat += loadedModules.strfModules()
-		return responseChat
-	else:
-		return loadedModules.find_and_execute(params[1], params, usr_i)
+	def commandSel(self, params, usr_i):
+		if len(params) == 1: return self.guide
+		else: return self.find_and_execute(params[1], params, usr_i)
 
 def sendAlarm(usr_i, str_i):
 	alarm_keywords = ["촉수","ㅎㅅㅋ","히사코"]
@@ -163,10 +153,14 @@ elif len(sys.argv) == 1:
 	print("***BANDBOT STARTED IN SERVICE MODE***")
 	print("***BANDBOT STARTED IN SERVICE MODE***")
 	print("Auto refreshing and driver re-grab enabled.")
-	cntQst()
+	if input("Continue? (Y)") != "Y": exit()
 	
 	chatRoom = bandChat(False)
-	loadedModules = extnModules()
+	
+	guide = param.NAME + " ver." + param.version + "\n" \
+			"https://github.com/kohs100/bandbot2\n" \
+			"지원되는 명령어 : \n!봇 + "
+	loadedModules = extnModules(guide)
 
 	timeFlag = int(strftime("%M")) < 30
 
@@ -189,7 +183,7 @@ elif len(sys.argv) == 1:
 				params = str_i.split(" ")
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-					responseChat = CommandSel(params, usr_i, loadedModules)
+					responseChat = loadedModules.commandSel(params, usr_i)
 					chatRoom.chatPrint(prefixChat + responseChat)
 			sendAlarm(usr_i, str_i)
 
@@ -203,10 +197,13 @@ elif sys.argv[1] == "--test":
 	print("***BANDBOT STARTED IN MODULE TEST MODE***")
 	print("Auto refreshing and driver re-grabbing disabled for tests on Windows.")
 	print("Long-term operation cannot be guaranteed. Use at your own risk.")
-	cntQst()
+	if input("Continue? (Y)") != "Y": exit()
 
 	chatRoom = bandChat(True)
-	loadedModules = extnModules()
+	guide = param.NAME + " ver." + param.version + "\n" \
+			"https://github.com/kohs100/bandbot2\n" \
+			"지원되는 명령어 : \n!봇 + "
+	loadedModules = extnModules(guide)
 
 	len_chat, i_chat, i_user = chatRoom.HTMLget()
 	recent_chat = len(i_chat)
@@ -223,7 +220,7 @@ elif sys.argv[1] == "--test":
 				params = str_i.split(" ")
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-					responseChat = CommandSel(params, usr_i, loadedModules)
+					responseChat = loadedModules.commandSel(params, usr_i)
 					chatRoom.chatPrint(prefixChat + responseChat)
 			sendAlarm(usr_i, str_i)
 
@@ -251,6 +248,6 @@ elif sys.argv[1] == "--simple-test":
 			params = str_i.split(" ")
 			if params[0] == "!봇":
 				prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-				responseChat = CommandSel(params, usr_i, loadedModules)
+				responseChat = commandSel(params, usr_i, loadedModules)
 				print(prefixChat + responseChat)
 		print("\nchatResponse end:--------------------\n")
