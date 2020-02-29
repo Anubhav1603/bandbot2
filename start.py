@@ -13,12 +13,6 @@ import importlib
 from time import sleep, strftime, time
 
 class bandChat():
-	def get_driver(self):
-		chromeOptions = {"debuggerAddress":"127.0.0.1:9222"}
-		capabilities = {"chromeOptions":chromeOptions}
-		print("Driver initializing...")
-		self.driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
-		
 	def get_msgWrite(self):
 		startsec = time()
 		while(True):
@@ -39,7 +33,10 @@ class bandChat():
 		self.chatURL = param.testchatURL if isTest else param.chatURL
 		self.isTest = isTest
 
-		self.get_driver()
+		chromeOptions = {"debuggerAddress":"127.0.0.1:9222"}
+		capabilities = {"chromeOptions":chromeOptions}
+		print("Driver initializing...")
+		self.driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
 		print("Driver initialized.")
 
 		self.driver.get(self.chatURL)
@@ -73,11 +70,7 @@ class bandChat():
 		self.get_msgWrite()
 
 	def loginRefresh(self):
-		self.get_driver()
-		print("Driver initialized.")
-
-		self.driver.get(self.chatURL)
-		print("Driver get completed.")
+		self.driver.refresh()
 
 		self.get_msgWrite()
 		self.driver.implicitly_wait(30)
@@ -152,11 +145,10 @@ elif len(sys.argv) == 1:
 	print("***BANDBOT STARTED IN SERVICE MODE***")
 	print("***BANDBOT STARTED IN SERVICE MODE***")
 	print("***BANDBOT STARTED IN SERVICE MODE***")
-	print("Auto refreshing and driver re-grab enabled.")
+	print("Auto refreshing enabled for long-term service.")
 	if input("Continue? (Y)") != "Y": exit()
 	
 	chatRoom = bandChat(False)
-	
 	guide = param.NAME + " ver." + param.version + "\n" \
 			"https://github.com/kohs100/bandbot2\n" \
 			"지원되는 명령어 : \n!봇 + "
@@ -192,10 +184,10 @@ elif len(sys.argv) == 1:
 		sleep(0.5)
 
 elif sys.argv[1] == "--test":
-	print("***BANDBOT STARTED IN MODULE TEST MODE***")
-	print("***BANDBOT STARTED IN MODULE TEST MODE***")
-	print("***BANDBOT STARTED IN MODULE TEST MODE***")
-	print("Auto refreshing and driver re-grabbing disabled for tests on Windows.")
+	print("***BANDBOT STARTED IN TEST MODE***")
+	print("***BANDBOT STARTED IN TEST MODE***")
+	print("***BANDBOT STARTED IN TEST MODE***")
+	print("Auto refreshing disabled for debugging.")
 	print("Long-term operation cannot be guaranteed. Use at your own risk.")
 	if input("Continue? (Y)") != "Y": exit()
 
@@ -222,6 +214,7 @@ elif sys.argv[1] == "--test":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
 					responseChat = loadedModules.commandSel(params, usr_i)
 					chatRoom.chatPrint(prefixChat + responseChat)
+
 			sendAlarm(usr_i, str_i)
 
 		recent_chat = len_chat
