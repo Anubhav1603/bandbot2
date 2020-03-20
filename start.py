@@ -92,6 +92,9 @@ class bandChat():
 		return len(chatlist), chatlist, userlist
 
 class extnModules():
+	emptyCall = 1
+	wrongCommand = 2
+
 	def __init__(self, guide):
 		self.mods = []
 		self.commands = []
@@ -110,7 +113,7 @@ class extnModules():
 			if command_i in command:
 				return self.mods[i].Com(params, usr_i)
 
-		return "잘못된 명령어입니다."
+		return extnModules.wrongCommand
 
 	def strfModules(self):
 		responseChat = ""
@@ -120,7 +123,7 @@ class extnModules():
 		return responseChat[:-2]
 
 	def commandSel(self, params, usr_i):
-		if len(params) == 1: return self.guide
+		if len(params) == 1: return extnModules.emptyCall
 		else: return self.find_and_execute(params[1], params, usr_i)
 
 def sendAlarm(usr_i, str_i):
@@ -152,7 +155,7 @@ elif len(sys.argv) == 1:
 	guide = param.NAME + " ver." + param.version + "\n" \
 			"https://github.com/kohs100/bandbot2\n" \
 			"지원되는 명령어 : \n!봇 + "
-	loadedModules = extnModules(guide)
+	loadedModules = extnModules()
 
 	timeFlag = int(strftime("%M")) < 30
 
@@ -176,7 +179,14 @@ elif len(sys.argv) == 1:
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
 					responseChat = loadedModules.commandSel(params, usr_i)
-					chatRoom.chatPrint(prefixChat + responseChat)
+
+					if responseChat == extnModules.wrongCommand:
+						chatRoom.chatPrint(prefixChat + guide + loadedModules.strfModules())
+					elif responseChat == extnModules.emptyCall:
+						chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
+					else:
+						chatRoom.chatPrint(prefixChat + responseChat)
+
 			sendAlarm(usr_i, str_i)
 
 		recent_chat = len_chat
