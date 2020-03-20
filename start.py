@@ -22,7 +22,7 @@ class bandChat():
 				if(time() > startsec+20):
 					now = datetime.datetime.now()
 					print("CHAT LOAD ERROR at " + now.isoformat())
-					raise chatError
+					raise
 					exit()
 				continue
 			break
@@ -155,7 +155,7 @@ elif len(sys.argv) == 1:
 	guide = param.NAME + " ver." + param.version + "\n" \
 			"https://github.com/kohs100/bandbot2\n" \
 			"지원되는 명령어 : \n!봇 + "
-	loadedModules = extnModules()
+	loadedModules = extnModules(guide)
 
 	timeFlag = int(strftime("%M")) < 30
 
@@ -181,9 +181,9 @@ elif len(sys.argv) == 1:
 					responseChat = loadedModules.commandSel(params, usr_i)
 
 					if responseChat == extnModules.wrongCommand:
-						chatRoom.chatPrint(prefixChat + guide + loadedModules.strfModules())
-					elif responseChat == extnModules.emptyCall:
 						chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
+					elif responseChat == extnModules.emptyCall:
+						chatRoom.chatPrint(prefixChat + guide + loadedModules.strfModules())
 					else:
 						chatRoom.chatPrint(prefixChat + responseChat)
 
@@ -223,7 +223,13 @@ elif sys.argv[1] == "--test":
 				if params[0] == "!봇":
 					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
 					responseChat = loadedModules.commandSel(params, usr_i)
-					chatRoom.chatPrint(prefixChat + responseChat)
+
+					if responseChat == extnModules.wrongCommand:
+						chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
+					elif responseChat == extnModules.emptyCall:
+						chatRoom.chatPrint(prefixChat + guide + loadedModules.strfModules())
+					else:
+						chatRoom.chatPrint(prefixChat + responseChat)
 
 			sendAlarm(usr_i, str_i)
 
@@ -239,7 +245,10 @@ elif sys.argv[1] == "--simple-test":
 	print("test username is \"QwErTyTeSt\".")
 	print("type \"!exit\" to exit\n")
 
-	loadedModules = extnModules()
+	guide = param.NAME + " ver." + param.version + "\n" \
+			"https://github.com/kohs100/bandbot2\n" \
+			"지원되는 명령어 : \n!봇 + "
+	loadedModules = extnModules(guide)
 
 	while True:
 		str_i = input("test chat: ")
@@ -249,8 +258,16 @@ elif sys.argv[1] == "--simple-test":
 		print("chatResponse start--------------------\n")
 		if str_i[:2] == "!봇":
 			params = str_i.split(" ")
-			if params[0] == "!봇":
-				prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-				responseChat = commandSel(params, usr_i, loadedModules)
-				print(prefixChat + responseChat)
+			if str_i[:2] == "!봇":
+				params = str_i.split(" ")
+				if params[0] == "!봇":
+					prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
+					responseChat = loadedModules.commandSel(params, usr_i)
+
+					if responseChat == extnModules.wrongCommand:
+						print(prefixChat + "잘못된 명령입니다.")
+					elif responseChat == extnModules.emptyCall:
+						print(prefixChat + guide + loadedModules.strfModules())
+					else:
+						print(prefixChat + responseChat)
 		print("\nchatResponse end:--------------------\n")

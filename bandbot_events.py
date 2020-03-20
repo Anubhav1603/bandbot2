@@ -19,16 +19,14 @@ def Com(params, usr_i):
 				return newEvent.getCut(int(params[2]))
 			elif paramnum == 2:
 				return newEvent.getCut()
-			else:
-				return Err(False)
 
 		elif params[1] == "밀리예측컷":
 			if paramnum == 3:
 				return newEvent.getPrecut(int(params[2]))
 			elif paramnum == 2:
 				return newEvent.getPrecut()
-			else:
-				return Err(False)
+				
+		return Err(False)
 			
 	except:
 		return Err(True)
@@ -59,10 +57,10 @@ def Err(isComm):
 		responseChat += "잘못된 명령어 사용"
 	return responseChat
 
-class eventObj():
-	dicType = {1:"TST", 2:"밀리코레", 3:"PSTheater", 4:"PSTour", 5:"주년이벤트", 6:"WORKING☆", 7:"만우절 이벤트", 9:"밀리코레", 10:"PSTwinstage"}
-	cutEvents = [3, 4, 10]
+dicType = {1:"TST", 2:"밀리코레", 3:"PSTheater", 4:"PSTour", 5:"주년이벤트", 6:"WORKING☆", 7:"만우절 이벤트", 9:"밀리코레", 10:"PSTwinstage"}
+cutEvents = [3, 4, 10]
 
+class eventObj():
 	def __init__(self):
 		json_info = reqjson('https://api.matsurihi.me/mltd/v1/events')
 		self.rawdata = json_info[-1]	#get last event
@@ -90,20 +88,20 @@ class eventObj():
 
 		if self.typenum in cutEvents:
 			responseChat += self.strName + "\n" \
-			"시작시각 : " + timeparser(json_info["schedule"]["beginDate"]) + "\n" \
-			"후반개시 : " + timeparser(json_info["schedule"]["boostBeginDate"]) + "\n" \
-			"종료시각 : " + timeparser(json_info["schedule"]["endDate"])
+			"시작시각 : " + timeparser(self.rawdata["schedule"]["beginDate"]) + "\n" \
+			"후반개시 : " + timeparser(self.rawdata["schedule"]["boostBeginDate"]) + "\n" \
+			"종료시각 : " + timeparser(self.rawdata["schedule"]["endDate"])
 		
 		elif self.typenum == 5:
 			responseChat += self.strName + "\n" \
-			"시작시각 : " + timeparser(json_info["schedule"]["beginDate"]) + "\n" \
-			"종료시각 : " + timeparser(json_info["schedule"]["pageEndDate"])
+			"시작시각 : " + timeparser(self.rawdata["schedule"]["beginDate"]) + "\n" \
+			"종료시각 : " + timeparser(self.rawdata["schedule"]["pageEndDate"])
 
 		elif self.typenum in dicType.keys():
 			responseChat += self.strName + "\n" \
-			"시작시각 : " + timeparser(json_info["schedule"]["beginDate"]) + "\n" \
-			"드롭종료 : " + timeparser(json_info["schedule"]["endDate"]) + "\n" \
-			"가챠종료 : " + timeparser(json_info["schedule"]["pageEndDate"])
+			"시작시각 : " + timeparser(self.rawdata["schedule"]["beginDate"]) + "\n" \
+			"드롭종료 : " + timeparser(self.rawdata["schedule"]["endDate"]) + "\n" \
+			"가챠종료 : " + timeparser(self.rawdata["schedule"]["pageEndDate"])
 
 		else:
 			responseChat += "알려지지 않은 이벤트 진행중"
@@ -119,10 +117,10 @@ class eventObj():
 		except:
 			return "텔레그램 연결이 원활하지 않습니다."
 
-		if not self.typeNum in dicType.keys():
+		if not self.typenum in dicType.keys():
 			return "알려지지 않은 이벤트 진행중.\n타입코드 " + self.typenum
 		
-		if not self.typeNum in cutEvents:
+		if not self.typenum in cutEvents:
 			return "랭킹이벤트 진행중이 아닙니다."
 
 		time_now = int(time.strftime("%Y%m%d%H%M"))
@@ -131,11 +129,14 @@ class eventObj():
 		#boost_event = 201905140152
 		#end_event = 202005140152
 
+		responseChat = "밀리이벤트 현재컷 정보\n"
+		responseChat += self.strName + "\n"
 		if time_now < end_event and time_now > boost_event:
 			res = parse.parse("예측컷\n{}\n{}\n{}\n{}\n{}\n{}", msg.text)
 			if res is None or res[0] != self.pureName:
 				return "아직 예측컷 정보가 없습니다."
 			else:
+				responseChat = ""
 				cut2500 = res[1].split()[1]
 				cut5000 = res[2].split()[1]
 				cut10000 = res[3].split()[1]
@@ -160,13 +161,13 @@ class eventObj():
 	def getCut(self, border = 0):
 		responseChat = "밀리이벤트 현재컷 정보\n"
 
-		if not self.typeNum in dicType.keys():
+		if not self.typenum in dicType.keys():
 			return "알려지지 않은 이벤트 진행중.\n타입코드 " + self.typenum
 		
-		if not self.typeNum in cutEvents:
+		if not self.typenum in cutEvents:
 			return "랭킹이벤트 진행중이 아닙니다."
 
-		json_cut = reqjson("https://api.matsurihi.me/mltd/v1/events/"+str(json_info["id"])+"/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000")
+		json_cut = reqjson("https://api.matsurihi.me/mltd/v1/events/"+str(self.rawdata["id"])+"/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000")
 		timedata = timeparser(json_cut[0]["data"][-1]["summaryTime"])
 
 		responseChat += self.strName + "\n"
