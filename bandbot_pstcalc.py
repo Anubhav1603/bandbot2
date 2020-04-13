@@ -44,7 +44,7 @@ def calcTour(Stamina, Score, isWork):
 		Yen = (Result*9800.0/8400.0)
 		return "계산 결과입니다.\n필요한 쥬엘은 " + "%.2f"%Result + "개\nG셋충전시 " + "%.2f"%Yen +"엔"
 
-def Err(msgWrite):
+def Err():
 	responseChat =  """\
 	pstcalc.py: 잘못된 계산기 명령입니다.
 	사용법 : !계산 [시어터|투어] [영업런|라이브런] [원기통] [목표점수]

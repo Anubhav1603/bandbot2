@@ -30,7 +30,7 @@ def Roll(dicemax, dicenum):
 	
 	return responseChat
 
-def Err(msgWrite, isToomany):
+def Err(isToomany):
 	responseChat = "dice.py: "
 	if isToomany:
 		responseChat += "너무 많은 주사위입니다."
