@@ -1,103 +1,11 @@
-from selenium import webdriver
-from bs4 import BeautifulSoup
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
-
 from extensions import extnMods, extnModules
+from chatRoom import bandChat
 
 import datetime
 import param
 
 import sys
 from time import sleep, strftime, time
-
-class bandChat():
-    def get_msgWrite(self):
-        startsec = time()
-        while(True):
-            try:
-                self.msgWrite = self.driver.find_element_by_class_name(
-                    "commentWrite")
-            except:
-                if(time() > startsec+20):
-                    now = datetime.datetime.now()
-                    print("CHAT LOAD ERROR at " + now.isoformat())
-                    raise
-                    exit()
-                continue
-            break
-        sleep(1)
-        print("[" + param.NAME + "] " + param.version + " boot success")
-
-    def __init__(self, isTest):
-        self.chatURL = param.testchatURL if isTest else param.chatURL
-        self.isTest = isTest
-
-        chromeOptions = {"debuggerAddress": "127.0.0.1:9222"}
-        capabilities = {"chromeOptions": chromeOptions}
-        print("Driver initializing...")
-        self.driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
-        print("Driver initialized.")
-
-        self.driver.get(self.chatURL)
-        print("Get login page completed.")
-        self.driver.implicitly_wait(3)
-
-        self.driver.find_element_by_css_selector(
-            ".uBtn.-icoType.-phone").click()
-        print("Get PhonenumberPage completed.")
-        self.driver.implicitly_wait(3)
-
-        Phonenumber = input("전화번호 입력 :")
-        self.driver.find_element_by_id(
-            "input_local_phone_number").send_keys(Phonenumber)
-        self.driver.find_element_by_css_selector(
-            ".uBtn.-tcType.-confirm").click()
-        print("Get PasswordPage completed.")
-        self.driver.implicitly_wait(3)
-
-        Password = input("비밀번호 입력 :")
-        self.driver.find_element_by_id("pw").send_keys(Password)
-        self.driver.find_element_by_css_selector(
-            ".uBtn.-tcType.-confirm").click()
-        print("Get SMSPage completed.")
-        self.driver.implicitly_wait(8)
-        try:
-            print(self.driver.find_element_by_id("hintNumberDiv").text)
-            sleep(20)
-        except NoSuchElementException:
-            pw_band = input("인증번호: ")
-            self.driver.find_element_by_id("code").send_keys(str(pw_band))
-            self.driver.find_element_by_css_selector(
-                "button.uBtn.-tcType.-confirm").click()
-            print("Driver get completed.")
-
-        self.get_msgWrite()
-
-    def loginRefresh(self):
-        self.driver.refresh()
-
-        self.get_msgWrite()
-        self.driver.implicitly_wait(30)
-
-        if self.isTest:
-            self.chatPrint("[" + param.NAME + "] 새로고침 완료")
-
-    def chatPrint(self, str_i):
-        lines = str_i.split("\n")
-        for chat in lines:
-            self.msgWrite.send_keys(chat)
-            self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-        self.msgWrite.send_keys(Keys.ENTER)
-
-    def HTMLget(self):
-        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-        chatlist = soup.find_all("span", class_="txt")
-        userlist = soup.find_all("button", class_="author")
-        return len(chatlist), chatlist, userlist
-
-
-
 
 if not __name__ == "__main__":
     pass
@@ -110,11 +18,8 @@ elif len(sys.argv) == 1:
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(False)
-    guide = param.NAME + " ver." + param.version + "\n" \
-        "https://github.com/kohs100/bandbot2\n" \
-        "지원되는 명령어 : \n!봇 + "
-    loadedModules = extnModules(guide)
+    chatRoom = bandChat(param.chatURL, False)
+    loadedModules = extnModules()
     loadedMods = extnMods()
 
     timeFlag = int(strftime("%M")) < 30
@@ -144,7 +49,7 @@ elif len(sys.argv) == 1:
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
                         chatRoom.chatPrint(
-                            prefixChat + guide + loadedModules.strfModules())
+                            prefixChat + param.GUIDE + loadedModules.strfModules())
                     else:
                         chatRoom.chatPrint(prefixChat + responseChat)
 
@@ -163,11 +68,8 @@ elif sys.argv[1] == "--test":
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(True)
-    guide = param.NAME + " ver." + param.version + "\n" \
-        "https://github.com/kohs100/bandbot2\n" \
-        "지원되는 명령어 : \n!봇 + "
-    loadedModules = extnModules(guide)
+    chatRoom = bandChat(param.testchatURL, True)
+    loadedModules = extnModules()
     loadedMods = extnMods()
 
     len_chat, i_chat, i_user = chatRoom.HTMLget()
@@ -191,7 +93,7 @@ elif sys.argv[1] == "--test":
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
                         chatRoom.chatPrint(
-                            prefixChat + guide + loadedModules.strfModules())
+                            prefixChat + param.GUIDE + loadedModules.strfModules())
                     else:
                         chatRoom.chatPrint(prefixChat + responseChat)
 
@@ -209,11 +111,8 @@ elif sys.argv[1] == "--simple-test":
     print("test username is \"QwErTyTeSt\".")
     print("type \"!exit\" to exit\n")
 
-    guide = param.NAME + " ver." + param.version + "\n" \
-        "https://github.com/kohs100/bandbot2\n" \
-        "지원되는 명령어 : \n!봇 + "
-    loadedModules = extnModules(guide)
-
+    loadedModules = extnModules()
+    loadedMods = extnMods()
 
     while True:
         str_i = input("test chat: ")
@@ -233,7 +132,7 @@ elif sys.argv[1] == "--simple-test":
                     if responseChat == extnModules.wrongCommand:
                         print(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
-                        print(prefixChat + guide + loadedModules.strfModules())
+                        print(prefixChat + param.GUIDE + loadedModules.strfModules())
                     else:
                         print(prefixChat + responseChat)
 

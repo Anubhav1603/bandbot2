@@ -20,7 +20,7 @@ class extnModules():
     emptyCall = 1
     wrongCommand = 2
 
-    def __init__(self, guide):
+    def __init__(self):
         self.mods = []
         self.commands = []
 
@@ -30,8 +30,6 @@ class extnModules():
             mod = importlib.import_module(module_name)
             self.mods.append(mod)
             self.commands.append(mod.command)
-
-        self.guide = guide + self.strfModules()
 
     def find_and_execute(self, command_i, params, usr_i):
         for i, command in enumerate(self.commands):
