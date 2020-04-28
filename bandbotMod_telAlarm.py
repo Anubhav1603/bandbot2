@@ -9,6 +9,7 @@ def recvChat(usr_i, str_i):
             bot = teletoken.getBot()
             msg = strftime("%H:%M ") + usr_i + " is calling you.\n" + str_i
             teletoken.sendChat(bot, msg)
+            
     alarm_users = ["레몬스타"]
     for keyuser in alarm_users:
         if keyuser == usr_i:
