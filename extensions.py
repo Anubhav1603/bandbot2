@@ -13,7 +13,7 @@ class extnMods():
 
     def sendChat(self, str_i, usr_i):
         for mod in self.mods:
-            mod(str_i, usr_i)
+            return mod(str_i, usr_i)
 
 
 class extnModules():

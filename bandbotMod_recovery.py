@@ -19,6 +19,9 @@ def recvChat(usr_i, str_i):
         bot = teletoken.getBot()
         teletoken.sendChat(bot, "최근 채팅기록 10개를 복원합니다.")
         for chat in CHATSAVE.data:
-            teletoken.sendChat(bot, chat[0] + ": " + chat[1])    
+            teletoken.sendChat(bot, chat[0] + ": " + chat[1])
+        return True
+
     elif usr_i != "ㅎㅅㅋ":
         CHATSAVE.add((usr_i, str_i))
+        return False

@@ -39,13 +39,17 @@ elif len(sys.argv) == 1:
             usr_i = i_user[i].text
             print(usr_i + ":" + str_i)
 
+            isCommand = loadedMods.sendChat(usr_i, str_i)
+
             if str_i[:2] == "!봇":
                 params = str_i.split(" ")
                 if params[0] == "!봇":
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
                     responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if responseChat == extnModules.wrongCommand:
+                    if isCommand:
+                        chatRoom.chatPrint(prefixChat + "명령실행 완료")
+                    elif responseChat == extnModules.wrongCommand:
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
                         chatRoom.chatPrint(
@@ -53,7 +57,7 @@ elif len(sys.argv) == 1:
                     else:
                         chatRoom.chatPrint(prefixChat + responseChat)
 
-            loadedMods.sendChat(usr_i, str_i)
+            
 
         recent_chat = len_chat
 
@@ -83,21 +87,23 @@ elif sys.argv[1] == "--test":
             usr_i = i_user[i].text
             print(usr_i + ":" + str_i)
 
+            isCommand = loadedMods.sendChat(usr_i, str_i)
+
             if str_i[:2] == "!봇":
                 params = str_i.split(" ")
                 if params[0] == "!봇":
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
                     responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if responseChat == extnModules.wrongCommand:
+                    if isCommand:
+                        chatRoom.chatPrint(prefixChat + "명령실행 완료")
+                    elif responseChat == extnModules.wrongCommand:
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
                         chatRoom.chatPrint(
                             prefixChat + param.GUIDE + loadedModules.strfModules())
                     else:
                         chatRoom.chatPrint(prefixChat + responseChat)
-
-            loadedMods.sendChat(usr_i, str_i)
 
         recent_chat = len_chat
 
@@ -119,6 +125,8 @@ elif sys.argv[1] == "--simple-test":
         usr_i = "QwErTyTeSt"
         if str_i == "!exit":
             break
+        
+        isCommand = loadedMods.sendChat(usr_i, str_i)
 
         print("chatResponse start--------------------\n")
         if str_i[:2] == "!봇":
@@ -129,12 +137,13 @@ elif sys.argv[1] == "--simple-test":
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
                     responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if responseChat == extnModules.wrongCommand:
+                    if isCommand:
+                        print(prefixChat + "명령실행 완료")
+                    elif responseChat == extnModules.wrongCommand:
                         print(prefixChat + "잘못된 명령입니다.")
                     elif responseChat == extnModules.emptyCall:
                         print(prefixChat + param.GUIDE + loadedModules.strfModules())
                     else:
                         print(prefixChat + responseChat)
 
-        loadedMods.sendChat(usr_i, str_i)
         print("\nchatResponse end:--------------------\n")
