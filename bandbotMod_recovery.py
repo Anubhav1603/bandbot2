@@ -15,7 +15,7 @@ class SimpleQueue():
 CHATSAVE = SimpleQueue(10)
 
 def recvChat(usr_i, str_i):
-    if usr_i == "ㅎㅅㅋ" or usr_i == "QwErTyTeSt" and str_i == "!봇 복구":
+    if (usr_i == "ㅎㅅㅋ" or usr_i == "QwErTyTeSt") and str_i == "!봇 복구":
         bot = teletoken.getBot()
         teletoken.sendChat(bot, "최근 채팅기록 10개를 복원합니다.")
         for chat in CHATSAVE.data:

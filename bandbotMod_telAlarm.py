@@ -16,3 +16,5 @@ def recvChat(usr_i, str_i):
             bot = teletoken.getBot()
             msg = "senpai alert" + strftime("%H:%M ") + str_i
             teletoken.sendChat(bot, msg)
+    
+    return False

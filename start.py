@@ -47,7 +47,7 @@ elif len(sys.argv) == 1:
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
                     responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if isCommand:
+                    if True in isCommand:
                         chatRoom.chatPrint(prefixChat + "명령실행 완료")
                     elif responseChat == extnModules.wrongCommand:
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
@@ -95,7 +95,7 @@ elif sys.argv[1] == "--test":
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
                     responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if isCommand:
+                    if True in isCommand:
                         chatRoom.chatPrint(prefixChat + "명령실행 완료")
                     elif responseChat == extnModules.wrongCommand:
                         chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
@@ -131,19 +131,17 @@ elif sys.argv[1] == "--simple-test":
         print("chatResponse start--------------------\n")
         if str_i[:2] == "!봇":
             params = str_i.split(" ")
-            if str_i[:2] == "!봇":
-                params = str_i.split(" ")
-                if params[0] == "!봇":
-                    prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-                    responseChat = loadedModules.commandSel(params, usr_i)
+            if params[0] == "!봇":
+                prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
+                responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if isCommand:
-                        print(prefixChat + "명령실행 완료")
-                    elif responseChat == extnModules.wrongCommand:
-                        print(prefixChat + "잘못된 명령입니다.")
-                    elif responseChat == extnModules.emptyCall:
-                        print(prefixChat + param.GUIDE + loadedModules.strfModules())
-                    else:
-                        print(prefixChat + responseChat)
+                if True in isCommand:
+                    print(prefixChat + "명령실행 완료")
+                elif responseChat == extnModules.wrongCommand:
+                    print(prefixChat + "잘못된 명령입니다.")
+                elif responseChat == extnModules.emptyCall:
+                    print(prefixChat + param.GUIDE + loadedModules.strfModules())
+                else:
+                    print(prefixChat + responseChat)
 
         print("\nchatResponse end:--------------------\n")
