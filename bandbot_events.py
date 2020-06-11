@@ -80,10 +80,7 @@ class eventObj():
 		self.pureName = rawname[rawname.find("～")+1:-1]
 		self.strName = dicType[self.typenum] + " " + self.pureName
 	
-	def getInfo(self):
-		if not self.typenum in cutEvents:
-			return None
-		
+	def getInfo(self):		
 		responseChat = ""
 
 		if self.typenum in cutEvents:
