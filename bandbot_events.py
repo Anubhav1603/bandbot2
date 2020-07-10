@@ -92,7 +92,8 @@ class eventObj():
 		elif self.typenum == 5:
 			responseChat += self.strName + "\n" \
 			"시작시각 : " + timeparser(self.rawdata["schedule"]["beginDate"]) + "\n" \
-			"종료시각 : " + timeparser(self.rawdata["schedule"]["pageEndDate"])
+			"후반개시 : " + timeparser(self.rawdata["schedule"]["boostBeginDate"]) + "\n" \
+			"종료시각 : " + timeparser(self.rawdata["schedule"]["endDate"])
 
 		elif self.typenum in dicType.keys():
 			responseChat += self.strName + "\n" \
