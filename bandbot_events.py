@@ -26,10 +26,10 @@ def Com(params, usr_i):
 			elif paramnum == 2:
 				return newEvent.getPrecut()
 				
-		return Err(False)
+		return "events.py: 잘못된 명령어 사용"
 			
 	except:
-		return Err(True)
+		return "events.py: matsurihi.me에서 응답하지 않습니다."
 
 reqjson = lambda URL:requests.get(URL).json()
 
@@ -48,14 +48,6 @@ def timeparser_int(dateinfo):
 	hour = dateinfo[11:13]
 	minute = dateinfo[14:16]
 	return int(year + month + day + hour + minute)
-
-def Err(isComm):
-	responseChat = "events.py: \n"
-	if isComm:
-		responseChat += "matsurihi.me에서 응답하지 않습니다."
-	else:
-		responseChat += "잘못된 명령어 사용"
-	return responseChat
 
 dicType = {1:"TST", 2:"밀리코레", 3:"PSTheater", 4:"PSTour", 5:"주년이벤트", 6:"WORKING☆", 7:"만우절 이벤트", 9:"밀리코레", 10:"PSTwinstage"}
 cutEvents = [3, 4, 10]
