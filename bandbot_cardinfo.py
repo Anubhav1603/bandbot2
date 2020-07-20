@@ -52,12 +52,20 @@ def GetCardName(cardObj):
         
 def GetCardList(idolNum, rarity):
     res = reqjson(URL % idolNum)
+    idolName = res[0]["name"]
+    nameLen = len(idolName)
     response = ""
 
-    for cardObj in res:
-        if cardObj["rarity"] == rarity:
-            response += GetCardName(cardObj)
-            response += "\n"
+    if rarity == 1:
+        for cardObj in res:
+            if cardObj["rarity"] == rarity:
+                response += GetCardName(cardObj)
+                response += "\n"
+    else:
+        for cardObj in res:
+            if cardObj["rarity"] == rarity:
+                response += GetCardName(cardObj)[:-(nameLen + 1)]
+                response += "\n"
     
     return response[:-1]
     
