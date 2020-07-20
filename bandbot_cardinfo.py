@@ -1,6 +1,5 @@
-import json
-import requests
-import parse
+import json, requests, re
+from bs4 import BeautifulSoup
 
 command = ["카드"]
 
@@ -35,6 +34,8 @@ def reqjson(URL): return requests.get(URL).json()
 
 URL = "https://api.matsurihi.me/mltd/v1/cards?idolId=%d"
 
+URL_DB = "https://imas.gamedbs.jp/mlth/chara/show/%d"
+
 def isInteger(str):
     try:
         int(str)
@@ -62,12 +63,27 @@ def GetCardList(idolNum, rarity):
     
 def GetCardInfo(idolNum, rarity, cardId):
     res = reqjson(URL % idolNum)
-    response = ""
+    idolName = res[0]["name"]
+    cardName = ""
 
     for cardObj in res:
         if cardObj["rarity"] == rarity and cardObj["id"] == cardId:
-            return "https://imas.gamedbs.jp/mlth/chara/show/%d/%d" % (idolNum, cardObj["sortId"])
+            cardName = cardObj["name"]
     
+    res = requests.get(URL_DB % idolNum)
+    soup = BeautifulSoup(res.text, "html.parser")
+    soup_links = soup.findAll("a", title = "詳細を表示")
+
+    if cardName == idolName:
+        return soup_links[0].attrs["href"]
+
+    nameLen = len(idolName)
+    cardName = cardName[:-(nameLen + 1)]
+
+    for link in soup_links[1:]:
+        if link.contents[2] == cardName:
+            return link.attrs["href"]
+
     return "cardinfo.py: 카드를 찾을 수 없습니다."
             
 def Com(params, usr_i):
