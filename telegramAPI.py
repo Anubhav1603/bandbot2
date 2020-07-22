@@ -10,6 +10,7 @@ class Bot:
     def sendMessage(self, message):
         req = {'chat_id': self.chat_id, 'text': message}
         res = requests.get(URL % (self.token, "sendMessage"), data = req)
+        return res
 
     def getUpdates(self):
         res = requests.get(URL % (self.token, "getUpdates"))
