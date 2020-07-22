@@ -13,7 +13,7 @@ class bandChat():
                 self.msgWrite = self.driver.find_element_by_class_name(
                     "commentWrite")
             except:
-                if(time() > startsec+20):
+                if(time() > startsec + 10):
                     print("CHAT LOAD ERROR at " + strftime("%Y.%M.%D, %H:%M"))
                     exit()
                 continue
