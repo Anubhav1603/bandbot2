@@ -33,7 +33,7 @@ def Com(params, usr_i):
         p = Process(target=SaveEvaluation, args = (sick, q))
         p.start()
 
-        p.join(10)
+        p.join(5)
 
         if p.is_alive():
             p.terminate()
