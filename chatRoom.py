@@ -21,9 +21,10 @@ class bandChat():
         sleep(1)
         print("boot success")
 
-    def __init__(self, URL, isTest):
+    def __init__(self, URL, imagePath, isTest):
         self.chatURL = URL
         self.isTest = isTest
+        self.imagePath = imagePath
 
         chromeOptions = {"debuggerAddress": "127.0.0.1:9222"}
         capabilities = {"chromeOptions": chromeOptions}
@@ -77,6 +78,17 @@ class bandChat():
 
     def chatPrint(self, str_i):
         lines = str_i.split("\n")
+
+        if len(lines) == 2:
+            if "REQUEST_IMAGE_" in lines[1]:
+                path = lines[1][14:]
+                try:
+                    img_up = self.driver.find_element_by_css_selector("input[data-uiselector='imageUploadButton']")
+                    img_up.send_keys(self.imagePath + path)
+                except Exception as e:
+                    print(e)
+                return
+
         for chat in lines:
             self.msgWrite.send_keys(chat)
             self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
