@@ -6,7 +6,7 @@ CSV_CACHE = []
 
 def UpdateCSV():
     global CSV_CACHE
-    f = open("bandbot_miraji_dict.csv", encoding = "utf-8")
+    f = open("bandbot_miraji_dict.csv", "r", encoding = "utf-8")
     rdr = csv.reader(f)
     CSV_CACHE = list(rdr)
     f.close()
