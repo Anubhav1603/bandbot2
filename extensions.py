@@ -1,5 +1,4 @@
-import glob
-import importlib
+import importlib, glob
 
 class extnMods():
     def __init__(self):

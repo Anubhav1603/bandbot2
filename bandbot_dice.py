@@ -1,5 +1,4 @@
-import random
-import parse
+import random, parse
 
 command = ["주사위"]
 

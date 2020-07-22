@@ -6,25 +6,8 @@ from selenium.common.exceptions import NoSuchElementException
 from time import sleep, strftime, time
 
 class bandChat():
-    def get_msgWrite(self):
-        startsec = time()
-        while(True):
-            try:
-                self.msgWrite = self.driver.find_element_by_class_name(
-                    "commentWrite")
-            except:
-                if(time() > startsec + 10):
-                    print("CHAT LOAD ERROR at " + strftime("%Y.%M.%D, %H:%M"))
-                    exit()
-                continue
-            break
-        sleep(1)
-        print("boot success")
-
-    def __init__(self, URL, imagePath, isTest):
+    def __init__(self, URL):
         self.chatURL = URL
-        self.isTest = isTest
-        self.imagePath = imagePath
 
         chromeOptions = {"debuggerAddress": "127.0.0.1:9222"}
         capabilities = {"chromeOptions": chromeOptions}
@@ -66,28 +49,48 @@ class bandChat():
             print("Driver get completed.")
 
         self.get_msgWrite()
+    
+    def get_msgWrite(self):
+        startsec = time()
+        while(True):
+            try:
+                self.msgWrite = self.driver.find_element_by_class_name(
+                    "commentWrite")
+            except:
+                if(time() > startsec + 10):
+                    print("CHAT LOAD ERROR at " + strftime("%Y.%M.%D, %H:%M"))
+                    exit()
+                continue
+            break
+        sleep(1)
+        print("boot success")
 
     def loginRefresh(self):
         self.driver.refresh()
 
         self.get_msgWrite()
         self.driver.implicitly_wait(30)
-
-        if self.isTest:
-            self.chatPrint("새로고침 완료")
+    
+    def sendImage(self, path):
+            try:
+                img_up = self.driver.find_element_by_css_selector("input[data-uiselector='imageUploadButton']")
+                img_up.send_keys(path)
+            except Exception as e:
+                print(e)
+            return
 
     def chatPrint(self, str_i):
         lines = str_i.split("\n")
+        isImage = False
 
-        if len(lines) == 2:
-            if "REQUEST_IMAGE_" in lines[1]:
-                path = lines[1][14:]
-                try:
-                    img_up = self.driver.find_element_by_css_selector("input[data-uiselector='imageUploadButton']")
-                    img_up.send_keys(self.imagePath + path)
-                except Exception as e:
-                    print(e)
-                return
+        if len(lines) >= 2:
+            for line in lines:
+                if "REQUEST_IMAGE_" in line:
+                    path = line[14:]
+                    self.sendImage(path)
+                    isImage = True
+        
+        if isImage: return
 
         for chat in lines:
             self.msgWrite.send_keys(chat)

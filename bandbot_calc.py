@@ -1,9 +1,9 @@
-import pwnlib.util.safeeval, time, multiprocessing
+import pwnlib.util.safeeval
 from multiprocessing import Process, Queue
 
 command = ["연산"]
 
-def SaveEvaluation(sick, q): 
+def SafeEvaluation(sick, q): 
     class avg:
         def __add__(self, lst_input):
             try:
@@ -17,6 +17,7 @@ def SaveEvaluation(sick, q):
 
     except Exception as e:
         print(e)
+        q.put("잘못된 식")
         return
     else:
         q.put(result)
@@ -30,7 +31,7 @@ def Com(params, usr_i):
         print(sick)
 
         q = Queue()
-        p = Process(target=SaveEvaluation, args = (sick, q))
+        p = Process(target = SafeEvaluation, args = (sick, q))
         p.start()
 
         p.join(5)

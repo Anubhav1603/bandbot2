@@ -1,9 +1,9 @@
+import sys
+from time import sleep, strftime
+
+import param
 from extensions import extnMods, extnModules
 from chatRoom import bandChat
-import param
-import sys
-
-from time import sleep, strftime, time
 
 if not __name__ == "__main__":
     pass
@@ -16,7 +16,7 @@ elif len(sys.argv) == 1:
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(param.chatURL, param.IMAGE_PATH, False)
+    chatRoom = bandChat(param.chatURL, False)
     loadedModules = extnModules()
     loadedMods = extnMods()
 
@@ -70,7 +70,7 @@ elif sys.argv[1] == "--test":
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(param.testchatURL, param.IMAGE_PATH, True)
+    chatRoom = bandChat(param.testchatURL, True)
     loadedModules = extnModules()
     loadedMods = extnMods()
 

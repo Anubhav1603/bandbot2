@@ -1,4 +1,4 @@
-import requests, parse, time
+import requests, parse
 import teletoken, telegramAPI
 
 command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]

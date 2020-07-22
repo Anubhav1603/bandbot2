@@ -7,5 +7,3 @@ chatURL = "https://band.us/band/55800178/chat/C6HumD"
 GUIDE = NAME + " ver." + VERSION + "\n" \
         "https://github.com/kohs100/bandbot2\n" \
         "지원되는 명령어 : \n!봇 + "
-
-IMAGE_PATH = "images\\"
