@@ -1,4 +1,3 @@
-
 command=["계산"]
 
 def Com(params, usr_i):

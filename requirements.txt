@@ -1,0 +1,5 @@
+beautifulsoup4>=4.9.0
+parse>=1.15.0
+pwntools>=4.2.1
+requests>=2.23.0
+selenium>=3.141.0

@@ -1,9 +1,5 @@
-import json
-import requests
-import parse
-import time
-
-import teletoken
+import requests, parse, time
+import teletoken, telegramAPI
 
 command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]
 
@@ -94,59 +90,60 @@ class eventObj():
 			"가챠종료 : " + timeparser(self.rawdata["schedule"]["pageEndDate"])
 
 		else:
-			responseChat += "알려지지 않은 이벤트 진행중"
+			return "알려지지 않은 이벤트 진행중"
 
 		return responseChat
 		
 	def getPrecut(self, border = 0):
-		bot = None
-		msg = None
 		try:
-			bot = teletoken.getBot()
-			msg = bot.getUpdates()[-1].message
+			bot = telegramAPI.Bot(teletoken.TOKEN, teletoken.CHAT_ID)
+			res = bot.getUpdates()
 		except:
-			return "텔레그램 연결이 원활하지 않습니다."
+			return "아직 예측컷 정보가 없습니다."
 
 		if not self.typenum in dicType.keys():
-			return "알려지지 않은 이벤트 진행중.\n타입코드 " + self.typenum
+			return "알려지지 않은 이벤트 진행중.\n타입코드 " + str(self.typenum)
 		
 		if not self.typenum in cutEvents:
 			return "랭킹이벤트 진행중이 아닙니다."
 
-		time_now = int(time.strftime("%Y%m%d%H%M"))
-		boost_event = timeparser_int(self.rawdata["schedule"]["boostBeginDate"])
-		end_event = timeparser_int(self.rawdata["schedule"]["endDate"])
-		#boost_event = 201905140152
-		#end_event = 202005140152
+		msg = res["message"]["text"]
 
-		responseChat = "밀리이벤트 현재컷 정보\n"
+		parsed = parse.parse("{}* {} イベントpt {} 2500位 {} 5000位 {} 10000位 {} 25000位 {} 50000位 {} {}", msg)
+
+		if parsed == None:
+			return "아직 예측컷 정보가 없습니다."
+
+		if parsed[1] != self.pureName:
+			return "아직 예측컷 정보가 없습니다."
+		
+		parsed = list(parsed)
+
+		if len(parsed) != 9:
+			return "아직 예측컷 정보가 없습니다."
+
+		responseChat = "밀리이벤트 예측컷 정보\n"
 		responseChat += self.strName + "\n"
-		if time_now < end_event and time_now > boost_event:
-			res = parse.parse("예측컷\n{}\n{}\n{}\n{}\n{}\n{}", msg.text)
-			if res is None or res[0] != self.pureName:
-				return "아직 예측컷 정보가 없습니다."
-			else:
-				responseChat = ""
-				cut2500 = res[1].split()[1]
-				cut5000 = res[2].split()[1]
-				cut10000 = res[3].split()[1]
-				cut25000 = res[4].split()[1]
-				cut50000 = res[5].split()[1]
-				
-				if border == 2500 or border == 0:
-					responseChat += "2500위 : " + cut2500 + "\n"
-				if border == 5000 or border == 0:
-					responseChat += "5000위 : " + cut5000 + "\n"
-				if border == 10000 or border == 0:
-					responseChat += "10000위 : " + cut10000 + "\n"
-				if border == 25000 or border == 0:
-					responseChat += "25000위 : " + cut25000 + "\n"
-				if border == 50000 or border == 0:
-					responseChat += "50000위 : " + cut50000 + "\n"
-				responseChat += msg.date.strftime("%m.%d %H:%M")+" 기준"
-				return responseChat
-		else:
-			return "후반전이 시작하지 않았거나 이미 끝난 이벤트입니다."
+		
+		if border == 2500 or border == 0:
+			responseChat += "2500위 : " + parsed[3] + "\n"
+		if border == 5000 or border == 0:
+			responseChat += "5000위 : " + parsed[4] + "\n"
+		if border == 10000 or border == 0:
+			responseChat += "10000위 : " + parsed[5] + "\n"
+		if border == 25000 or border == 0:
+			responseChat += "25000위 : " + parsed[6] + "\n"
+		if border == 50000 or border == 0:
+			responseChat += "50000위 : " + parsed[7] + "\n"
+
+		parseDate = parse.parse("{}({})", parsed[2])
+
+		if parseDate == None:
+			return "아직 예측컷 정보가 없습니다."
+
+		responseChat += parseDate[1] + " 기준"
+
+		return responseChat
 	
 	def getCut(self, border = 0):
 		responseChat = "밀리이벤트 현재컷 정보\n"

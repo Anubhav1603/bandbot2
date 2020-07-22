@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
-import datetime
-
 from time import sleep, strftime, time
 
 class bandChat():
@@ -16,9 +14,7 @@ class bandChat():
                     "commentWrite")
             except:
                 if(time() > startsec+20):
-                    now = datetime.datetime.now()
-                    print("CHAT LOAD ERROR at " + now.isoformat())
-                    raise
+                    print("CHAT LOAD ERROR at " + strftime("%Y.%M.%D, %H:%M"))
                     exit()
                 continue
             break
