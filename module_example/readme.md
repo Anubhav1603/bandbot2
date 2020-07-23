@@ -30,7 +30,7 @@ command = ["이미지"]
 def Com(params, usr_i):
     return "REQUEST_IMAGE_filepath.jpg"
 ```
-bandbot_image.py 파일 참조
+[bandbot_image.py](https://github.com/kohs100/bandbot2/blob/master/module_example/bandbot_image.py, "ref") 파일 참조
 
 ## 모드
 채팅창에 올라오는 모든 채팅에 대해 호출되는 모듈
