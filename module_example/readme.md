@@ -11,15 +11,14 @@
 def Com(params, usr_i):
     return "응답 to " + usr_i
 ```
-*params
+* params
 인식한 채팅을 split(" ") 한 리스트
 
-*usr_i
+* usr_i
 호출한 유저 닉네임
 
 ## 모드
 채팅창에 올라오는 모든 채팅에 대해 호출되는 모듈
-개발자만 쓸거임
 
 # 모듈 테스트 방법
 모듈과 필요 파일들을 start.py와 같은 디렉토리에 놓고
