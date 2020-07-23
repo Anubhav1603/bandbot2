@@ -40,11 +40,12 @@ def Com(params, usr_i):
         if p.is_alive():
             p.terminate()
             p.join()
-
-        if q.empty():
             return "calc.py: 너무 오래걸립니다."
-        else:
-            return q.get()
+
+        try:
+            return q.get_nowait()
+        except:
+            return "calc.py: 너무 오래걸립니다."
     else:
         return "calc.py: 사용법\n"\
                "!봇 연산 [계산식]"
