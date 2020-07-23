@@ -3,25 +3,26 @@ from multiprocessing import Process, Queue
 
 command = ["연산"]
 
-def SafeEvaluation(sick, q): 
+
+def SafeEvaluation(sick, q):
+
+    # avg + [2,3,4] == 3
     class avg:
         def __add__(self, lst_input):
-            try:
-                return sum(lst_input) / len(lst_input)
-            except:
-                raise ValueError
+            return sum(lst_input) / len(lst_input)
 
     try:
-        result = pwnlib.util.safeeval.values(sick, {'avg' : avg()})
+        result = pwnlib.util.safeeval.values(sick, {'avg': avg()})
         result = str(result)
 
     except Exception as e:
         print(e)
-        q.put("잘못된 식")
+        q.put("calc.py: 잘못된 식")
         return
     else:
         q.put(result)
         return
+
 
 def Com(params, usr_i):
     paramNum = len(params)
@@ -31,7 +32,7 @@ def Com(params, usr_i):
         print(sick)
 
         q = Queue()
-        p = Process(target = SafeEvaluation, args = (sick, q))
+        p = Process(target=SafeEvaluation, args=(sick, q))
         p.start()
 
         p.join(5)

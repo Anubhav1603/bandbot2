@@ -1,12 +1,14 @@
-import csv, glob
+import csv
+import glob
 
 command = ["미라"]
 
 CSV_CACHE = []
 
+
 def UpdateCSV():
     global CSV_CACHE
-    f = open("bandbot_miraji_dict.csv", "r", encoding = "utf-8")
+    f = open("bandbot_miraji_dict.csv", "r", encoding="utf-8")
     rdr = csv.reader(f)
     CSV_CACHE = list(rdr)
     f.close()
@@ -15,16 +17,18 @@ def UpdateCSV():
             return False
     return True
 
+
 def CheckCSV():
     file_list = glob.glob("images/*.*")
 
     for i, elem in enumerate(file_list):
         file_list[i] = elem.replace("\\", "/")
-    
+
     for elem in CSV_CACHE:
         if not elem[1] in file_list:
             return False
     return True
+
 
 def Com(params, usr_i):
     global CSV_CACHE
@@ -35,7 +39,7 @@ def Com(params, usr_i):
             return "miraji.py: CSV 무결성검사 실패"
         if not CheckCSV():
             return "miraji.py: 이미지 무결성검사 실패"
-            
+
     if paramNum >= 3:
         if "갱신" in params:
             if not UpdateCSV():
@@ -43,12 +47,14 @@ def Com(params, usr_i):
             if not CheckCSV():
                 return "miraji.py: 이미지 무결성검사 실패"
             return "miraji.py: 미라지 갱신 성공"
-        
+
         req_miraji = params[2:]
         invalid_miraji = []
         response = []
 
         for miraji in req_miraji:
+            if len(miraji) == 0:
+                continue
             is_invalid = True
             for elem in CSV_CACHE:
                 if miraji == elem[0]:
@@ -57,11 +63,10 @@ def Com(params, usr_i):
                     break
             if is_invalid:
                 invalid_miraji.append(miraji)
-        
+
         if len(invalid_miraji) != 0:
             return "miraji.py: 미라지가 없습니다: " + " ".join(invalid_miraji)
-        
+
         return "\n".join(response)
     else:
-        return "miraji.py: 사용법\n"\
-               "!봇 미라 [미라지명]"
+        return "miraji.py: 사용법\n!봇 미라 [미라지명]..."

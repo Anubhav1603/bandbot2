@@ -5,6 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from time import sleep, strftime, time
 
+
 class bandChat():
     def __init__(self, URL):
         self.chatURL = URL
@@ -49,7 +50,7 @@ class bandChat():
             print("Driver get completed.")
 
         self.get_msgWrite()
-    
+
     def get_msgWrite(self):
         startsec = time()
         while(True):
@@ -70,14 +71,15 @@ class bandChat():
 
         self.get_msgWrite()
         self.driver.implicitly_wait(30)
-    
+
     def sendImage(self, path):
-            try:
-                img_up = self.driver.find_element_by_css_selector("input[data-uiselector='imageUploadButton']")
-                img_up.send_keys(path)
-            except Exception as e:
-                print(e)
-            return
+        try:
+            img_up = self.driver.find_element_by_css_selector(
+                "input[data-uiselector='imageUploadButton']")
+            img_up.send_keys(path)
+        except Exception as e:
+            print(e)
+        return
 
     def chatPrint(self, str_i):
         lines = str_i.split("\n")
@@ -89,8 +91,9 @@ class bandChat():
                     path = line[14:]
                     self.sendImage(path)
                     isImage = True
-        
-        if isImage: return
+
+        if isImage:
+            return
 
         for chat in lines:
             self.msgWrite.send_keys(chat)

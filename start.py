@@ -16,7 +16,7 @@ elif len(sys.argv) == 1:
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(param.chatURL, False)
+    chatRoom = bandChat(param.chatURL)
     loadedModules = extnModules()
     loadedMods = extnMods()
 
@@ -70,7 +70,7 @@ elif sys.argv[1] == "--test":
     if input("Continue? (Y)") != "Y":
         exit()
 
-    chatRoom = bandChat(param.testchatURL, True)
+    chatRoom = bandChat(param.testchatURL)
     loadedModules = extnModules()
     loadedMods = extnMods()
 
