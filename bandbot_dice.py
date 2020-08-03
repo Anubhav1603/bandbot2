@@ -1,42 +1,31 @@
-import random, parse
+import random
 
 command = ["주사위"]
 
 def Com(params, usr_i):
 	paramnum = len(params)
-	if paramnum == 3:
+	if paramnum == 4:
 		try:
-			res = parse.parse("{}D{}", params[2])
-			if int(res[0]) >= 11 or int(res[1]) > 99999999:
-				raise ValueError
-			return Roll(int(res[1]), int(res[0]))
-		except ValueError:
-			return Err(True)
+			dicenum = int(params[2])
+			dicesize = int(params[3])
 		except:
-			return Err(False)
+			response = "dice.py: 잘못된 주사위 명령입니다.\n"
+			response += "사용법 : !봇 주사위 [주사위갯수] [최대값]"
+			return response
+		
+		if dicenum >= 1 and dicenum <= 10:
+			if dicesize >= 1 and dicenum <= 99999999:
+				response = []
+				for i in range(dicenum):
+					diceval = random.randint(1, dicesize)
+					response.append("[주사위%d] %d" % (i + 1, diceval))
+				return "\n".join(response)
+			else:
+				return "dice.py: 잘못된 주사위 크기(최대 8자리)"
+		else:
+			return "dice.py: 잘못된 주사위 갯수(최대 10개)"
+
 	else:
-		return Err(False)
-
-def Roll(dicemax, dicenum):
-	responseChat = ""
-
-	sum = 0
-	for i in range(dicenum):
-		dice = random.randrange(1,dicemax + 1)
-		sum += dice
-		responseChat += "[주사위]" + str(i + 1) + " 값: " + str(dice) + "\n"
-	responseChat += "[주사위]합계: " + str(sum)
-	
-	return responseChat
-
-def Err(isToomany):
-	responseChat = "dice.py: "
-	if isToomany:
-		responseChat += "너무 많은 주사위입니다."
-	else:
-		responseChat += """\
-		잘못된 주사위 명령입니다.
-		사용법 : !봇 주사위 (주사위갯수)D(최대값)
-		"""
-
-	return responseChat
+		response = "dice.py: 잘못된 주사위 명령입니다.\n"
+		response += "사용법 : !봇 주사위 [주사위갯수] [최대값]"
+		return response
