@@ -64,7 +64,7 @@ if __name__ == "__main__":
             sleep(0.5)
 
     
-    elif sys.argv[1] == "--simple-test":
+    elif sys.argv[1] == "--test":
         print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
         print("this mode tests 3rd-party extensions only")
         print("test username is \"QwErTyTeSt\".")

@@ -5,5 +5,4 @@ Python bandbot
 ```
 python start.py
 python start.py --test
-python start.py --simple-test
 ```

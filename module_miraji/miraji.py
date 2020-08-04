@@ -8,7 +8,7 @@ CSV_CACHE = []
 
 def UpdateCSV():
     global CSV_CACHE
-    f = open("bandbot_miraji_dict.csv", "r", encoding="utf-8")
+    f = open("module_miraji/miraji_dict.csv", "r", encoding = "utf-8")
     rdr = csv.reader(f)
     CSV_CACHE = list(rdr)
     f.close()
@@ -19,10 +19,11 @@ def UpdateCSV():
 
 
 def CheckCSV():
-    file_list = glob.glob("images/*.*")
-
+    file_list = glob.glob("module_miraji/images/*.*")
+    
     for i, elem in enumerate(file_list):
         file_list[i] = elem.replace("\\", "/")
+        file_list[i] = file_list[i][14:]
 
     for elem in CSV_CACHE:
         if not elem[1] in file_list:
@@ -59,7 +60,7 @@ def Com(params, usr_i):
             for elem in CSV_CACHE:
                 if miraji == elem[0]:
                     is_invalid = False
-                    response.append("REQUEST_IMAGE_" + elem[1])
+                    response.append("REQUEST_IMAGE_module_miraji/" + elem[1])
                     break
             if is_invalid:
                 invalid_miraji.append(miraji)

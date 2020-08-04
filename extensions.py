@@ -5,9 +5,9 @@ class extnMods():
     def __init__(self):
         self.mods = []
 
-        modules = glob.glob("bandbotMod_*.py")
+        modules = glob.glob("mod_*")
         for module in modules:
-            module_name = module[:-3]
+            module_name = module + "." + module[4:]
             mod = importlib.import_module(module_name)
             self.mods.append(mod.recvChat)
 
@@ -24,20 +24,20 @@ class extnModules():
     def __init__(self, timeout):
         self.timeout = timeout
 
-        self.mods = []
+        self.coms = []
         self.commands = []
 
-        modules = glob.glob("bandbot_*.py")
+        modules = glob.glob("module_*")
         for module in modules:
-            module_name = module[:-3]
+            module_name = module + "." + module[7:]
             mod = importlib.import_module(module_name)
-            self.mods.append(mod)
+            self.coms.append(mod.Com)
             self.commands.append(mod.command)
 
     def findModule(self, command_i, params, usr_i):
         for i, command in enumerate(self.commands):
             if command_i in command:
-                return self.executeModule(self.mods[i].Com, params, usr_i)
+                return self.executeModule(self.coms[i], params, usr_i)
 
         return extnModules.wrongCommand
     
