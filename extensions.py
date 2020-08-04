@@ -1,4 +1,5 @@
 import importlib, glob
+from timeoutAPI import TimeoutDeco
 
 class extnMods():
     def __init__(self):
@@ -16,12 +17,13 @@ class extnMods():
             retVal.append(mod(str_i, usr_i))
         return retVal
 
-
 class extnModules():
     emptyCall = 1
     wrongCommand = 2
 
-    def __init__(self):
+    def __init__(self, timeout):
+        self.timeout = timeout
+
         self.mods = []
         self.commands = []
 
@@ -32,12 +34,26 @@ class extnModules():
             self.mods.append(mod)
             self.commands.append(mod.command)
 
-    def find_and_execute(self, command_i, params, usr_i):
+    def findModule(self, command_i, params, usr_i):
         for i, command in enumerate(self.commands):
             if command_i in command:
-                return self.mods[i].Com(params, usr_i)
+                return self.executeModule(self.mods[i].Com, params, usr_i)
 
         return extnModules.wrongCommand
+    
+    def executeModule(self, foundCom, params, usr_i):
+        decorated = TimeoutDeco(self.timeout, "TimeoutError", foundCom)
+        try:
+            ret = decorated(params, usr_i)
+        except:
+            return "ModuleError"
+        else:
+            if type(ret) != str:
+                return "TypeError"
+            elif len(ret) == 0:
+                return "NullReturnError"
+            else:
+                return ret
 
     def strfModules(self):
         responseChat = ""
@@ -50,4 +66,4 @@ class extnModules():
         if len(params) == 1:
             return extnModules.emptyCall
         else:
-            return self.find_and_execute(params[1], params, usr_i)
+            return self.findModule(params[1], params, usr_i)

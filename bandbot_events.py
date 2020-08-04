@@ -45,8 +45,8 @@ def timeparser_int(dateinfo):
 	minute = dateinfo[14:16]
 	return int(year + month + day + hour + minute)
 
-dicType = {1:"TST", 2:"밀리코레", 3:"PSTheater", 4:"PSTour", 5:"주년이벤트", 6:"WORKING☆", 7:"만우절 이벤트", 9:"밀리코레", 10:"PSTwinstage"}
-cutEvents = [3, 4, 10]
+dicType = {1:"TST", 2:"밀리코레", 3:"PSTheater", 4:"PSTour", 5:"주년이벤트", 6:"WORKING☆", 7:"만우절 이벤트", 9:"밀리코레", 10:"PSTwinstage", 11:"PSTune"}
+cutEvents = [3, 4, 10, 11]
 
 class eventObj():
 	def __init__(self):
@@ -63,9 +63,11 @@ class eventObj():
 		#7:aprilfool
 		#9:millicore(boxtype)
 		#10:twin stage
+		#11:theater_tune
 
 		rawname = self.rawdata["name"]
-		self.pureName = rawname[rawname.find("～")+1:-1]
+		parsedname = parse.parse("{}～{}～", rawname)
+		self.pureName = parsedname[1]
 		self.strName = dicType[self.typenum] + " " + self.pureName
 	
 	def getInfo(self):		

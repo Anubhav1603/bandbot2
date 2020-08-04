@@ -1,11 +1,9 @@
 import pwnlib.util.safeeval
-from multiprocessing import Process, Queue
+from timeoutAPI import TimeoutDeco
 
 command = ["연산"]
 
-
-def SafeEvaluation(sick, q):
-
+def SafeEvaluation(sick):
     # avg + [2,3,4] == 3
     class avg:
         def __add__(self, lst_input):
@@ -17,11 +15,9 @@ def SafeEvaluation(sick, q):
 
     except Exception as e:
         print(e)
-        q.put("calc.py: 잘못된 식")
-        return
+        return "calc.py: 잘못된 식"
     else:
-        q.put(result)
-        return
+        return result
 
 
 def Com(params, usr_i):
@@ -31,21 +27,9 @@ def Com(params, usr_i):
         sick = " ".join(params[2:])
         print(sick)
 
-        q = Queue()
-        p = Process(target=SafeEvaluation, args=(sick, q))
-        p.start()
+        decorated = TimeoutDeco(5, "calc.py: 너무 오래걸립니다.", SafeEvaluation)
 
-        p.join(5)
-
-        if p.is_alive():
-            p.terminate()
-            p.join()
-            return "calc.py: 너무 오래걸립니다."
-
-        try:
-            return q.get_nowait()
-        except:
-            return "calc.py: 너무 오래걸립니다."
+        return decorated(sick)
     else:
         return "calc.py: 사용법\n"\
                "!봇 연산 [계산식]"
