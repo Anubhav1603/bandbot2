@@ -30,7 +30,7 @@ command = ["이미지"]
 def Com(params, usr_i):
     return "REQUEST_IMAGE_filepath.jpg"
 ```
-[example.py](https://github.com/kohs100/bandbot2/blob/master/module_example/example.py "ref") 파일 참조
+[example.py](https://github.com/kohs100/bandbot2/blob/master/_module_example/example.py "ref") 파일 참조
 
 ### API
 #### telegramAPI
@@ -73,3 +73,4 @@ print(timeout_func(29910))     => TIMEOUT
 ```
 python start.py --simple-test
 ```
+_module_example을 사용해보고 싶다면 맨 앞의 _를 삭제할것

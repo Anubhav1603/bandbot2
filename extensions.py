@@ -34,14 +34,14 @@ class extnModules():
             self.coms.append(mod.Com)
             self.commands.append(mod.command)
 
-    def findModule(self, command_i, params, usr_i):
+    def _findModule(self, command_i, params, usr_i):
         for i, command in enumerate(self.commands):
             if command_i in command:
-                return self.executeModule(self.coms[i], params, usr_i)
+                return self._executeModule(self.coms[i], params, usr_i)
 
         return extnModules.wrongCommand
     
-    def executeModule(self, foundCom, params, usr_i):
+    def _executeModule(self, foundCom, params, usr_i):
         decorated = TimeoutDeco(self.timeout, "TimeoutError", foundCom)
         try:
             ret = decorated(params, usr_i)
@@ -56,14 +56,14 @@ class extnModules():
                 return ret
 
     def strfModules(self):
-        responseChat = ""
+        allCommand = []
         for command in self.commands:
             for com in command:
-                responseChat += com + ", "
-        return responseChat[:-2]
+                allCommand.append(com)
+        return ", ".join(allCommand)
 
     def commandSel(self, params, usr_i):
         if len(params) == 1:
             return extnModules.emptyCall
         else:
-            return self.findModule(params[1], params, usr_i)
+            return self._findModule(params[1], params, usr_i)
