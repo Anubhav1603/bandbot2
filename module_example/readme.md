@@ -32,6 +32,39 @@ def Com(params, usr_i):
 ```
 [bandbot_image.py](https://github.com/kohs100/bandbot2/blob/master/module_example/bandbot_image.py "ref") 파일 참조
 
+### API
+#### telegramAPI
+```
+from telegramAPI import Bot
+
+token = "봇 토큰"
+chat_id = "채팅 id"
+
+bot = Bot(token, chat_id)
+
+bot.sendMessage("Hello, World!")
+
+try:
+    newChat = bot.getUpdates()
+    print(newChat)
+except:
+    print("최근 채팅이 없습니다.")
+
+```
+
+#### timeoutAPI
+```
+from timeoutAPI
+
+def loop(num):
+    return num**num**num
+
+timeout_func = TimeoutDeco(5, "TIMEOUT", loop)
+
+print(timeout_func(2))      => 16
+print(timeout_func(10))     => TIMEOUT
+```
+
 ## 모드
 채팅창에 올라오는 모든 채팅에 대해 호출되는 모듈
 
