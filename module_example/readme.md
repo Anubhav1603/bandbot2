@@ -54,7 +54,7 @@ except:
 
 #### timeoutAPI
 ```
-from timeoutAPI
+from timeoutAPI import TimeoutDeco
 
 def loop(num):
     return num**num**num
