@@ -30,7 +30,8 @@ if __name__ == "__main__":
         recent_chat = len(i_chat)
 
         while(True):
-            if (int(strftime("%M")) < 30 and timeFlag) or (int(strftime("%M")) >= 30 and not timeFlag):
+            minNow = int(strftime("%M"))
+            if (minNow < 30 and timeFlag) or (minNow >= 30 and not timeFlag):
                 timeFlag = not timeFlag
                 chatRoom.loginRefresh()
 
