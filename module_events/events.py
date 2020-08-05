@@ -3,8 +3,6 @@ import parse
 from timeAPI import TimeISO, StrfTimeISO
 from twitter_scraper import get_tweets
 
-command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]
-
 PRECUTF = "{}\nイベントpt ボーダー 予想 ({})\n\n2500位 {}\n5000位 {}\n10000位 {}\n25000位 {}\n50000位 {}\n{}"
 URL = 'https://api.matsurihi.me/mltd/v1/events/'
 
@@ -12,6 +10,8 @@ dicType = {1: "TST", 2: "밀리코레", 3: "PSTheater", 4: "PSTour",
            5: "주년이벤트", 6: "WORKING☆", 7: "만우절 이벤트",
 		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune",}
 cutEvents = [3, 4, 10, 11]
+
+command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]
 
 def Com(params, usr_i):
     paramnum = len(params)
@@ -43,11 +43,18 @@ def reqjson(url):
 
 class eventObj():
     def __init__(self):
-        json_info = reqjson(URL)
-        self.rawdata = json_info[-1]  # get last event
+        timeNow = TimeISO()
+        reqBody = {"at":timeNow}
+        res = requests.get(URL, data = reqBody)
+        eventNow = res.json()
+
+        if len(eventNow) == 1:
+            self.rawdata = eventNow[0]
+        else:
+            self.onEvent = False
+            return
 
         self.typenum = self.rawdata["type"]  # get type
-
         rawname = self.rawdata["name"]
         parsedname = parse.parse("{}～{}～", rawname)
         self.pureName = parsedname[1]

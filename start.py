@@ -14,15 +14,16 @@ def removeList(asdf, function):
     for i in toRemove:
         asdf.pop(i)
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("***BANDBOT STARTED IN SERVICE MODE***")
         if input("Continue? (Y)") != "Y":
             exit()
 
-        chatRoom = bandChat(param.chatURL)
         loadedModules = extnModules(6)
         loadedMods = extnMods()
+        chatRoom = bandChat(param.chatURL)
 
         timeFlag = int(strftime("%M")) < 30
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     
     elif sys.argv[1] == "--test":
         print("***BANDBOT STARTED IN SIMPLE TEST MODE***")
-        print("this mode tests 3rd-party extensions only")
+        print("this mode tests modules only")
         print("test username is \"QwErTyTeSt\".")
         print("type \"!exit\" to exit\n")
 
