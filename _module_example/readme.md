@@ -65,6 +65,25 @@ print(timeout_func(2))          => 16
 print(timeout_func(29910))      => TIMEOUT
 ```
 
+#### timeAPI
+```
+from timeAPI import *
+
+now = TimeISO()
+later = "2020-08-07T03:00:00+09:00"
+
+print(now)
+# 2020-08-07T00:42:42+09:00
+
+print(StrfTimeISO(now))
+# 8월 7일 00:42
+
+print(DeltaTimeISO(start, end))
+# 2.2883333333333336
+# Unit: Hour
+
+```
+
 ## 모드
 채팅창에 올라오는 모든 채팅에 대해 호출되는 모듈
 
