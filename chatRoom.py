@@ -1,7 +1,10 @@
-from selenium import webdriver
 from bs4 import BeautifulSoup
+
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+
+from selenium.webdriver import Chrome
+from selenium.webdriver import ChromeOptions
 
 from time import sleep, strftime, time
 
@@ -10,10 +13,13 @@ class bandChat():
     def __init__(self, URL):
         self.chatURL = URL
 
-        chromeOptions = {"debuggerAddress": "127.0.0.1:9222"}
-        capabilities = {"chromeOptions": chromeOptions}
+        options = ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument('--disable-extensions')
+        options.add_argument("--no-sandbox")
+
         print("Driver initializing...")
-        self.driver = webdriver.Remote("http://127.0.0.1:33333", capabilities)
+        self.driver = Chrome(options=options)
         print("Driver initialized.")
 
         self.driver.get(self.chatURL)
