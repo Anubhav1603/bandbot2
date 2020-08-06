@@ -1,0 +1,6 @@
+/opt/google/chrome/google-chrome --headless --disable-gpu --no-sandbox --remote-debugging-port=9222&
+../chromedriver --port=33333&
+
+LC_ALL = C.UTF-8
+
+https://chromedriver.storage.googleapis.com/84.0.4147.30/chromedriver_linux64.zip
