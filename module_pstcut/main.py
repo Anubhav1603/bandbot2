@@ -57,7 +57,7 @@ def PlotBorder(PSType):
     legendList = []
 
     # plt.rc('font', family = "MS Gothic")
-    plt.rc('font', family = "Noto CJK")
+    plt.rc('font', family = "Noto Sans CJK JP")
     plt.figure(figsize=(12,8))
 
     max_x = 0
