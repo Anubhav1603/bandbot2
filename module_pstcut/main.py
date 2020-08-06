@@ -56,7 +56,8 @@ def PlotBorder(PSType):
 
     legendList = []
 
-    plt.rc('font', family = "MS Gothic")
+    # plt.rc('font', family = "MS Gothic")
+    plt.rc('font', familt = "fonts-noto-cjk")
     plt.figure(figsize=(12,8))
 
     max_x = 0
@@ -84,4 +85,4 @@ def PlotBorder(PSType):
 
     maxTick = int(max_x) // 24 + 1
     plt.xticks([24 * x for x in range(maxTick)])
-    plt.savefig("border_%s.png" % PSType, dpi = 150, bbox_inches='tight')
+    plt.savefig("module_pstcut/border_%s.png" % PSType, dpi = 150, bbox_inches='tight')

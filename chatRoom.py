@@ -7,6 +7,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
 
 from time import sleep, strftime, time
+import os
 
 
 class bandChat():
@@ -78,11 +79,12 @@ class bandChat():
         self.get_msgWrite()
         self.driver.implicitly_wait(30)
 
-    def sendImage(self, path):
+    def sendImage(self, rPath):
         try:
+            absPath = os.path.abspath(rPath)
             img_up = self.driver.find_element_by_css_selector(
                 "input[data-uiselector='imageUploadButton']")
-            img_up.send_keys(path)
+            img_up.send_keys(absPath)
         except Exception as e:
             print(e)
         return
