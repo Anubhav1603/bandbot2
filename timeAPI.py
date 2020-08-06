@@ -19,4 +19,4 @@ def DeltaTimeISO(start, end):
     start = datetime.datetime.fromisoformat(start)
     end = datetime.datetime.fromisoformat(end)
     delta = end - start
-    return delta.total_seconds() // 3600
+    return delta.total_seconds() / 3600

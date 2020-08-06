@@ -4,3 +4,4 @@ pwntools>=4.2.1
 requests>=2.23.0
 selenium>=3.141.0
 twitter-scraper>=0.4.4
+matplotlib>=3.2.2

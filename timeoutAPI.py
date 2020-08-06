@@ -1,8 +1,17 @@
 from multiprocessing import Process, Queue
 
+class FuncE(Exception):
+    pass
+
+class TimeoutError(Exception):
+    pass
+
 def IFunction(OFunction, q, args, kwargs):
-    ret = OFunction(*args, **kwargs)
-    q.put(ret)
+    try:
+        ret = OFunction(*args, **kwargs)
+        q.put(ret)
+    except:
+        q.put(None)
 
 def TimeoutDeco(timeout, timeoutRet, OFunction):
     def WrapperFunction(*args, **kwargs):

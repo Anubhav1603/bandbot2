@@ -46,9 +46,11 @@ class extnModules():
         try:
             ret = decorated(params, usr_i)
         except:
-            return "ModuleError"
+            return "TimeoutException"
         else:
-            if type(ret) != str:
+            if ret == None:
+                return "ModuleException"
+            elif type(ret) != str:
                 return "TypeError"
             elif len(ret) == 0:
                 return "NullReturnError"

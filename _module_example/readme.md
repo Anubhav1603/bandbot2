@@ -61,8 +61,8 @@ def loop(num):
 
 timeout_func = TimeoutDeco(5, "TIMEOUT", loop)
 
-print(timeout_func(2))      => 16
-print(timeout_func(29910))     => TIMEOUT
+print(timeout_func(2))          => 16
+print(timeout_func(29910))      => TIMEOUT
 ```
 
 ## 모드
