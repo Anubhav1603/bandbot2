@@ -12,10 +12,8 @@ class extnMods():
             self.mods.append(mod.recvChat)
 
     def sendChat(self, str_i, usr_i):
-        retVal = []
         for mod in self.mods:
-            retVal.append(mod(str_i, usr_i))
-        return retVal
+            mod(str_i, usr_i)
 
 class extnModules():
     emptyCall = 1

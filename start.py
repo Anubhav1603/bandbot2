@@ -30,7 +30,7 @@ if __name__ == "__main__":
         len_chat, i_chat, i_user = chatRoom.HTMLget()
         recent_chat = len(i_chat)
 
-        while(True):
+        while True:
             minNow = int(strftime("%M"))
             if (minNow < 30 and timeFlag) or (minNow >= 30 and not timeFlag):
                 timeFlag = not timeFlag
@@ -43,24 +43,37 @@ if __name__ == "__main__":
                 usr_i = i_user[i].text
                 print(usr_i + ":" + str_i)
 
-                isCommand = loadedMods.sendChat(usr_i, str_i)
+                loadedMods.sendChat(usr_i, str_i)
 
                 if str_i[:2] == "!봇":
                     params = str_i.split(" ")
-                    removeList(params, lambda x: len(x) == 0)
+                    removeList(params, lambda x: x == "")
+                    
                     if params[0] == "!봇":
                         prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-                        responseChat = loadedModules.commandSel(params, usr_i)
 
-                        if True in isCommand:
-                            chatRoom.chatPrint(prefixChat + "명령실행 완료")
-                        elif responseChat == extnModules.wrongCommand:
-                            chatRoom.chatPrint(prefixChat + "잘못된 명령입니다.")
-                        elif responseChat == extnModules.emptyCall:
-                            chatRoom.chatPrint(
-                                prefixChat + param.GUIDE + loadedModules.strfModules())
+                        paramnum = len(params)
+
+                        if paramnum == 1:
+                            resChat = prefixChat + param.GUIDE + loadedModules.strfModules()
                         else:
-                            chatRoom.chatPrint(prefixChat + responseChat)
+                            if params[1][0] == "_":
+                                if params[1] == "_reload":
+                                    try:
+                                        loadedModules = extnModules(6)
+                                        loadedMods = extnMods()
+                                        resChat = "모듈 갱신완료"
+                                    except:
+                                        resChat = "모듈 갱신실패"
+                            else:
+                                resChat = loadedModules.commandSel(params, usr_i)
+
+                                if resChat == extnModules.wrongCommand:
+                                    resChat = prefixChat + "잘못된 명령입니다."
+                                else:
+                                    resChat = prefixChat + resChat
+
+                        chatRoom.chatPrint(resChat)
             
             recent_chat = len_chat
             sleep(0.5)
@@ -80,24 +93,37 @@ if __name__ == "__main__":
             usr_i = "QwErTyTeSt"
             if str_i == "!exit":
                 break
-            
-            isCommand = loadedMods.sendChat(usr_i, str_i)
 
             print("chatResponse start--------------------\n")
+            loadedMods.sendChat(usr_i, str_i)
             if str_i[:2] == "!봇":
                 params = str_i.split(" ")
-                removeList(params, lambda x: len(x) == 0)
+                removeList(params, lambda x: x == "")
+                
                 if params[0] == "!봇":
                     prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-                    responseChat = loadedModules.commandSel(params, usr_i)
 
-                    if True in isCommand:
-                        print(prefixChat + "명령실행 완료")
-                    elif responseChat == extnModules.wrongCommand:
-                        print(prefixChat + "잘못된 명령입니다.")
-                    elif responseChat == extnModules.emptyCall:
-                        print(prefixChat + param.GUIDE + loadedModules.strfModules())
+                    paramnum = len(params)
+
+                    if paramnum == 1:
+                        resChat = prefixChat + param.GUIDE + loadedModules.strfModules()
                     else:
-                        print(prefixChat + responseChat)
+                        if params[1][0] == "_":
+                            if params[1] == "_reload":
+                                try:
+                                    loadedModules = extnModules(6)
+                                    loadedMods = extnMods()
+                                    resChat = "모듈 갱신완료"
+                                except:
+                                    resChat = "모듈 갱신실패"
+                        else:
+                            resChat = loadedModules.commandSel(params, usr_i)
+
+                            if resChat == extnModules.wrongCommand:
+                                resChat = prefixChat + "잘못된 명령입니다."
+                            else:
+                                resChat = prefixChat + resChat
+
+                    print(resChat)
 
             print("\nchatResponse end:--------------------\n")
