@@ -9,6 +9,7 @@ class extnMods():
         for module in modules:
             module_name = module + "." + module[4:]
             mod = importlib.import_module(module_name)
+            importlib.reload(module_name)
             self.mods.append(mod.recvChat)
 
     def sendChat(self, str_i, usr_i):
@@ -29,6 +30,7 @@ class extnModules():
         for module in modules:
             module_name = module + "." + module[7:]
             mod = importlib.import_module(module_name)
+            importlib.reload(module_name)
             self.coms.append(mod.Com)
             self.commands.append(mod.command)
 
