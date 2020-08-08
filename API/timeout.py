@@ -1,12 +1,6 @@
 from multiprocessing import Process, Queue
 
-class FuncE(Exception):
-    pass
-
-class TimeoutError(Exception):
-    pass
-
-def IFunction(OFunction, q, args, kwargs):
+def _IFunction(OFunction, q, args, kwargs):
     try:
         ret = OFunction(*args, **kwargs)
         q.put(ret)
@@ -16,7 +10,7 @@ def IFunction(OFunction, q, args, kwargs):
 def TimeoutDeco(timeout, timeoutRet, OFunction):
     def WrapperFunction(*args, **kwargs):
         q = Queue()
-        p = Process(target = IFunction, args = (OFunction, q, args, kwargs))
+        p = Process(target = _IFunction, args = (OFunction, q, args, kwargs))
         p.start()
 
         p.join(timeout)

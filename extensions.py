@@ -1,4 +1,7 @@
-import importlib, glob
+import importlib
+import glob
+from multiprocessing import Process
+
 from API.timeout import TimeoutDeco
 
 class extnMods():
@@ -13,8 +16,13 @@ class extnMods():
             self.mods.append(mod.recvChat)
 
     def sendChat(self, str_i, usr_i):
+        plist = []
         for mod in self.mods:
-            mod(str_i, usr_i)
+            p = Process(target = mod, args = (usr_i, str_i))
+            p.start()
+        
+        for p in plist:
+            p.join()
 
 class extnModules():
     emptyCall = 1
