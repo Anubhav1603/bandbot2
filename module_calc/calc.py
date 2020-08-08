@@ -4,13 +4,30 @@ from API.timeout import TimeoutDeco
 command = ["연산"]
 
 def SafeEvaluation(sick):
-    # avg + [2,3,4] == 3
-    class avg:
+    # AVG + [2,3,4] == 3
+    class AVG:
         def __add__(self, lst_input):
             return sum(lst_input) / len(lst_input)
+    
+    class LTS:
+        def __add__(self, lv):
+            if lv >= 700:
+                return 240
+            elif lv >= 586:
+                return 221 + (lv-586) / 6
+            elif lv >= 426:
+                return 189 + (lv-426) / 5
+            elif lv >= 150:
+                return 120 + (lv-150) / 4
+            elif lv >= 60:
+                return 60 + (lv-60) / 3
+            elif lv >= 2:
+                return 61 + (lv-2) / 2
+
+    cmdDict = {"AVG": AVG(), "LTS":LTS()}
 
     try:
-        result = pwnlib.util.safeeval.values(sick, {'avg': avg()})
+        result = pwnlib.util.safeeval.values(sick, cmdDict)
         result = str(result)
 
     except Exception as e:
