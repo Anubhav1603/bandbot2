@@ -1,5 +1,5 @@
 import pwnlib.util.safeeval
-from timeoutAPI import TimeoutDeco
+from API.timeout import TimeoutDeco
 
 command = ["연산"]
 

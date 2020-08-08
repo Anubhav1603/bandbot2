@@ -1,6 +1,6 @@
 import requests
 import parse
-from timeAPI import TimeISO, StrfTimeISO
+from API.time import TimeISO, StrfTimeISO
 from twitter_scraper import get_tweets
 
 PRECUTF = "{}\nイベントpt ボーダー 予想 ({})\n\n2500位 {}\n5000位 {}\n10000位 {}\n25000位 {}\n50000位 {}\n{}"

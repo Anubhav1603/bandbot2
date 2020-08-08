@@ -1,6 +1,6 @@
 import requests
 import glob
-import timeAPI
+import API.time
 import csv
 import datetime
 import parse
@@ -24,7 +24,7 @@ def UpdateCSV(PSType, id):
 
     timeInit = data[0]["summaryTime"]
     for i, row in enumerate(data):
-        data[i]["summaryTime"] = timeAPI.DeltaTimeISO(timeInit, row["summaryTime"])
+        data[i]["summaryTime"] = API.time.DeltaTimeISO(timeInit, row["summaryTime"])
 
     with open(CPATH % (PSType, id), mode = "w", newline='') as f:
         fc = csv.writer(f)
@@ -58,7 +58,7 @@ def PlotBorder(PSType):
 
     # plt.rc('font', family = "MS Gothic")
     plt.rc('font', family = "Noto Sans CJK JP")
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(12, 8))
 
     max_x = 0
 

@@ -1,4 +1,5 @@
-import telegramAPI, teletoken
+import API.telegram
+import teletoken
 
 class SimpleQueue():
     def __init__(self, maxsize):
@@ -16,7 +17,7 @@ CHATSAVE = SimpleQueue(10)
 
 def recvChat(usr_i, str_i):
     if (usr_i == "ㅎㅅㅋ" or usr_i == "QwErTyTeSt") and str_i == "!봇 복구":
-        bot = telegramAPI.Bot(teletoken.TOKEN, teletoken.CHAT_ID)
+        bot = API.telegram.Bot(teletoken.TOKEN, teletoken.CHAT_ID)
         bot.sendMessage("최근 채팅기록 10개를 복원합니다.")
         for chat in CHATSAVE.data:
             bot.sendMessage(chat[0] + ": " + chat[1])
