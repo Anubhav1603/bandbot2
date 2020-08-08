@@ -1,5 +1,5 @@
 # Bandbot
-Python bandbot
+Python bandbot2
 
 # Dependencies
 ## 파이썬 버전
