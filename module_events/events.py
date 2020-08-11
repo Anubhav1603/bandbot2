@@ -6,9 +6,12 @@ from twitter_scraper import get_tweets
 PRECUTF = "{}\nイベントpt ボーダー 予想 ({})\n\n2500位 {}\n5000位 {}\n10000位 {}\n25000位 {}\n50000位 {}\n{}"
 URL = 'https://api.matsurihi.me/mltd/v1/events/'
 
+BORDER_SUFFIX = "%d/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000"
+
 dicType = {1: "TST", 2: "밀리코레", 3: "PSTheater", 4: "PSTour",
            5: "주년이벤트", 6: "WORKING☆", 7: "만우절 이벤트",
 		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune",}
+
 cutEvents = [3, 4, 10, 11]
 
 command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]
@@ -36,10 +39,6 @@ def Com(params, usr_i):
 
     except:
         return "events.py: matsurihi.me에서 응답하지 않습니다."
-
-
-def reqjson(url):
-    return requests.get(url).json()
 
 class eventObj():
     def __init__(self):
@@ -87,14 +86,13 @@ class eventObj():
         return responseChat
 
     def getPrecut(self, border=0):
-        print("PRECUT ENCOUNTER")
         if not self.typenum in dicType.keys():
             return "알려지지 않은 이벤트 진행중.\n타입코드 " + str(self.typenum)
 
         if not self.typenum in cutEvents:
             return "랭킹이벤트 진행중이 아닙니다."
 
-        res = get_tweets("alneys_al", pages=1)
+        res = get_tweets("alneys_al", pages = 1)
         res = list(res)[:5]
         parsed = None
         for tweet in res:
@@ -139,30 +137,30 @@ class eventObj():
         if not self.typenum in cutEvents:
             return "랭킹이벤트 진행중이 아닙니다."
 
-        json_cut = reqjson(
-            URL+str(self.rawdata["id"])+"/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000")
+        res = requests.get(URL + BORDER_SUFFIX % self.rawdata["id"])
+        json_cut = res.json()
         timedata = StrfTimeISO(json_cut[0]["data"][-1]["summaryTime"])
 
         responseChat += self.strName + "\n"
 
         if border == 100 or border == 0:
-            cut100 = str(int(json_cut[0]["data"][-1]["score"]))
-            responseChat += "100위 : " + cut100 + "\n"
+            cut = str(int(json_cut[0]["data"][-1]["score"]))
+            responseChat += "100위 : " + cut + "\n"
         if border == 2500 or border == 0:
-            cut2500 = str(int(json_cut[1]["data"][-1]["score"]))
-            responseChat += "2500위 : " + cut2500 + "\n"
+            cut = str(int(json_cut[1]["data"][-1]["score"]))
+            responseChat += "2500위 : " + cut + "\n"
         if border == 5000 or border == 0:
-            cut5000 = str(int(json_cut[2]["data"][-1]["score"]))
-            responseChat += "5000위 : " + cut5000 + "\n"
+            cut = str(int(json_cut[2]["data"][-1]["score"]))
+            responseChat += "5000위 : " + cut + "\n"
         if border == 10000 or border == 0:
-            cut10000 = str(int(json_cut[3]["data"][-1]["score"]))
-            responseChat += "10000위 : " + cut10000 + "\n"
+            cut = str(int(json_cut[3]["data"][-1]["score"]))
+            responseChat += "10000위 : " + cut + "\n"
         if border == 25000 or border == 0:
-            cut25000 = str(int(json_cut[4]["data"][-1]["score"]))
-            responseChat += "25000위 : " + cut25000 + "\n"
+            cut = str(int(json_cut[4]["data"][-1]["score"]))
+            responseChat += "25000위 : " + cut + "\n"
         if border == 50000 or border == 0:
-            cut50000 = str(int(json_cut[5]["data"][-1]["score"]))
-            responseChat += "50000위 : " + cut50000 + "\n"
+            cut = str(int(json_cut[5]["data"][-1]["score"]))
+            responseChat += "50000위 : " + cut + "\n"
 
         responseChat += timedata + " 기준"
         return responseChat
