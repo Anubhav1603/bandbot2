@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -f /bandbot2/teletoken.py ]; then
-    python3.7 /bandbot2/start.py
+    python3.8 /bandbot2/start.py
 else
     if [ "$FILETOKEN" = "DEFAULT" ]; then
         echo "Missing environment variable FILETOKEN"
