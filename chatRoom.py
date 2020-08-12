@@ -13,6 +13,7 @@ import os
 class bandChat():
     def __init__(self, URL):
         self.chatURL = URL
+        
 
         options = ChromeOptions()
         options.add_argument("--headless")
