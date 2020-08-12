@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
-RUN apt-get -y update && \
-    apt-get -y install git wget python3.8 python3.8-dev python3-pip fonts-noto-cjk
+RUN apt-get -qqy update && \
+    apt-get -qqy install git wget python3.8 python3.8-dev python3-pip fonts-noto-cjk
 
 ARG CHROME_DRIVER_VERSION="latest"
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
