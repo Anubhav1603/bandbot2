@@ -29,7 +29,7 @@ command = ["이미지"]
 def Com(params, usr_i):
     return "REQUEST_IMAGE_filepath.jpg"
 ```
-[example.py](https://github.com/kohs100/bandbot2/blob/master/_module_example/example.py "ref") 파일 참조
+[example.py](example.py) 파일 참조
 
 ## 테스트 방법
 모듈과 필요 파일들을 start.py와 같은 디렉토리에 놓고
