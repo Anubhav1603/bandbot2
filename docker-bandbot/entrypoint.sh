@@ -4,7 +4,7 @@ read -p "Press enter to continue" REPLY
 read -p "Press enter to continue" REPLY
 
 if [ -f /bandbot2/teletoken.py ]; then
-    python3.8 /bandbot2/start.py
+    python3.8 /bandbot2/start.py --test
 else
     echo "Missing teletoken.py file"
     if [ "$FILETOKEN" = "DEFAULT" ]; then

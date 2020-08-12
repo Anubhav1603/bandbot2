@@ -1,22 +1,31 @@
 import csv
 import glob
+import API.fsync as fsync
 
 command = ["미라"]
 
+DBENDPOINT = "https://si.ster.email/download/miraji"
+DBDIR = "module_miraji/images"
+
 CSV_CACHE = []
 
+def GetDB():
+    try:
+        fsync.WebStorage(DBENDPOINT, DBDIR)
+    except:
+        return False
+    return True
 
 def UpdateCSV():
     global CSV_CACHE
-    f = open("module_miraji/miraji_dict.csv", "r", encoding = "utf-8")
-    rdr = csv.reader(f)
-    CSV_CACHE = list(rdr)
-    f.close()
+    with open("module_miraji/images/miraji_dict.csv", "r", encoding = "utf-8") as f:
+        rdr = csv.reader(f)
+        CSV_CACHE = list(rdr)
+
     for elem in CSV_CACHE:
         if len(elem) != 2:
             return False
     return True
-
 
 def CheckCSV():
     file_list = glob.glob("module_miraji/images/*.*")
@@ -30,12 +39,13 @@ def CheckCSV():
             return False
     return True
 
-
 def Com(params, usr_i):
     global CSV_CACHE
     paramNum = len(params)
 
     if len(CSV_CACHE) == 0:
+        if not GetDB():
+            return "miraji.py: DB 동기화 실패"
         if not UpdateCSV():
             return "miraji.py: CSV 무결성검사 실패"
         if not CheckCSV():
@@ -43,6 +53,8 @@ def Com(params, usr_i):
 
     if paramNum >= 3:
         if "갱신" in params:
+            if not GetDB():
+                return "miraji.py: DB 동기화 실패"
             if not UpdateCSV():
                 return "miraji.py: CSV 무결성검사 실패"
             if not CheckCSV():
