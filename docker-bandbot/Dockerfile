@@ -34,7 +34,7 @@ RUN CD_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RE
     mv /tmp/chromedriver /usr/bin/chromedriver && \
     chmod 755 /usr/bin/chromedriver
 
-ARG NO_CACHE_LINE=1
+ARG NO_CACHE_LINE=5
 
 RUN git clone https://github.com/kohs100/bandbot2
 WORKDIR /bandbot2
@@ -47,9 +47,7 @@ RUN python3.8 -m pip install -r requirements.txt
 ENV LC_ALL C.UTF-8
 ENV FILETOKEN DEFAULT
 
-ADD ./entrypoint.sh /bandbot2/entrypoint.sh
-RUN chmod 755 /bandbot2/entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
 
-RUN /bandbot2/entrypoint.sh
-
-ENTRYPOINT ["/bandbot2/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
