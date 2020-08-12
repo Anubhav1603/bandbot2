@@ -190,6 +190,10 @@
             false
         ],
         [
+            "qmark.jpg",
+            false
+        ],
+        [
             "miraji_dict.csv",
             true
         ]
