@@ -4,6 +4,7 @@ import API.time
 import csv
 import datetime
 import parse
+import platform
 
 from matplotlib import pyplot as plt
 
@@ -56,8 +57,10 @@ def PlotBorder(PSType):
 
     legendList = []
 
-    # plt.rc('font', family = "MS Gothic")
-    plt.rc('font', family = "Noto Sans CJK JP")
+    if platform.system() == "Windows":
+        plt.rc('font', family = "MS Gothic")
+    else:
+        plt.rc('font', family = "Noto Sans CJK JP")
     plt.figure(figsize=(12, 8))
 
     max_x = 0
