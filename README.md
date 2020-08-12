@@ -30,7 +30,11 @@ $ sudo apt-get install fonts-noto-cjk
 * 전화번호를 통해 로그인하는 기능밖에 구현되어있지 않음
 
 # 사용법
+* [Docker image(Recommended)](docker-bandbot)
+
+* Native
 ```
 $ python start.py
 $ python start.py --test
 ```
+
