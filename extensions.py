@@ -15,7 +15,7 @@ class extnMods():
             importlib.reload(mod)
             self.mods.append(mod.recvChat)
 
-    def sendChat(self, str_i, usr_i):
+    def sendChat(self, usr_i, str_i):
         plist = []
         for mod in self.mods:
             p = Process(target = mod, args = (usr_i, str_i))
