@@ -9,12 +9,16 @@ DBDIR = "module_miraji/images"
 
 CSV_CACHE = []
 
+class GetDBError(Exception):pass
+class UpdateCSVError(Exception):pass
+class CheckCSVError(Exception):pass
+
 def GetDB():
     try:
-        fsync.WebStorage(DBENDPOINT, DBDIR)
+        stor = fsync.WebStorage(DBENDPOINT, DBDIR)
+        stor.sync()
     except:
-        return False
-    return True
+        raise GetDBError
 
 def UpdateCSV():
     global CSV_CACHE
@@ -24,8 +28,7 @@ def UpdateCSV():
 
     for elem in CSV_CACHE:
         if len(elem) != 2:
-            return False
-    return True
+            raise UpdateCSVError
 
 def CheckCSV():
     file_list = glob.glob("module_miraji/images/*.*")
@@ -36,30 +39,39 @@ def CheckCSV():
 
     for elem in CSV_CACHE:
         if not elem[1] in file_list:
-            return False
-    return True
+            raise CheckCSVError
 
 def Com(params, usr_i):
-    global CSV_CACHE
     paramNum = len(params)
 
-    if len(CSV_CACHE) == 0:
-        if not GetDB():
+    try:
+        UpdateCSV()
+    except FileNotFoundError:
+        try:
+            GetDB()
+            UpdateCSV()
+            CheckCSV()
+        except GetDBError:
             return "miraji.py: DB 동기화 실패"
-        if not UpdateCSV():
+        except UpdateCSVError:
             return "miraji.py: CSV 무결성검사 실패"
-        if not CheckCSV():
+        except CheckCSVError:
             return "miraji.py: 이미지 무결성검사 실패"
 
     if paramNum >= 3:
         if "갱신" in params:
-            if not GetDB():
+            try:
+                GetDB()
+                UpdateCSV()
+                CheckCSV()
+            except GetDBError:
                 return "miraji.py: DB 동기화 실패"
-            if not UpdateCSV():
+            except UpdateCSVError:
                 return "miraji.py: CSV 무결성검사 실패"
-            if not CheckCSV():
+            except CheckCSVError:
                 return "miraji.py: 이미지 무결성검사 실패"
-            return "miraji.py: 미라지 갱신 성공"
+            else:
+                return "miraji.py: 미라지 갱신 성공"
 
         req_miraji = params[2:]
         invalid_miraji = []

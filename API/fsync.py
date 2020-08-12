@@ -19,8 +19,6 @@ class WebStorage():
         
         if not os.path.isdir(self.directory):
             raise InvalidDirectoryError
-
-        self.sync()
         
     def _getFile(self, fpath):
         f = open(self.directory + fpath, mode = "wb")
