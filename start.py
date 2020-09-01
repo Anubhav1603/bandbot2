@@ -85,7 +85,7 @@ if __name__ == "__main__":
         print("test username is \"QwErTyTeSt\".")
         print("type \"!exit\" to exit\n")
 
-        loadedModules = extnModules(6)
+        loadedModules = extnModules(20)
         loadedMods = extnMods()
 
         while True:

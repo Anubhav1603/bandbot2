@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get -qqy update && \
-    apt-get -qqy install unzip git wget python3.8 python3.8-dev python3-pip fonts-noto-cjk
+    apt-get -qqy install unzip git wget python3.8 python3.8-dev python3-pip
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -qqy install tzdata && \
     ln -fs /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
@@ -34,7 +34,7 @@ RUN CD_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RE
     mv /tmp/chromedriver /usr/bin/chromedriver && \
     chmod 755 /usr/bin/chromedriver
 
-ARG NO_CACHE_LINE=12322354
+ARG NO_CACHE_LINE=1
 
 RUN git clone https://github.com/kohs100/bandbot2
 WORKDIR /bandbot2

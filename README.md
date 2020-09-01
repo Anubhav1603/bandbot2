@@ -23,12 +23,6 @@ $ sudo dpkg -i google-chrome*.deb
 ## chromedriver
 * https://chromedriver.chromium.org/
 
-## Noto Sans CJK JP
-* https://www.google.co.kr/get/noto/help/cjk/
-```
-$ sudo apt-get install fonts-noto-cjk
-```
-
 ## BAND Account
 * Should be able to login with phone number
 
