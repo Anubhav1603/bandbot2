@@ -11,3 +11,5 @@ test.py
 module_pstcut/border_tour.png
 *.jpg
 *.png
+*.otf
+*.csv
