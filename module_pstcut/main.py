@@ -56,7 +56,7 @@ def PlotBorder(PSType):
 
     legendList = []
 
-    prop = fm.FontProperties(fname = 'module_pstcut/font.asd')
+    prop = fm.FontProperties(fname = 'module_pstcut/NotoSansCJKjp.otf')
     plt.figure(figsize=(12, 8))
 
     timenow = API.time.TimeISO()
