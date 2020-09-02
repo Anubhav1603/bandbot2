@@ -37,6 +37,7 @@ RUN CD_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RE
 ARG NO_CACHE_LINE=1
 
 RUN git clone https://github.com/kohs100/bandbot2
+RUN chmod -R 777 /bandbot2
 WORKDIR /bandbot2
 
 RUN apt-get purge --auto-remove -y curl git unzip 
