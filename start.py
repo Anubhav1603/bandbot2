@@ -21,7 +21,7 @@ if __name__ == "__main__":
         if input("Continue? (Y)") != "Y":
             exit()
 
-        loadedModules = extnModules(6)
+        loadedModules = extnModules()
         loadedMods = extnMods()
         chatRoom = bandChat(param.chatURL)
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
                             if params[1][0] == "_":
                                 if params[1] == "_reload":
                                     try:
-                                        loadedModules = extnModules(6)
+                                        loadedModules = extnModules()
                                         loadedMods = extnMods()
                                         resChat = "모듈 갱신완료"
                                     except:
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         print("test username is \"QwErTyTeSt\".")
         print("type \"!exit\" to exit\n")
 
-        loadedModules = extnModules(20)
+        loadedModules = extnModules()
         loadedMods = extnMods()
 
         while True:
@@ -111,7 +111,7 @@ if __name__ == "__main__":
                         if params[1][0] == "_":
                             if params[1] == "_reload":
                                 try:
-                                    loadedModules = extnModules(6)
+                                    loadedModules = extnModules()
                                     loadedMods = extnMods()
                                     resChat = "모듈 갱신완료"
                                 except:

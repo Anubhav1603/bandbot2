@@ -2,8 +2,6 @@ import importlib
 import glob
 from multiprocessing import Process
 
-from API.timeout import TimeoutDeco
-
 class extnMods():
     def __init__(self):
         self.mods = []
@@ -28,9 +26,7 @@ class extnModules():
     emptyCall = 1
     wrongCommand = 2
 
-    def __init__(self, timeout):
-        self.timeout = timeout
-
+    def __init__(self):
         self.coms = []
         self.commands = []
 
@@ -50,20 +46,10 @@ class extnModules():
         return extnModules.wrongCommand
     
     def _executeModule(self, foundCom, params, usr_i):
-        decorated = TimeoutDeco(self.timeout, "TimeoutError", foundCom)
         try:
-            ret = decorated(params, usr_i)
+            return foundCom(params, usr_i)
         except:
-            return "TimeoutException"
-        else:
-            if ret == None:
-                return "ModuleException"
-            elif type(ret) != str:
-                return "TypeError"
-            elif len(ret) == 0:
-                return "NullReturnError"
-            else:
-                return ret
+            return "ModuleException"
 
     def strfModules(self):
         allCommand = []

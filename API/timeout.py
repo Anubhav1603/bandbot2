@@ -4,7 +4,8 @@ def _IFunction(OFunction, q, args, kwargs):
     try:
         ret = OFunction(*args, **kwargs)
         q.put(ret)
-    except:
+    except Exception as e:
+        print(e)
         q.put(None)
 
 def TimeoutDeco(timeout, timeoutRet, OFunction):

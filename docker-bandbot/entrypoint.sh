@@ -4,7 +4,6 @@ read -p "Press enter to continue" REPLY
 read -p "Press enter to continue" REPLY
 
 if [ -f /bandbot2/teletoken.py ]; then
-    cd bandbot2
     python3.8 start.py
 else
     echo "Missing teletoken.py file"

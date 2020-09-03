@@ -88,8 +88,8 @@ def PlotBorder(PSType):
     max_x = 0
 
     if inEvent:
-        print("NOW IN EVENT")
-        for i, event in enumerate(resRecent):
+        print("NOW IN EVENTs")
+        for event in resRecent:
             eventName = parse.parse("{}～{}～", event["name"])[1]
             event["purename"] = eventName
 
