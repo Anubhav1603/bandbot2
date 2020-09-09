@@ -37,7 +37,8 @@ def Com(params, usr_i):
 
         return "events.py: 잘못된 명령어 사용"
 
-    except:
+    except Exception as e:
+        print(e)
         return "events.py: matsurihi.me에서 응답하지 않습니다."
 
 class eventObj():
@@ -60,6 +61,9 @@ class eventObj():
         self.strName = dicType[self.typenum] + " " + self.pureName
 
     def getInfo(self):
+        if not self.onEvent:
+            return "현재 진행중인 이벤트가 없습니다."
+
         responseChat = ""
 
         if self.typenum in cutEvents:
@@ -86,6 +90,8 @@ class eventObj():
         return responseChat
 
     def getPrecut(self, border=0):
+        if not self.onEvent:
+            return "현재 진행중인 이벤트가 없습니다."
         if not self.typenum in dicType.keys():
             return "알려지지 않은 이벤트 진행중.\n타입코드 " + str(self.typenum)
 
@@ -129,6 +135,9 @@ class eventObj():
         return responseChat
 
     def getCut(self, border=0):
+        if not self.onEvent:
+            return "현재 진행중인 이벤트가 없습니다."
+
         responseChat = "밀리이벤트 현재컷 정보\n"
 
         if not self.typenum in dicType.keys():
