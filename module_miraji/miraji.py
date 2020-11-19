@@ -4,7 +4,7 @@ import API.fsync as fsync
 
 command = ["미라"]
 
-DBENDPOINT = "https://si.ster.email/download/miraji"
+DBENDPOINT = "https://si.ster.email/dl/miraji"
 DBDIR = "module_miraji/images"
 
 CSV_CACHE = []

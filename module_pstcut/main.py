@@ -27,7 +27,9 @@ def PickFilename(fPath):
     return fPath[pos:]
 
 def UpdateCSV(PSType, id):
+    print(BURL%id)
     res = requests.get(BURL % id)
+    print(res.json())
     data = res.json()[0]["data"]
     data = list(data)
 

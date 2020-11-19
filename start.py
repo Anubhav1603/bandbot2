@@ -3,11 +3,10 @@ from extensions import extnMods, extnModules
 
 import bandchat
 
-bot = bandchat.Client("https://band.us/band/77955502/chat/CQvbxV")
+bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
 
 loadedModules = extnModules()
 loadedMods = extnMods()
-bot.run()
 
 @bot.on_event
 def on_chat(usr_i, str_i):
@@ -15,7 +14,7 @@ def on_chat(usr_i, str_i):
     global loadedModules
     if str_i[:3] == "!봇 ":
         params = str_i.split(" ")
-        params = list(filter(params, lambda x: x != ""))
+        params = list(filter(lambda x: x != "", params))
         if params[0] == "!봇":
             prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
 
@@ -37,7 +36,17 @@ def on_chat(usr_i, str_i):
 
                     if resChat == extnModules.wrongCommand:
                         resChat = prefixChat + "잘못된 명령입니다."
+                    elif "REQUEST_IMAGE_" in resChat:
+                        resList = []
+                        for line in resChat.split('\n'):
+                            if line[:14] == "REQUEST_IMAGE_":
+                                resList.append(("image", line[14:]))
+                        return resList
+
                     else:
                         resChat = prefixChat + resChat
 
             return [("chat", resChat)]
+    
+    return []
+bot.run()
