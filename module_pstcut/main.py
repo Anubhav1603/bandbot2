@@ -15,7 +15,7 @@ CPATH = "module_pstcut/cache_%s/%s.csv"
 RESCENT_NUM = 10
 
 print("Downloading JP fonts...")
-resFont = requests.get("https://si.ster.email/download/NotoSansCJKjp.otf")
+resFont = requests.get("https://si.ster.email/dl/NotoSansCJKjp.otf")
 f = open("module_pstcut/NotoSansCJKjp.otf", "wb")
 f.write(resFont.content)
 f.close()

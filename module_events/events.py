@@ -10,9 +10,9 @@ BORDER_SUFFIX = "%d/rankings/logs/eventPoint/100,2500,5000,10000,25000,50000"
 
 dicType = {1: "TST", 2: "밀리코레", 3: "PSTheater", 4: "PSTour",
            5: "주년이벤트", 6: "WORKING☆", 7: "만우절 이벤트",
-		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune",}
+		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune", 12: "PSTwinstage"}
 
-cutEvents = [3, 4, 10, 11]
+cutEvents = [3, 4, 10, 11, 12]
 
 command = ["밀리이벤", "밀리이벤컷", "밀리예측컷"]
 
@@ -50,6 +50,7 @@ class eventObj():
 
         if len(eventNow) == 1:
             self.rawdata = eventNow[0]
+            self.onEvent = True
         else:
             self.onEvent = False
             return
@@ -94,7 +95,6 @@ class eventObj():
             return "현재 진행중인 이벤트가 없습니다."
         if not self.typenum in dicType.keys():
             return "알려지지 않은 이벤트 진행중.\n타입코드 " + str(self.typenum)
-
         if not self.typenum in cutEvents:
             return "랭킹이벤트 진행중이 아닙니다."
 
