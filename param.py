@@ -1,5 +1,5 @@
 NAME = "밴드봇"
-VERSION = "2.2.1"
+VERSION = "2.5.2"
 
 chatURL = "https://band.us/band/55800178/chat/C6HumD"
 
