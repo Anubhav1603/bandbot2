@@ -7,7 +7,7 @@ from module_events.events import cutEvents, dicType
 
 command = ["밀리예측컷"]
 URL = 'https://api.matsurihi.me/mltd/v1/events/'
-PRECUTF = "{}イベントpt ボーダー 予想 ({})2500位 {}5000位 {}10000位 {}25000位 {}50000位 {}#ミリシタ#ミリシタボーダー\n"
+PRECUTF = "{}イベントpt ボーダー 予想 ({})☆4  {}☆3  {}☆2  {}☆1  {}#ミリシタ#ミリシタボーダー\n"
 
 def error(msg):
     return "mlprecut.py: " + msg
@@ -63,6 +63,7 @@ def getPrecut(border = 0):
     
     if parsed == None:
         print("Parse Failed")
+        print(t.text)
         return error("아직 예측컷 정보가 없습니다.")
     
     parsed = list(parsed)
@@ -82,8 +83,6 @@ def getPrecut(border = 0):
         responseChat += "10000위 : " + parsed[4] + "\n"
     if border == 25000 or border == 0:
         responseChat += "25000위 : " + parsed[5] + "\n"
-    if border == 50000 or border == 0:
-        responseChat += "50000위 : " + parsed[6] + "\n"
 
     responseChat += parsed[1] + " 기준"
 

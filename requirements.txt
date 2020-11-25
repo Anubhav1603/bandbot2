@@ -6,8 +6,5 @@ selenium>=3.141.0
 # For module_calc
 pwntools>=4.2.1
 
-# For module_events
-twitter-scraper>=0.4.4
-
 # For module_pstcut
 matplotlib>=3.2.2

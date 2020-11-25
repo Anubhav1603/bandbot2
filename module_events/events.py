@@ -1,7 +1,6 @@
 import requests
 import parse
 from API.time import TimeISO, StrfTimeISO
-from twitter_scraper import get_tweets
 
 URL = 'https://api.matsurihi.me/mltd/v1/events/'
 
