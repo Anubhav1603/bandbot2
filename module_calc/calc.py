@@ -8,6 +8,9 @@ def SafeEvaluation(sick):
     class AVG:
         def __add__(self, lst_input):
             return sum(lst_input) / len(lst_input)
+        
+        def __repr__(self):
+            return "calc.py: AVG+[1,2,3...] -> 평균값"
     
     class LTS:
         def __add__(self, lv):
@@ -23,6 +26,9 @@ def SafeEvaluation(sick):
                 return 60 + (lv-60) // 3
             elif lv >= 2:
                 return 61 + (lv-2) // 2
+        
+        def __repr__(self):
+            return "calc.py: LTS+레벨 -> 스태통"
 
     cmdDict = {"AVG": AVG(), "LTS": LTS()}
 
