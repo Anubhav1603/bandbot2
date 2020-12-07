@@ -1,14 +1,11 @@
 import param
 from extensions import extnMods, extnModules
 
-import bandchat
-
-bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
-
 loadedModules = extnModules()
 loadedMods = extnMods()
 
-@bot.on_event
+username = input("username? ")
+
 def on_chat(usr_i, str_i):
     global loadedMods
     global loadedModules
@@ -47,6 +44,13 @@ def on_chat(usr_i, str_i):
                         resChat = prefixChat + resChat
 
             return [("chat", resChat)]
+
+if __name__ == '__main__':
+    while True:
+        print("--------------------------------------------------------")
+        str_i = input(username + ": ")
+        print("response start {")
+        print(on_chat(username, str_i))
+        print("} response end")
+        print("--------------------------------------------------------")
     
-    return []
-bot.run()

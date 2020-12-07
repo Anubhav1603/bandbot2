@@ -27,7 +27,12 @@ class InvalidEventException(BandchatException):
         super().__init__("Invalid on_event name")
 
 class Client():
-    def __init__(self, url, get_rate=0.5, refresh_rate=1800, cli_login=True, options=None, user_data=None):
+    def __init__(self, url,
+                 get_rate=0.5,
+                 refresh_rate=1800,
+                 cli_login=True,
+                 user_data=None,
+                 ):
         self.chatURL = url
         self.refresh_rate = refresh_rate
         self.get_rate = get_rate
@@ -35,9 +40,7 @@ class Client():
         self.on_chat = lambda x,y: []
         self.on_ready = lambda :[]
 
-        if options == None:
-            print("Starting with default chrome options...")
-            options = ChromeOptions()
+        options = ChromeOptions()
 
         options.add_argument('--disable-extensions')
         options.add_argument("--no-sandbox")
@@ -46,7 +49,7 @@ class Client():
             options.add_argument("--disable-gpu")
         
         if user_data is not None:
-            options.add_argument("--user-data-dir=%s"%user_data)
+            options.add_argument(f"--user-data-dir={user_data}")
         
         print("Driver initializing...")
         self.driver = Chrome(options=options)
@@ -66,7 +69,7 @@ class Client():
                 print("Get PhonenumberPage completed.")
                 self.driver.implicitly_wait(3)
 
-                Phonenumber = input("전화번호 입력 :")
+                Phonenumber = input("Phone number: +82")
                 self.driver.find_element_by_id(
                     "input_local_phone_number").send_keys(Phonenumber)
                 self.driver.find_element_by_css_selector(
@@ -74,7 +77,7 @@ class Client():
                 print("Get PasswordPage completed.")
                 self.driver.implicitly_wait(3)
 
-                Password = input("비밀번호 입력 :")
+                Password = input("Password: ")
                 self.driver.find_element_by_id("pw").send_keys(Password)
                 self.driver.find_element_by_css_selector(
                     ".uBtn.-tcType.-confirm").click()
@@ -87,7 +90,7 @@ class Client():
                 print(self.driver.find_element_by_id("hintNumberDiv").text)
                 sleep(20)
             except NoSuchElementException:
-                pw_band = input("인증번호: ")
+                pw_band = input("SMS authcode: ")
                 self.driver.find_element_by_id("code").send_keys(str(pw_band))
                 self.driver.find_element_by_css_selector(
                     "button.uBtn.-tcType.-confirm").click()
