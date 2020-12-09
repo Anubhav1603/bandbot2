@@ -57,20 +57,18 @@ class Event():
     def __init__(self, now=True):
         eventnow = None
 
-        def get_event(data=None):
-            res = r.get(URL, data=req)
-            return jsonify(res)
-
         # Retrieve event information from PRINCESS API
         if now:
             time_ISO = TimeISO()
-            req = {"at": time_ISO}
-            eventnow = get_event(req)
+            res = r.get(URL+'?at='+time_ISO)
+            eventnow = jsonify(res)
             if len(eventnow) != 1:
                 print(eventnow)
                 raise NoEventError
         else:
-            eventnow = get_event()
+            res = r.get(URL)
+            eventnow = jsonify(res)
+
         eventnow = eventnow[0]
 
         # Parse response
