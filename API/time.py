@@ -13,7 +13,7 @@ def StrfTimeISO(dateISO):
     day = dateISO[8:10]
     hour = dateISO[11:13]
     minute = dateISO[14:16]
-    return month+'월 '+day+'일 '+hour+":"+minute
+    return f"{month}.{day} {hour}:{minute}"
 
 def DeltaTimeISO(start, end):
     start = datetime.datetime.fromisoformat(start)

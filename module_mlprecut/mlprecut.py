@@ -3,11 +3,11 @@ import parse
 from bs4 import BeautifulSoup
 from API.time import TimeISO
 
-from module_events.events import cutEvents, dicType
+from API.princess import *
 
 command = ["밀리예측컷"]
-URL = 'https://api.matsurihi.me/mltd/v1/events/'
-PRECUTF = "{}イベントpt ボーダー 予想 ({})☆4  {}☆3  {}☆2  {}☆1  {}#ミリシタ#ミリシタボーダー\n"
+
+PRECUTF = "{}イベントpt ボーダー 予想 ({})☆4{}☆3{}☆2{}☆1{}#ミリシタ#ミリシタボーダー\n"
 
 def error(msg):
     return "mlprecut.py: " + msg
@@ -27,31 +27,18 @@ def Com(params, usr_i):
         print(e)
         return error("크롤링 실패")
 
-def getEvent():
-    timeNow = TimeISO()
-    req = {"at": timeNow}
-    res = r.get(URL, data=req)
-    return res.json()
-
 def getPrecut(border = 0):
-    enow = getEvent()
-    if not enow:
-        return error("진행중인 이벤트 없음")
-    else:
-        enow = enow[0]
-    
-    typenum = enow["type"]
+    try:
+        enow = Event()
 
-    if not typenum in dicType.keys():
-        return error("알려지지 않은 이벤트 진행중\n타입코드 %d"%typenum)
-    if not typenum in cutEvents:
-        return error("비PST이벤트 진행중(%d)"%typenum)
+    except PrincessError as e:
+        print(e)
+        return "mlprecut.py: " + str(e)
 
-    rawname = enow["name"]
-    parsedname = parse.parse("{}～{}～", rawname)
-    purename = parsedname[1]
-    strname = dicType[typenum] + " " + purename
-
+    except Exception as e:
+        print(e)
+        return "mlprecut.py: 처리되지 않은 예외"
+        
     res = r.get("https://syndication.twitter.com/timeline/profile?screen_name=alneys_al")
     res = res.json()["body"]
     soup = BeautifulSoup(res, 'html.parser')
@@ -68,12 +55,12 @@ def getPrecut(border = 0):
     
     parsed = list(parsed)
 
-    if parsed[0] != purename:
+    if parsed[0] != enow.purename:
         print("purename dismatch")
         return error("아직 예측컷 정보가 없습니다.")
     
-    responseChat = "밀리이벤트 예측컷 정보\n"
-    responseChat += strname + "\n"
+    responseChat = "예측컷 정보\n"
+    responseChat += enow.strname + "\n"
 
     if border == 2500 or border == 0:
         responseChat += "2500위 : " + parsed[2] + "\n"
