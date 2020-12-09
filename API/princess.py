@@ -134,4 +134,4 @@ class Event():
                     score = int(data[-1]['score'])
                     response += f"{rank}위: {score}\n"
         
-        return response
+        return response[:-1]

@@ -2,96 +2,89 @@ import csv
 import glob
 import API.fsync as fsync
 
-command = ["미라"]
+from extensions import ModuleBase
 
 DBENDPOINT = "https://si.ster.email/dl/miraji"
 DBDIR = "module_miraji/images"
 
-CSV_CACHE = []
+class get_DBError(Exception): pass
+class update_DBError(Exception): pass
+class check_dbError(Exception): pass
 
-class GetDBError(Exception):pass
-class UpdateCSVError(Exception):pass
-class CheckCSVError(Exception):pass
+def chat(msg): return [("chat", msg)]
+def image(path): return [("image", path)]
 
-def GetDB():
-    try:
-        stor = fsync.WebStorage(DBENDPOINT, DBDIR)
-        stor.sync()
-    except:
-        raise GetDBError
+class Module(ModuleBase):
+    commands = ["미라"]
 
-def UpdateCSV():
-    global CSV_CACHE
-    with open("module_miraji/images/miraji_dict.csv", "r", encoding = "utf-8") as f:
-        rdr = csv.reader(f)
-        CSV_CACHE = list(rdr)
+    def __init__(self):
+        self.cache = []
 
-    for elem in CSV_CACHE:
-        if len(elem) != 2:
-            raise UpdateCSVError
+    def run(self, params, usr_i):
+        paramNum = len(params)
 
-def CheckCSV():
-    file_list = glob.glob("module_miraji/images/*.*")
-    
-    for i, elem in enumerate(file_list):
-        file_list[i] = elem.replace("\\", "/")
-        file_list[i] = file_list[i][14:]
-
-    for elem in CSV_CACHE:
-        if not elem[1] in file_list:
-            raise CheckCSVError
-
-def Com(params, usr_i):
-    paramNum = len(params)
-
-    try:
-        UpdateCSV()
-    except FileNotFoundError:
         try:
-            GetDB()
-            UpdateCSV()
-            CheckCSV()
-        except GetDBError:
-            return "miraji.py: DB 동기화 실패"
-        except UpdateCSVError:
-            return "miraji.py: CSV 무결성검사 실패"
-        except CheckCSVError:
-            return "miraji.py: 이미지 무결성검사 실패"
-
-    if paramNum >= 3:
-        if "갱신" in params:
+            self.update_DB()
+        except FileNotFoundError:
             try:
-                GetDB()
-                UpdateCSV()
-                CheckCSV()
-            except GetDBError:
-                return "miraji.py: DB 동기화 실패"
-            except UpdateCSVError:
-                return "miraji.py: CSV 무결성검사 실패"
-            except CheckCSVError:
-                return "miraji.py: 이미지 무결성검사 실패"
-            else:
-                return "miraji.py: 미라지 갱신 성공"
+                self.get_DB()
+                self.update_DB()
+                self.check_db()
+            except get_DBError:
+                return chat("miraji.py: DB 동기화 실패")
+            except update_DBError:
+                return chat("miraji.py: CSV 무결성검사 실패")
+            except check_dbError:
+                return chat("miraji.py: 이미지 무결성검사 실패")
 
-        req_miraji = params[2:]
-        invalid_miraji = []
-        response = []
+        if paramNum == 3:
+            name = params[2]
 
-        for miraji in req_miraji:
-            if len(miraji) == 0:
-                continue
-            is_invalid = True
-            for elem in CSV_CACHE:
-                if miraji == elem[0]:
-                    is_invalid = False
-                    response.append("REQUEST_IMAGE_module_miraji/" + elem[1])
-                    break
-            if is_invalid:
-                invalid_miraji.append(miraji)
+            if name == "갱신":
+                try:
+                    self.get_DB()
+                    self.update_DB()
+                    self.check_db()
+                except get_DBError:
+                    return chat("miraji.py: DB 동기화 실패")
+                except update_DBError:
+                    return chat("miraji.py: CSV 무결성검사 실패")
+                except check_dbError:
+                    return chat("miraji.py: 이미지 무결성검사 실패")
+                else:
+                    return chat("miraji.py: 미라지 갱신 성공")
 
-        if len(invalid_miraji) != 0:
-            return "miraji.py: 미라지가 없습니다: " + " ".join(invalid_miraji)
+            for elem in self.cache:
+                if name == elem[0]: return image("module_miraji/"+elem[1])
 
-        return "\n".join(response)
-    else:
-        return "miraji.py: 사용법\n!봇 미라 [미라지명]..."
+            return chat("miraji.py: 미라지가 없습니다: " + name)
+        else:
+            return chat("miraji.py: 사용법\n!봇 미라 [미라지명]")
+
+
+    def get_DB(self):
+        try:
+            stor = fsync.WebStorage(DBENDPOINT, DBDIR)
+            stor.sync()
+        except:
+            raise get_DBError
+
+    def update_DB(self):
+        with open("module_miraji/images/miraji_dict.csv", "r", encoding = "utf-8") as f:
+            rdr = csv.reader(f)
+            self.cache = list(rdr)
+
+        for elem in self.cache:
+            if len(elem) != 2:
+                raise update_DBError
+
+    def check_db(self):
+        file_list = glob.glob("module_miraji/images/*.*")
+        
+        for i, elem in enumerate(file_list):
+            file_list[i] = elem.replace("\\", "/")
+            file_list[i] = file_list[i][14:]
+
+        for elem in self.cache:
+            if not elem[1] in file_list:
+                raise check_dbError

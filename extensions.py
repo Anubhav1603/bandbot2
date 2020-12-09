@@ -1,6 +1,30 @@
 import importlib
 import glob
+
+from abc import ABC, abstractmethod
 from multiprocessing import Process
+
+def single_chat(method):
+    def imethod(*args, **kwargs):
+        res = method(*args, **kwargs)
+        return [("chat", res)]
+    return imethod
+
+class ModuleBase(ABC):
+    @property
+    @abstractmethod
+    def commands(self): pass
+
+    @abstractmethod
+    def run(self, params, usr_i): pass
+
+class ModLoadError(Exception):
+    def __init__(self):
+        super().__init__("모드 로딩 실패")
+
+class ModuleLoadError(Exception):
+    def __init__(self):
+        super().__init__("모듈 로딩 실패")
 
 class extnMods():
     def __init__(self):
@@ -23,43 +47,42 @@ class extnMods():
             p.join()
 
 class extnModules():
-    emptyCall = 1
-    wrongCommand = 2
+    empty_call = 1
+    wrong_command = 2
 
     def __init__(self):
-        self.coms = []
-        self.commands = []
+        self.commands = {}
 
         modules = glob.glob("module_*")
         for module in modules:
             module_name = module + "." + module[7:]
             mod = importlib.import_module(module_name)
             importlib.reload(mod)
-            self.coms.append(mod.Com)
-            self.commands.append(mod.command)
 
-    def _findModule(self, command_i, params, usr_i):
-        for i, command in enumerate(self.commands):
-            if command_i in command:
-                return self._executeModule(self.coms[i], params, usr_i)
+            module_instance = mod.Module()
 
-        return extnModules.wrongCommand
-    
-    def _executeModule(self, foundCom, params, usr_i):
-        try:
-            return foundCom(params, usr_i)
-        except:
-            return "ModuleException"
+            for comm in module_instance.commands:
+                if comm in self.commands:
+                    print("Duplicated command:", comm)
+                    raise ModuleLoadError
+                else:
+                    self.commands[comm] = module_instance
 
     def strfModules(self):
-        allCommand = []
-        for command in self.commands:
-            for com in command:
-                allCommand.append(com)
-        return ", ".join(allCommand)
+        return ", ".join(self.commands.keys())
 
     def commandSel(self, params, usr_i):
-        if len(params) == 1:
-            return extnModules.emptyCall
+        command = params[1]
+        if command in self.commands:
+            try:
+                res = self.commands[command].run(params, usr_i)
+                for r in res:
+                    if r[0] not in ['chat', 'image', 'delay', 'change']:
+                        print("Wrong Response type:", r)
+                        raise Exception
+                return res
+            except Exception as e:
+                print(e)
+                return [("chat", "모듈 에러")]
         else:
-            return self._findModule(params[1], params, usr_i)
+            return extnModules.wrong_command

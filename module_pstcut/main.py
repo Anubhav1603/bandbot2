@@ -14,14 +14,6 @@ CPATH = "module_pstcut/cache_%s/%s.csv"
 
 RESCENT_NUM = 10
 
-print("Downloading JP fonts...")
-resFont = requests.get("https://si.ster.email/dl/NotoSansCJKjp.otf")
-f = open("module_pstcut/NotoSansCJKjp.otf", "wb")
-f.write(resFont.content)
-f.close()
-print("downloaded.")
-
-
 def PickFilename(fPath):
     pos = fPath.rfind("/") + 1
     return fPath[pos:]
@@ -29,7 +21,6 @@ def PickFilename(fPath):
 def UpdateCSV(PSType, id):
     print(BURL%id)
     res = requests.get(BURL % id)
-    print(res.json())
     data = res.json()[0]["data"]
     data = list(data)
 

@@ -4,28 +4,31 @@ from bs4 import BeautifulSoup
 from API.time import TimeISO
 
 from API.princess import *
-
-command = ["밀리예측컷"]
+from extensions import ModuleBase, single_chat
 
 PRECUTF = "{}イベントpt ボーダー 予想 ({})☆4{}☆3{}☆2{}☆1{}#ミリシタ#ミリシタボーダー\n"
 
+class Module(ModuleBase):
+    commands = ["밀리예측컷"]
+
+    @single_chat
+    def run(self, params, usr_i):
+        paramnum = len(params)
+        try:
+            if params[1] == "밀리예측컷":
+                if paramnum == 3:
+                    return getPrecut(int(params[2]))
+                elif paramnum == 2:
+                    return getPrecut()
+
+            return error("잘못된 명령어 사용")
+
+        except Exception as e:
+            print(e)
+            return error("크롤링 실패")
+
 def error(msg):
     return "mlprecut.py: " + msg
-
-def Com(params, usr_i):
-    paramnum = len(params)
-    try:
-        if params[1] == "밀리예측컷":
-            if paramnum == 3:
-                return getPrecut(int(params[2]))
-            elif paramnum == 2:
-                return getPrecut()
-
-        return error("잘못된 명령어 사용")
-
-    except Exception as e:
-        print(e)
-        return error("크롤링 실패")
 
 def getPrecut(border = 0):
     try:

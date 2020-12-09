@@ -1,7 +1,8 @@
+from extensions import ModuleBase
+from extensions import single_chat
+
 import requests, re
 from bs4 import BeautifulSoup
-
-command = ["카드"]
 
 idolDict = {"하루카": 1, "치하야": 2, "미키": 3,
             "유키호": 4, "야요이": 5, "마코토": 6,
@@ -29,12 +30,45 @@ idolDict = {"하루카": 1, "치하야": 2, "미키": 3,
 rarityDict = {1: "N", 2: "R", 3: "SR", 4: "SSR"}
 rrarityDict = {"N": 1, "R": 2, "SR": 3, "SSR": 4}
 
-
 def reqjson(URL): return requests.get(URL).json()
 
 URL = "https://api.matsurihi.me/mltd/v1/cards?idolId=%d"
 
 URL_DB = "https://imas.gamedbs.jp/mlth/chara/show/%d"
+
+class Module(ModuleBase):
+    commands = ["카드"]
+
+    @single_chat
+    def run(self, params, usr_i):
+        paramNum = len(params)
+
+        if paramNum == 4:
+            if params[2] in idolDict:
+                if params[3] in rrarityDict:
+                    return GetCardList(idolDict[params[2]],
+                                    rrarityDict[params[3]])
+                else:
+                    return "cardinfo.py: 잘못된 레어리티"
+            else:
+                return "cardinfo.py: 잘못된 아이돌 이름"
+        elif paramNum == 5:
+            if params[2] in idolDict:
+                if params[3] in rrarityDict:
+                    if isInteger(params[4]):
+                        return GetCardInfo(idolDict[params[2]],
+                                        rrarityDict[params[3]],
+                                        int(params[4]))
+                    else:
+                        return "cardinfo.py: 잘못된 id"
+                else:
+                    return "cardinfo.py: 잘못된 레어리티"
+            else:
+                return "cardinfo.py: 잘못된 아이돌 이름"
+        else:
+            return "cardinfo.py: 사용법:\n" \
+                "!봇 카드 [이름] [N|R|SR|SSR]\n" \
+                "!봇 카드 [이름] [N|R|SR|SSR] [id]"
 
 def isInteger(str):
     try:
@@ -93,33 +127,3 @@ def GetCardInfo(idolNum, rarity, cardId):
             return link.attrs["href"]
 
     return "cardinfo.py: 카드를 찾을 수 없습니다."
-            
-def Com(params, usr_i):
-    paramNum = len(params)
-
-    if paramNum == 4:
-        if params[2] in idolDict:
-            if params[3] in rrarityDict:
-                return GetCardList(idolDict[params[2]],
-                                   rrarityDict[params[3]])
-            else:
-                return "cardinfo.py: 잘못된 레어리티"
-        else:
-            return "cardinfo.py: 잘못된 아이돌 이름"
-    elif paramNum == 5:
-        if params[2] in idolDict:
-            if params[3] in rrarityDict:
-                if isInteger(params[4]):
-                    return GetCardInfo(idolDict[params[2]],
-                                       rrarityDict[params[3]],
-                                       int(params[4]))
-                else:
-                    return "cardinfo.py: 잘못된 id"
-            else:
-                return "cardinfo.py: 잘못된 레어리티"
-        else:
-            return "cardinfo.py: 잘못된 아이돌 이름"
-    else:
-        return "cardinfo.py: 사용법:\n" \
-               "!봇 카드 [이름] [N|R|SR|SSR]\n" \
-               "!봇 카드 [이름] [N|R|SR|SSR] [id]"

@@ -3,7 +3,7 @@ from extensions import extnMods, extnModules
 
 import bandchat
 
-bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
+bot = bandchat.Client("https://band.us/band/77955502/chat/CQvbxV", cli_login=False, user_data=r"%localappdata%\Google\Chrome\User Data")
 
 loadedModules = extnModules()
 loadedMods = extnMods()
@@ -21,32 +21,23 @@ def on_chat(usr_i, str_i):
             paramnum = len(params)
 
             if paramnum == 1:
-                resChat = prefixChat + param.GUIDE + loadedModules.strfModules()
+                return [("chat", prefixChat + param.GUIDE + loadedModules.strfModules())]
             else:
                 if params[1][0] == "_":
                     if params[1] == "_reload":
                         try:
                             loadedModules = extnModules()
                             loadedMods = extnMods()
-                            resChat = "모듈 갱신완료"
+                            return [("chat", "모듈 갱신완료")]
                         except:
-                            resChat = "모듈 갱신실패"
+                            return [("chat", "모듈 갱신실패")]
                 else:
-                    resChat = loadedModules.commandSel(params, usr_i)
+                    res = loadedModules.commandSel(params, usr_i)
 
-                    if resChat == extnModules.wrongCommand:
-                        resChat = prefixChat + "잘못된 명령입니다."
-                    elif "REQUEST_IMAGE_" in resChat:
-                        resList = []
-                        for line in resChat.split('\n'):
-                            if line[:14] == "REQUEST_IMAGE_":
-                                resList.append(("image", line[14:]))
-                        return resList
-
+                    if res == loadedModules.wrong_command:
+                        return [("chat", "잘못된 명령어입니다.")]
                     else:
-                        resChat = prefixChat + resChat
-
-            return [("chat", resChat)]
+                        return res
     
     return []
 bot.run()

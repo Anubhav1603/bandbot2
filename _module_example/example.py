@@ -1,38 +1,39 @@
-command = ["에코", "이미지1", "이미지12"]
+from extensions import ModuleBase
+from extensions import single_chat
 
-IMG_PREFIX = "REQUETST_IMAGE_"
+# 단일채팅 응답 모듈 예시
 
-def Com(params, usr_i):
-    bot_name = params[0]            # !봇
-    module_name = params[1]         # 에코, 이미지1, 이미지12
-    user_name = usr_i               # 호출 유저 닉네임
+# run 메소드에 single_chat 데코레이터를 적용하면
+# 문자열 하나만 리턴하도록 짤 수 있음
 
-    guide = "example.py: 사용법:\n"\
-            "!봇 에코 [문자열]\n!봇 이미지1\n!봇 이미지12"
-    
-    param_num = len(params)
+class Module(ModuleBase):
+    commands = ["카운터"]
 
-    if module_name == "에코":
-        if param_num == 3:
-            return user_name + ":" + params[2]
+    # 봇 처음 작동시에만 실행됨
+    def __init__(self):
+        self.count = {}
+
+    @single_chat
+    def run(self, params, usr_i):
+        assert params[0] == "!봇"
+        assert params[1] == "카운터"
+
+        if len(params) != 3:
+            return "example.py: 사용법\n" \
+                   "!봇 카운터 [올릴숫자]"
         else:
-            return guide
-    
-    # sample_images/image1.jpg를 전송
-    elif module_name == "이미지1":
-        if param_num == 2:
-            img_path = "module_example/sample_images/folder1/image1.jpg"
-            return IMG_PREFIX + img_path
-        else:
-            return guide
-    
-    # image1과 image2를 연속으로 전송: 개행문자로 구분
-    elif module_name == "이미지12":
-        if param_num == 2:
-            response = ""
-            img_path_1 = "module_example/sample_images/folder1/image1.jpg"
-            img_path_2 = "module_example/sample_images/folder2/image2.jpg"
-            response += IMG_PREFIX + img_path_1 + "\n"
-            response += IMG_PREFIX + img_path_2
-        else:
-            return guide
+            try:
+                num = int(params[2])
+            except:
+                return "example.py: 사용법\n" \
+                       "!봇 카운터 [올릴숫자]"
+
+            if usr_i not in self.count:
+                self.count[usr_i] = num
+            else:
+                self.count[usr_i] += num
+            
+            return f"{usr_i} 카운터값: {self.count[usr_i]}"
+
+
+

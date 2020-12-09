@@ -1,17 +1,34 @@
 import pwnlib.util.safeeval
+
+from extensions import ModuleBase
+from extensions import single_chat
 from API.timeout import TimeoutDeco
 
-command = ["연산"]
+class Module(ModuleBase):
+    commands = ["연산"]
 
-def SafeEvaluation(sick):
-    # AVG + [2,3,4] == 3
+    def __init__(self):
+        self.decorated = TimeoutDeco(5, "calc.py: 너무 오래걸립니다.", evaluation)
+
+    @single_chat
+    def run(self, usr_i, params):
+        if len(params) > 2:
+            sick = " ".join(params[2:])
+            print(sick)
+
+            return self.decorated(sick)
+        else:
+            return "calc.py: 사용법\n"\
+                "!봇 연산 [계산식]"
+    
+def evaluation(self, sick):
     class AVG:
         def __add__(self, lst_input):
             return sum(lst_input) / len(lst_input)
         
         def __repr__(self):
             return "calc.py: AVG+[1,2,3...] -> 평균값"
-    
+
     class LTS:
         def __add__(self, lv):
             if lv >= 700:
@@ -35,24 +52,8 @@ def SafeEvaluation(sick):
     try:
         result = pwnlib.util.safeeval.values(sick, cmdDict)
         result = str(result)
-
     except Exception as e:
         print(e)
         return "calc.py: 잘못된 식"
     else:
         return result
-
-
-def Com(params, usr_i):
-    paramNum = len(params)
-
-    if paramNum > 2:
-        sick = " ".join(params[2:])
-        print(sick)
-
-        decorated = TimeoutDeco(5, "calc.py: 너무 오래걸립니다.", SafeEvaluation)
-
-        return decorated(sick)
-    else:
-        return "calc.py: 사용법\n"\
-               "!봇 연산 [계산식]"

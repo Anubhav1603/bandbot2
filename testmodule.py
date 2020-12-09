@@ -1,4 +1,5 @@
 import param
+import time
 from extensions import extnMods, extnModules
 
 loadedModules = extnModules()
@@ -18,39 +19,38 @@ def on_chat(usr_i, str_i):
             paramnum = len(params)
 
             if paramnum == 1:
-                resChat = prefixChat + param.GUIDE + loadedModules.strfModules()
+                return [("chat", prefixChat + param.GUIDE + loadedModules.strfModules())]
             else:
                 if params[1][0] == "_":
                     if params[1] == "_reload":
                         try:
                             loadedModules = extnModules()
                             loadedMods = extnMods()
-                            resChat = "모듈 갱신완료"
+                            return [("chat", "모듈 갱신완료")]
                         except:
-                            resChat = "모듈 갱신실패"
+                            return [("chat", "모듈 갱신실패")]
                 else:
-                    resChat = loadedModules.commandSel(params, usr_i)
-
-                    if resChat == extnModules.wrongCommand:
-                        resChat = prefixChat + "잘못된 명령입니다."
-                    elif "REQUEST_IMAGE_" in resChat:
-                        resList = []
-                        for line in resChat.split('\n'):
-                            if line[:14] == "REQUEST_IMAGE_":
-                                resList.append(("image", line[14:]))
-                        return resList
-
-                    else:
-                        resChat = prefixChat + resChat
-
-            return [("chat", resChat)]
+                    return loadedModules.commandSel(params, usr_i)
+    
+    return []
 
 if __name__ == '__main__':
     while True:
         print("--------------------------------------------------------")
         str_i = input(username + ": ")
-        print("response start {")
-        print(on_chat(username, str_i))
-        print("} response end")
+        res = on_chat(username, str_i)
+        for i, r in enumerate(res):
+            print("response %d start {" % i)
+            if r[0] == 'chat':
+                print(r[1])
+            elif r[0] == 'delay':
+                time.sleep(float(r[1]))
+            elif r[0] == 'image':
+                print("IMAGE:", r[1])
+            elif r[0] == 'change':
+                print("채팅방 변경됨:", r[1])
+            else:
+                print("잘못된 response type")
+            print("} response end")
         print("--------------------------------------------------------")
     
