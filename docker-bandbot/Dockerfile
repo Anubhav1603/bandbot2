@@ -34,7 +34,7 @@ RUN CD_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RE
     mv /tmp/chromedriver /usr/bin/chromedriver && \
     chmod 755 /usr/bin/chromedriver
 
-ARG NO_CACHE_LINE=3
+ARG NO_CACHE_LINE=9
 
 RUN git clone https://github.com/kohs100/bandbot2
 RUN chmod -R 777 /bandbot2

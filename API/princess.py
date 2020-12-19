@@ -10,7 +10,8 @@ BORDER_CUT_SUFFIX = "%d/rankings/logs/eventPoint/%s"
 
 TYPEDIC = {1: "TST", 2: "밀리코레", 3: "PSTheater", 4: "PSTour",
            5: "주년이벤트", 6: "WORKING☆", 7: "만우절 이벤트",
-		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune", 12: "PSTwinstage"}
+		   9: "밀리코레", 10: "PSTwinstage", 11: "PSTune", 12: "PSTwinstage",
+           13: "PSTale"}
 
 SKIP_NAME = [1, 2, 6, 9]
 
