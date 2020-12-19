@@ -3,7 +3,7 @@ from extensions import extnMods, extnModules
 
 import bandchat
 
-bot = bandchat.Client("https://band.us/band/77955502/chat/C6HumD")
+bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
 
 loadedModules = extnModules()
 loadedMods = extnMods()
