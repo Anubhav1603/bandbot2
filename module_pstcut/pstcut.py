@@ -3,7 +3,7 @@ import requests
 from module_pstcut.main import UpdateCache, PlotBorder
 from extensions import ModuleBase
 
-IMG_PATH = "REQUEST_IMAGE_module_pstcut/border_%s.png"
+IMG_PATH = "module_pstcut/border_%s.png"
 
 def chat(msg): return [("chat", msg)]
 def image(path): return [("image", path)]

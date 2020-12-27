@@ -26,6 +26,69 @@ class InvalidEventException(BandchatException):
     def __init__(self):
         super().__init__("Invalid on_event name")
 
+class ChatObject():
+    # Types
+    # 0: Text
+    # 1: Sticker
+    # 2: Image
+    # 3: Video
+    # 4: GIF
+    # 5: File
+    def __init__(self, webelement):
+        typedict = {
+            'DChattingRoomTextMessageItemView': 0,
+            'DChattingRoomStickerMessageItemView': 1,
+            'DChattingRoomPhotoMessageItemView': 2,
+            'DChattingRoomVideoMessageItemView': 3,
+            'DChattingRoomAniGifMessageItemView': 4,
+            'DChattingRoomFileMessageItemView': 5,
+        }
+
+        self._elem = webelement
+        viewname = self._elem.get_attribute('data-viewname')
+        viewclass = self._elem.get_attribute('class')
+        if viewname in typedict:
+            self.type = typedict[viewname]
+
+        self.ismychat = 'logMy' in viewclass
+        if self.ismychat:
+            self.user = '^_+_MYCHAT'
+        else:
+            self.user = self._elem.find_element_by_css_selector('button.author').text
+
+        if self.type == 0:
+            self.text = self._elem.find_element_by_css_selector('span._messageContent').text
+        else:
+            self.text = "^_+_Parsing nontext chat is not implemented yet"
+    
+    def get_reply(self):
+        try:
+            self._elem.find_element_by_css_selector('button.btnMore').click()
+            self._elem.find_element_by_css_selector('button[data-menutype="MENU_TYPE_REPLY"]').click()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def send_emotion(self, emotiontype):
+        typelist = ['great', 'funny', 'like', 'shocked', 'sad', 'angry']
+
+        if self.ismychat:
+            print("Cannot send emotion to my chat")
+            return False
+
+        if emotiontype not in typelist:
+            print("Wrong emotiontype")
+            return False
+
+        try:
+            self._elem.find_element_by_css_selector('button.btnMore').click()
+            self._elem.find_element_by_css_selector('button[data-menutype="MENU_TYPE_EMOTION"]').click()
+            self._elem.find_element_by_css_selector(f'button[data-emotion-type="{emotiontype}"]').click()
+        except Exception as e:
+            print(e)
+            return False
+
 class Client():
     def __init__(self, url,
                  get_rate=0.5,
@@ -54,12 +117,12 @@ class Client():
         print("Driver initializing...")
         self.driver = Chrome(options=options)
         print("Driver initialized.")
+        self.driver.implicitly_wait(3)
 
         if cli_login:
             try:
                 self.driver.get(self.chatURL)
                 print("Get login page completed.")
-                self.driver.implicitly_wait(3)
             except requests.exceptions.ConnectionError:
                 raise LoginFailure
 
@@ -67,7 +130,6 @@ class Client():
                 self.driver.find_element_by_css_selector(
                     ".uBtn.-icoType.-phone").click()
                 print("Get PhonenumberPage completed.")
-                self.driver.implicitly_wait(3)
 
                 Phonenumber = input("Phone number: +82")
                 self.driver.find_element_by_id(
@@ -75,7 +137,6 @@ class Client():
                 self.driver.find_element_by_css_selector(
                     ".uBtn.-tcType.-confirm").click()
                 print("Get PasswordPage completed.")
-                self.driver.implicitly_wait(3)
 
                 Password = input("Password: ")
                 self.driver.find_element_by_id("pw").send_keys(Password)
@@ -113,7 +174,7 @@ class Client():
                 continue
             break
         sleep(1)
-        print("boot success")
+        print("Messagebox grabbed")
 
     def _refresh(self):
         self.last_refresh = time()
@@ -141,17 +202,21 @@ class Client():
             self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
         self.msgWrite.send_keys(Keys.ENTER)
 
-    def _get_HTML(self):
-        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-        chat_found = soup.find_all(attrs={"data-viewname":"DChattingRoomTextMessageItemView"})
-        chat_list = []
+    def _get_chats(self):
+        chats = self.driver.find_elements_by_css_selector('div._childViewContainer>div.logWrap')
 
-        for chat in chat_found:
-            chat_content = chat.find_all("span", class_="_messageContent")[0].text
-            chat_user = chat.find_all("button", class_="author")[0].text
-            chat_list.append((chat_user, chat_content))
+        chatlist = []
+        for chat in chats:
+            try:
+                chatlist.append(ChatObject(chat))
+            except Exception as e:
+                print(e)
+        
+        return chatlist
 
-        return chat_list
+    def _get_chats_len(self):
+        chats = self.driver.find_elements_by_class_name('logWrap')
+        return len(chats)
 
     def _parse_response(self, res_lst):
         for res in res_lst:
@@ -175,20 +240,21 @@ class Client():
 
     def run(self):
         self._refresh()
-        recent_chat = len(self._get_HTML())
+        recent_chat = self._get_chats_len()
         self._parse_response(self.on_ready())
 
         while True:
             if time() >= self.next_refresh:
                 self._refresh()
-            chat_list = self._get_HTML()
-            len_chat = len(chat_list)
+            
+            len_chat = self._get_chats_len()
 
             if len_chat > recent_chat:
+                chat_list = self._get_chats()
                 for i in range(recent_chat - len_chat, 0):
                     chat = chat_list[i]
-                    print(chat[0] + ":" + chat[1])
-                    self._parse_response(self.on_chat(*chat))
+                    print(chat.user + ":" + chat.text)
+                    self._parse_response(self.on_chat(chat))
             
             recent_chat = len_chat
             sleep(self.get_rate)
