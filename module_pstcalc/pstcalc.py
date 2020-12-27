@@ -6,8 +6,7 @@ class Module(ModuleBase):
 	@single_chat
 	def run(self, params, usr_i):
 		paramnum = len(params)
-		guide = "pstcalc.py: 사용법\n\
-				!봇 계산 [시어터|투어|튠] [영업런|라이브런] [레벨] [목표점수]"
+		guide = "pstcalc.py: 사용법\n!봇 계산 [시어터|투어|튠] [영업런|라이브런] [레벨] [목표점수]"
 
 		if paramnum == 6:
 			try:
