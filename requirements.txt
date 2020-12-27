@@ -8,3 +8,6 @@ pwntools>=4.2.1
 
 # For module_pstcut
 matplotlib>=3.2.2
+
+# For module_mcserver
+mcstatus

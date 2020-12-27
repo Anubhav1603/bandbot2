@@ -10,6 +10,10 @@ def single_chat(method):
         return [("chat", res)]
     return imethod
 
+class ModBase(ABC):
+    @abstractmethod
+    def recv_chat(self, usr_i, str_i): pass
+
 class ModuleBase(ABC):
     @property
     @abstractmethod
@@ -32,19 +36,22 @@ class extnMods():
 
         modules = glob.glob("mod_*")
         for module in modules:
-            module_name = module + "." + module[4:]
-            mod = importlib.import_module(module_name)
+            mod_name = module + "." + module[4:]
+            mod = importlib.import_module(mod_name)
             importlib.reload(mod)
-            self.mods.append(mod.recvChat)
 
-    def sendChat(self, usr_i, str_i):
-        plist = []
-        for mod in self.mods:
-            p = Process(target = mod, args = (usr_i, str_i))
-            p.start()
-        
-        for p in plist:
-            p.join()
+            mod_instance = mod.Mod()
+
+            self.mods.append(mod_instance)
+
+            print(f"mod loaded: {mod_name}")
+
+    def send_chat(self, usr_i, str_i):
+        for mod_inst in self.mods:
+            try:
+                mod_inst.recv_chat(usr_i, str_i)
+            except Exception as e:
+                print(e)
 
 class extnModules():
     empty_call = 1
@@ -67,6 +74,8 @@ class extnModules():
                     raise ModuleLoadError
                 else:
                     self.commands[comm] = module_instance
+            
+            print(f"module loaded: {module_name}")
 
     def strfModules(self):
         return ", ".join(self.commands.keys())

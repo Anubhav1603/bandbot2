@@ -10,6 +10,9 @@ username = input("username? ")
 def on_chat(usr_i, str_i):
     global loadedMods
     global loadedModules
+
+    loadedMods.send_chat(usr_i, str_i)
+
     if str_i.startswith('!봇'):
         params = str_i.split(" ")
         params = list(filter(lambda x: x != "", params))
@@ -30,7 +33,12 @@ def on_chat(usr_i, str_i):
                         except:
                             return [("chat", "모듈 갱신실패")]
                 else:
-                    return loadedModules.commandSel(params, usr_i)
+                    res = loadedModules.commandSel(params, usr_i)
+
+                    if res == loadedModules.wrong_command:
+                        return [("chat", "잘못된 명령어입니다.")]
+                    else:
+                        return res
     
     return []
 

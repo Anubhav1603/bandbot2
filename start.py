@@ -12,6 +12,9 @@ loadedMods = extnMods()
 def on_chat(usr_i, str_i):
     global loadedMods
     global loadedModules
+    
+    loadedMods.send_chat(usr_i, str_i)
+
     if str_i.startswith('!봇'):
         params = str_i.split(" ")
         params = list(filter(lambda x: x != "", params))
