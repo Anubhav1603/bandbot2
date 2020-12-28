@@ -26,6 +26,16 @@ class InvalidEventException(BandchatException):
     def __init__(self):
         super().__init__("Invalid on_event name")
 
+TYPEDICT = {
+            'DChattingRoomTextMessageItemView': 0,
+            'DChattingRoomStickerMessageItemView': 1,
+            'DChattingRoomPhotoMessageItemView': 2,
+            'DChattingRoomVideoMessageItemView': 3,
+            'DChattingRoomAniGifMessageItemView': 4,
+            'DChattingRoomFileMessageItemView': 5,
+            'UnknownOrDeletedMessage': 6
+           }
+
 class ChatObject():
     # Types
     # 0: Text
@@ -34,34 +44,39 @@ class ChatObject():
     # 3: Video
     # 4: GIF
     # 5: File
+    # 6: Unknown or deleted message object
     def __init__(self, webelement):
-        typedict = {
-            'DChattingRoomTextMessageItemView': 0,
-            'DChattingRoomStickerMessageItemView': 1,
-            'DChattingRoomPhotoMessageItemView': 2,
-            'DChattingRoomVideoMessageItemView': 3,
-            'DChattingRoomAniGifMessageItemView': 4,
-            'DChattingRoomFileMessageItemView': 5,
-        }
-
         self._elem = webelement
-        viewname = self._elem.get_attribute('data-viewname')
-        viewclass = self._elem.get_attribute('class')
-        if viewname in typedict:
-            self.type = typedict[viewname]
 
-        self.ismychat = 'logMy' in viewclass
-        if self.ismychat:
-            self.user = '^_+_MYCHAT'
-        else:
-            self.user = self._elem.find_element_by_css_selector('button.author').text
+        try:
+            viewname = self._elem.get_attribute('data-viewname')
+            viewclass = self._elem.get_attribute('class')
+            if viewname in TYPEDICT:
+                self.type = TYPEDICT[viewname]
+            else: raise ValueError
 
-        if self.type == 0:
-            self.text = self._elem.find_element_by_css_selector('span._messageContent').text
-        else:
-            self.text = "^_+_Parsing nontext chat is not implemented yet"
+            self.ismychat = 'logMy' in viewclass
+            
+            if self.ismychat:
+                self.user = "^_+_MYCHAT"
+            else:
+                self.user = self._elem.find_element_by_css_selector('.author').text
+
+            if self.type == 0:
+                self.text = self._elem.find_element_by_css_selector('._messageContent').text
+            else:
+                self.text = "^_+_Parsing nontext chat is not implemented yet"
+        except:
+            self.type = 6
+            self.ismychat = False
+            self.user = "Unknown"
+            self.text = "^_+_Unknown"
     
     def get_reply(self):
+        if self.type == 6: 
+            print("Cannot reply to unknown or deleted chat")
+            return False
+
         try:
             self._elem.find_element_by_css_selector('button.btnMore').click()
             self._elem.find_element_by_css_selector('button[data-menutype="MENU_TYPE_REPLY"]').click()
@@ -73,11 +88,15 @@ class ChatObject():
     def send_emotion(self, emotiontype):
         typelist = ['great', 'funny', 'like', 'shocked', 'sad', 'angry']
 
-        if self.ismychat:
+        if self.type == 6:
+            print("Cannot send emotion to unknown or deleted chat")
+            return False
+
+        elif self.ismychat:
             print("Cannot send emotion to my chat")
             return False
 
-        if emotiontype not in typelist:
+        elif emotiontype not in typelist:
             print("Wrong emotiontype")
             return False
 
@@ -203,7 +222,7 @@ class Client():
         self.msgWrite.send_keys(Keys.ENTER)
 
     def _get_chats(self):
-        chats = self.driver.find_elements_by_css_selector('div._childViewContainer>div.logWrap')
+        chats = self.driver.find_elements_by_css_selector('._childViewContainer>.logWrap')
 
         chatlist = []
         for chat in chats:
@@ -246,6 +265,8 @@ class Client():
         while True:
             if time() >= self.next_refresh:
                 self._refresh()
+                recent_chat = self._get_chats_len()
+                len_chat = recent_chat
             
             len_chat = self._get_chats_len()
 

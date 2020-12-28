@@ -2,13 +2,13 @@
 
 ## 개요
 
-Simple BAND chatbot implemented using [band.py](https://github.com/kohs100/band.py) module(nightly build).
+[band.py](https://github.com/kohs100/band.py) 모듈을 사용해 구현된 워너비어스타 밴드 챗봇
   
 ## 명령어
 
 ### 밀리이벤 관련
 
-```chat
+```text
 !봇 밀리이벤
 !봇 밀리이벤컷
 !봇 밀리역대컷 [시어터|투어]
@@ -30,7 +30,7 @@ Simple BAND chatbot implemented using [band.py](https://github.com/kohs100/band.
   
 ### 그외
 
-```chat
+```text
 !봇 연산 [식]
 !봇 개그
 !봇 주사위 [주사위갯수] [주사위크기]
@@ -48,3 +48,7 @@ Simple BAND chatbot implemented using [band.py](https://github.com/kohs100/band.
 ## 모듈 기여
 
 [모듈 개발 가이드](_module_example/readme.md)
+
+## 이벤트 달력
+
+<iframe src="https://calendar.google.com/calendar/embed?height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Asia%2FSeoul&amp;src=ajgxcm90NTZrMDdxZHIwYzlvaDhyOTNyaWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23a2845e&amp;showTitle=1&amp;title=MLTD%20Events&amp;showPrint=0&amp;showNav=1&amp;showCalendars=0&amp;showDate=1&amp;showTabs=0&amp;showTz=1" style="border:solid 1px #777" width="600" height="400" frameborder="0" scrolling="no"></iframe>

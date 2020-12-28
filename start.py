@@ -3,9 +3,9 @@ from extensions import extnMods, extnModules
 
 import bandchat
 
-# bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD", cli_login=False, user_data="%localappdata%\\Google\\Chrome\\User Data")
+bot = bandchat.Client("https://band.us/band/55800178/chat/CP2C7U", cli_login=False, user_data="%localappdata%\\Google\\Chrome\\User Data")
 
-bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
+# bot = bandchat.Client("https://band.us/band/55800178/chat/C6HumD")
 
 loadedModules = extnModules()
 loadedMods = extnMods()
@@ -28,7 +28,7 @@ def on_chat(chatobj):
 
             if paramnum == 1:
                 chatobj.get_reply()
-                return [("chat", param.GUIDE + loadedModules.strfModules())]
+                return [("chat", "https://bot.ster.email")]
             else:
                 if params[1][0] == "_":
                     if params[1] == "_reload":
