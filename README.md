@@ -41,10 +41,10 @@
 * 연산
   * 파이썬 식을 연산한 결과를 반환
 * 미라지
-  * [미라지 목록](http://si.ster.email/dl/miraji/images/miraji_dict.csv)
+  * [미라지 목록](https://si.ster.email/dl/miraji/images/miraji_dict.csv)
 * 마크서버
   * 마크서버 상태체크
 
 ## 모듈 기여
 
-[모듈 개발 가이드](_module_example/readme.md)
+[모듈 개발 가이드](https://github.com/kohs100/bandbot2/tree/master/_module_example)
