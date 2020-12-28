@@ -48,7 +48,3 @@
 ## 모듈 기여
 
 [모듈 개발 가이드](_module_example/readme.md)
-
-## 이벤트 달력
-
-<iframe src="https://calendar.google.com/calendar/embed?height=400&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Asia%2FSeoul&amp;src=ajgxcm90NTZrMDdxZHIwYzlvaDhyOTNyaWdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&amp;color=%23a2845e&amp;showTitle=1&amp;title=MLTD%20Events&amp;showPrint=0&amp;showNav=1&amp;showCalendars=0&amp;showDate=1&amp;showTabs=0&amp;showTz=1" style="border:solid 1px #777" width="600" height="400" frameborder="0" scrolling="no"></iframe>
