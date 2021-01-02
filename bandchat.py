@@ -1,14 +1,15 @@
-from time import sleep, strftime, time
+from time import sleep
 import os
+import json
+import gzip
 
 import requests
 
-from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver import Chrome
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.chrome.options import Options
+from seleniumwire.webdriver import Chrome
+from seleniumwire.webdriver import ChromeOptions
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class BandchatException(Exception):
     def __init__(self, msg = "Bandchat module error"):
@@ -26,117 +27,58 @@ class InvalidEventException(BandchatException):
     def __init__(self):
         super().__init__("Invalid on_event name")
 
-TYPEDICT = {
-            'DChattingRoomTextMessageItemView': 0,
-            'DChattingRoomStickerMessageItemView': 1,
-            'DChattingRoomPhotoMessageItemView': 2,
-            'DChattingRoomVideoMessageItemView': 3,
-            'DChattingRoomAniGifMessageItemView': 4,
-            'DChattingRoomFileMessageItemView': 5,
-            'UnknownOrDeletedMessage': 6
-           }
-
-class ChatObject():
-    # Types
-    # 0: Text
-    # 1: Sticker
-    # 2: Image
-    # 3: Video
-    # 4: GIF
-    # 5: File
-    # 6: Unknown or deleted message object
-    def __init__(self, webelement):
-        self._elem = webelement
-
-        try:
-            viewname = self._elem.get_attribute('data-viewname')
-            viewclass = self._elem.get_attribute('class')
-            if viewname in TYPEDICT:
-                self.type = TYPEDICT[viewname]
-            else: raise ValueError
-
-            self.ismychat = 'logMy' in viewclass
-            
-            if self.ismychat:
-                self.user = "^_+_MYCHAT"
-            else:
-                self.user = self._elem.find_element_by_css_selector('.author').text
-
-            if self.type == 0:
-                self.text = self._elem.find_element_by_css_selector('._messageContent').text
-            else:
-                self.text = "^_+_Parsing nontext chat is not implemented yet"
-        except:
-            self.type = 6
-            self.ismychat = False
-            self.user = "Unknown"
-            self.text = "^_+_Unknown"
-    
-    def get_reply(self):
-        if self.type == 6: 
-            print("Cannot reply to unknown or deleted chat")
-            return False
-
-        try:
-            self._elem.find_element_by_css_selector('button.btnMore').click()
-            self._elem.find_element_by_css_selector('button[data-menutype="MENU_TYPE_REPLY"]').click()
-            return True
-        except Exception as e:
-            print(e)
-            return False
-
-    def send_emotion(self, emotiontype):
-        typelist = ['great', 'funny', 'like', 'shocked', 'sad', 'angry']
-
-        if self.type == 6:
-            print("Cannot send emotion to unknown or deleted chat")
-            return False
-
-        elif self.ismychat:
-            print("Cannot send emotion to my chat")
-            return False
-
-        elif emotiontype not in typelist:
-            print("Wrong emotiontype")
-            return False
-
-        try:
-            self._elem.find_element_by_css_selector('button.btnMore').click()
-            self._elem.find_element_by_css_selector('button[data-menutype="MENU_TYPE_EMOTION"]').click()
-            self._elem.find_element_by_css_selector(f'button[data-emotion-type="{emotiontype}"]').click()
-        except Exception as e:
-            print(e)
-            return False
-
 class Client():
     def __init__(self, url,
                  get_rate=0.5,
-                 refresh_rate=1800,
+                 chat_per_refresh=2,
                  cli_login=True,
                  user_data=None,
+                 timeout=10,
                  ):
         self.chatURL = url
-        self.refresh_rate = refresh_rate
+        self.chat_per_refresh = chat_per_refresh
         self.get_rate = get_rate
         
         self.on_chat = lambda x,y: []
-        self.on_ready = lambda :[]
+        self.on_ready = lambda : []
+        self.dict_user = {}
+
+        def response_interceptor(req, res):
+            if 'sync_chat_channel' in req.url:
+                if req.method == 'GET':
+                    try:
+                        dict_raw = gzip.decompress(res.body)
+                        dict_usr = json.loads(dict_raw)
+                        dict_usr = dict_usr['result_data']['channel']['participants']
+                        for usr in dict_usr:
+                            self.dict_user[usr["user_no"]] = usr["name"]
+                            print("Found usercode-username dictionary")
+                    except:
+                        print("Invalid dictionary")
+            return res
+
+        caps = DesiredCapabilities.CHROME
+        caps['goog:loggingPrefs'] = {
+            'performance':'ALL'
+        }
 
         options = ChromeOptions()
-
+        options.add_experimental_option('perfLoggingPrefs', {
+            'enableNetwork': True,
+            'enablePage': False
+        })
         options.add_argument('--disable-extensions')
         options.add_argument("--no-sandbox")
         if cli_login:
-            options.add_argument("--headless")
-            options.add_argument("--disable-gpu")
-        
+            options.headless = True
         if user_data is not None:
             options.add_argument(f"--user-data-dir={user_data}")
         
         print("Driver initializing...")
         self.driver = Chrome(options=options)
+        self.driver.response_interceptor = response_interceptor
+        self.driver.implicitly_wait(timeout)
         print("Driver initialized.")
-        self.driver.implicitly_wait(3)
 
         if cli_login:
             try:
@@ -162,7 +104,6 @@ class Client():
                 self.driver.find_element_by_css_selector(
                     ".uBtn.-tcType.-confirm").click()
                 print("Get SMSPage completed.")
-                self.driver.implicitly_wait(8)
             except NoSuchElementException:
                 raise LoginFailure
             
@@ -176,32 +117,18 @@ class Client():
                     "button.uBtn.-tcType.-confirm").click()
                 print("Driver get completed.")
         else:
+            self.driver.get(self.chatURL)
             input("Please login from GUI.\nPress Enter to Continue...")
 
-        self._get_msgbox()
+        self._refresh()
 
     def _get_msgbox(self):
-        startsec = time()
-        while(True):
-            try:
-                self.msgWrite = self.driver.find_element_by_class_name(
-                    "commentWrite")
-            except NoSuchElementException:
-                if(time() > startsec + 10):
-                    raise ChatLoadException
-                sleep(1)
-                continue
-            break
-        sleep(1)
+        self.msgWrite = self.driver.find_element_by_class_name("commentWrite")
         print("Messagebox grabbed")
 
     def _refresh(self):
-        self.last_refresh = time()
-        self.next_refresh = self.last_refresh + self.refresh_rate
-
         self.driver.get(self.chatURL)
         self._get_msgbox()
-        self.driver.implicitly_wait(10)
 
     def _send_image(self, rPath):
         try:
@@ -220,22 +147,6 @@ class Client():
             self.msgWrite.send_keys(chat)
             self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
         self.msgWrite.send_keys(Keys.ENTER)
-
-    def _get_chats(self):
-        chats = self.driver.find_elements_by_css_selector('._childViewContainer>.logWrap')
-
-        chatlist = []
-        for chat in chats:
-            try:
-                chatlist.append(ChatObject(chat))
-            except Exception as e:
-                print(e)
-        
-        return chatlist
-
-    def _get_chats_len(self):
-        chats = self.driver.find_elements_by_class_name('logWrap')
-        return len(chats)
 
     def _parse_response(self, res_lst):
         for res in res_lst:
@@ -259,23 +170,43 @@ class Client():
 
     def run(self):
         self._refresh()
-        recent_chat = self._get_chats_len()
-        self._parse_response(self.on_ready())
-
+        num_chats = 0
         while True:
-            if time() >= self.next_refresh:
+            if num_chats > self.chat_per_refresh:
                 self._refresh()
-                recent_chat = self._get_chats_len()
-                len_chat = recent_chat
-            
-            len_chat = self._get_chats_len()
+                num_chats = 0
 
-            if len_chat > recent_chat:
-                chat_list = self._get_chats()
-                for i in range(recent_chat - len_chat, 0):
-                    chat = chat_list[i]
-                    print(chat.user + ":" + chat.text)
-                    self._parse_response(self.on_chat(chat))
-            
-            recent_chat = len_chat
+            for log in self.driver.get_log('performance'):
+                try:
+                    message = log['message']
+                    if "Network.webSocketFrameReceived" not in message:
+                        continue
+                    elif "userNo" not in message:
+                        continue
+                    elif "contents" not in message:
+                        continue
+
+                    num_chats += 1
+                    msg = json.loads(message)
+                    payload = msg['message']['params']['response']['payloadData']
+                    from_index = payload.find(',') + 1
+                    message_parsed = json.loads(payload[from_index:])
+
+                    chat_parsed = message_parsed[1]['message']
+                    user_no = chat_parsed['userNo']
+                    chat_body = chat_parsed['contents']
+                    try:
+                        user_str = self.dict_user[int(user_no)]
+                    except Exception as e:
+                        print(e)
+                        user_str = "unknown_user"
+
+                    print(f"{user_str}: {chat_body}")
+                    res = self.on_chat(user_no, user_str, chat_body)
+                    self._parse_response(res)
+
+                except Exception as e:
+                    print(e)
+                    continue
+
             sleep(self.get_rate)

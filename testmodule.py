@@ -17,12 +17,10 @@ def on_chat(usr_i, str_i):
         params = str_i.split(" ")
         params = list(filter(lambda x: x != "", params))
         if params[0] == "!봇":
-            prefixChat = "[" + param.NAME + "] " + usr_i + "\n"
-
             paramnum = len(params)
 
             if paramnum == 1:
-                return [("chat", prefixChat + param.GUIDE + loadedModules.strfModules())]
+                return [("chat", "https://bot.ster.email")]
             else:
                 if params[1][0] == "_":
                     if params[1] == "_reload":

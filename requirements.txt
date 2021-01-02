@@ -1,7 +1,8 @@
-beautifulsoup4>=4.9.0
-parse>=1.15.0
-requests>=2.23.0
-selenium>=3.141.0
+beautifulsoup4
+parse
+requests
+selenium
+seleniumwire
 
 # For module_calc
 pwntools>=4.2.1
