@@ -149,16 +149,20 @@ class Client():
         self.msgWrite.send_keys(Keys.ENTER)
 
     def _parse_response(self, res_lst):
-        for res in res_lst:
-            if res[0] == "chat":
-                self._send_chat(res[1])
-            elif res[0] == "image":
-                self._send_image(res[1])
-            elif res[0] == "change":
-                self.chatURL = res[1]
-                self._refresh()
-            elif res[0] == "delay":
-                sleep(float(res[1]))
+        try:
+            for res in res_lst:
+                if res[0] == "chat":
+                    self._send_chat(res[1])
+                elif res[0] == "image":
+                    self._send_image(res[1])
+                elif res[0] == "change":
+                    self.chatURL = res[1]
+                    self._refresh()
+                elif res[0] == "delay":
+                    sleep(float(res[1]))
+        except Exception as e:
+            print(e)
+            print("Error while parsing response")
     
     def on_event(self, ifunction):
         if ifunction.__name__ == "on_chat":
