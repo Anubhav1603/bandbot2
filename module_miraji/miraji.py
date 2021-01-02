@@ -4,7 +4,7 @@ import API.fsync as fsync
 
 from extensions import ModuleBase
 
-DBENDPOINT = "https://si.ster.email/dl/miraji"
+DBENDPOINT = "https://bot.ster.email/miraji"
 DBDIR = "module_miraji/images"
 
 class get_DBError(Exception): pass

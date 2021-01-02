@@ -41,7 +41,7 @@
 * 연산
   * 파이썬 식을 연산한 결과를 반환
 * 미라지
-  * [미라지 목록](https://si.ster.email/dl/miraji/images/miraji_dict.csv)
+  * [미라지 목록](https://bot.ster.email/miraji.html)
 * 마크서버
   * 마크서버 상태체크
 

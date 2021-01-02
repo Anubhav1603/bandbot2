@@ -30,7 +30,7 @@ class InvalidEventException(BandchatException):
 class Client():
     def __init__(self, url,
                  get_rate=0.5,
-                 chat_per_refresh=2,
+                 chat_per_refresh=100,
                  cli_login=True,
                  user_data=None,
                  timeout=10,
@@ -49,13 +49,12 @@ class Client():
                     try:
                         dict_raw = gzip.decompress(res.body)
                         dict_usr = json.loads(dict_raw)
-                        dict_usr = dict_usr['result_data']['channel']['participants']
+                        dict_usr = dict_usr['result_data']['users']
                         for usr in dict_usr:
                             self.dict_user[usr["user_no"]] = usr["name"]
-                            print("Found usercode-username dictionary")
+                        print("Found usercode-username dictionary")
                     except:
                         print("Invalid dictionary")
-            return res
 
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {
