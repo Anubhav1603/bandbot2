@@ -2,7 +2,7 @@ beautifulsoup4
 parse
 requests
 selenium
-seleniumwire
+selenium-wire
 
 # For module_calc
 pwntools>=4.2.1
