@@ -44,17 +44,16 @@ class Client():
         self.dict_user = {}
 
         def response_interceptor(req, res):
-            if 'sync_chat_channel' in req.url:
-                if req.method == 'GET':
-                    try:
-                        dict_raw = gzip.decompress(res.body)
-                        dict_usr = json.loads(dict_raw)
-                        dict_usr = dict_usr['result_data']['users']
-                        for usr in dict_usr:
-                            self.dict_user[usr["user_no"]] = usr["name"]
-                        print("Found usercode-username dictionary")
-                    except:
-                        print("Invalid dictionary")
+            if 'sync_chat_channel' in req.url and req.method == 'GET':
+                try:
+                    dict_raw = gzip.decompress(res.body)
+                    dict_usr = json.loads(dict_raw)
+                    dict_usr = dict_usr['result_data']['users']
+                    for usr in dict_usr:
+                        self.dict_user[usr["user_no"]] = usr["name"]
+                    print("Found usercode-username dictionary")
+                except:
+                    print("Invalid dictionary")
 
         caps = DesiredCapabilities.CHROME
         caps['goog:loggingPrefs'] = {

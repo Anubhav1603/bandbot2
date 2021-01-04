@@ -24,7 +24,7 @@ def on_chat(usr_no, usr_i, str_i):
             paramnum = len(params)
 
             if paramnum == 1:
-                return [("chat", "https://bot.ster.email")]
+                return [("chat", "http://bot.ster.email")]
             else:
                 if params[1][0] == "_":
                     if params[1] == "_reload":
