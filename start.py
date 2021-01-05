@@ -3,7 +3,7 @@ import json
 from extensions import extnMods, extnModules
 import bandchat
 
-URL = "https://band.us/band/55800178/chat/COMq8L"
+URL = "https://band.us/band/55800178/chat/C6HumD"
 
 bot = bandchat.Client(URL, cli_login=False, user_data="%localappdata%\\Google\\Chrome\\User Data")
 

@@ -134,6 +134,7 @@ class Client():
             img_up = self.driver.find_element_by_css_selector(
                 "input[data-uiselector='imageUploadButton']")
             img_up.send_keys(absPath)
+            sleep(2)
         except Exception as e:
             print(e)
         return
@@ -145,6 +146,7 @@ class Client():
             self.msgWrite.send_keys(chat)
             self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
         self.msgWrite.send_keys(Keys.ENTER)
+        sleep(2)
 
     def _parse_response(self, res_lst):
         try:
