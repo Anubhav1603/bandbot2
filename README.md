@@ -49,6 +49,19 @@
 * 마크서버
   * 마크서버 상태체크
 
+### 최근 변경
+* [kohs100/bandbot2:11](https://hub.docker.com/r/kohs100/bandbot2)
+  * Performance logging을 통한 ws통신 후킹으로 채팅인식방식 변경
+  * 닉네임 변경과 관계 없이 유저구분 가능
+  
+* [kohs100/bandbot2:12](https://hub.docker.com/r/kohs100/bandbot2)
+  * 개인채팅 리디렉션 기능 추가
+  * 역계산 모듈 추가
+  * 연산모듈 오류 수정
+
+### 알려진 이슈
+
+
 ## 모듈 기여
 
 [모듈 개발 가이드](https://github.com/kohs100/bandbot2/tree/master/_module_example)
