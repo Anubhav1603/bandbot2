@@ -14,7 +14,7 @@ class Module(ModuleBase):
         assert params[1] == "고오급개그"
 
         if len(params) != 2:
-            return ("chat", "example.py: 사용법\n!봇 고오급개그")
+            return [("chat", "example.py: 사용법\n!봇 고오급개그")]
         else:
             res1 = ("chat", "비빔면 비빌때 팔을 조심해야하는 이유는?")
             res2 = ("delay", "3.2")         # 3.2초 딜레이
