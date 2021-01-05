@@ -15,10 +15,16 @@ def chat(msg): return [("chat", msg)]
 def image(path): return [("image", path)]
 
 class Module(ModuleBase):
-    commands = ["미라"]
+    commands = ["미라", "미라지", "미라티콘"]
 
     def __init__(self):
         self.cache = []
+        try:
+            self.update_DB()
+        except FileNotFoundError:
+            self.get_DB()
+            self.update_DB()
+            self.check_db()
 
     def run(self, params, usr_i):
         paramNum = len(params)

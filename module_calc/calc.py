@@ -21,7 +21,7 @@ class Module(ModuleBase):
             return "calc.py: 사용법\n"\
                 "!봇 연산 [계산식]"
     
-def evaluation(self, sick):
+def evaluation(sick):
     class AVG:
         def __add__(self, lst_input):
             return sum(lst_input) / len(lst_input)

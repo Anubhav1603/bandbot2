@@ -1,12 +1,12 @@
 from extensions import ModuleBase, single_chat
 
 class Module(ModuleBase):
-	commands = ["계산"]
+	commands = ["역계산"]
 
 	@single_chat
 	def run(self, params, usr_i):
 		paramnum = len(params)
-		guide = "pstcalc.py: 사용법\n!봇 계산 [시어터|투어|튠] [영업런|라이브런] [레벨] [목표점수]"
+		guide = "pstcalc_r.py: 사용법\n!봇 역계산 [시어터|투어|튠] [영업런|라이브런] [레벨] [주얼]"
 
 		if paramnum == 6:
 			try:
@@ -15,10 +15,10 @@ class Module(ModuleBase):
 				stamina = LevelToStamina(int(params[4]))
 				score = int(params[5])
 				
-				if params[2] == "시어터":	#EX) !봇 계산 시어터 영업런 160 300000
+				if params[2] == "시어터":
 					return calcTheater(stamina, score, isWork)
 
-				elif params[2] == "투어":	#EX) !봇 계산 투어 영업런 160 300000
+				elif params[2] == "투어":
 					return calcTour(stamina, score, isWork)
 
 				elif params[2] == "튠":
@@ -42,16 +42,16 @@ def LevelToStamina(lv):
 	elif lv >= 2:
 		return 61 + (lv-2) / 2
 
-def calcTheater(genki, score, isWork):
-	req_stamina = score / 11.28611
-	if isWork:
-		req_stamina /= 0.7
+def calcTheater(genki, jewel, isWork):
+	stamina = (jewel / 50) * genki
+	score = stamina * 11.28611
 
-	req_jewel = req_stamina / genki * 50
-	req_yen = req_jewel * 9800 / 8400
-	return "필요주얼: %.1f\nG셋충전시: %.1f엔" % (req_jewel, req_yen)
+	if isWork:
+		score *= 0.7
+
+	return "획득pt: %.1f" % score
 	
-def calcTour(genki, score, isWork):
+def calcTour(genki, jewel, isWork):
 	'''
 	라이브런
 	스테 300 -> MM 10판 + 이벤곡 3판(5배수)
@@ -64,16 +64,15 @@ def calcTour(genki, score, isWork):
 	이벤곡 5배수 3판: 144 * 5 * 3 = 2160pt
 	스테 300당 2760pt.
 	'''
+	stamina = (jewel / 50) * genki
 	if isWork:
-		req_stamina = score / 2760 * 300
+		score = stamina / 300 * 2760
 	else:
-		req_stamina = score / 3560 * 300
+		score = stamina / 300 * 3560
 
-	req_jewel = req_stamina / genki * 50
-	req_yen = req_jewel * 9800 / 8400
-	return "필요주얼: %.1f\nG셋충전시: %.1f엔" % (req_jewel, req_yen)
+	return "획득pt: %.1f" % score
 
-def calcTune(genki, score, isWork):
+def calcTune(genki, jewel, isWork):
 	'''
 	라이브런
 	스테 300 -> MM 10판 + 재화 750개
@@ -86,11 +85,10 @@ def calcTune(genki, score, isWork):
 	재화 525개 -> x4.2: 2205pt
 	스테 300당 2730pt.
 	'''
+	stamina = (jewel / 50) * genki
 	if isWork:
-		req_stamina = score / 2730 * 300
+		score = stamina / 300 * 2730
 	else:
-		req_stamina = score / 3774 * 300
+		score = stamina / 300 * 3774
 
-	req_jewel = req_stamina / genki * 50
-	req_yen = req_jewel * 9800 / 8400
-	return "필요주얼: %.1f\nG셋충전시: %.1f엔" % (req_jewel, req_yen)
+	return "획득pt: %.1f" % score
