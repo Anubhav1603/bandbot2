@@ -67,6 +67,10 @@
   * 역계산 모듈 추가
   * 연산모듈 오류 수정
 
+* [kohs100/bandbot2:13](https://hub.docker.com/r/kohs100/bandbot2)
+  * 밀리역대컷 모듈 100위 그래프 추가
+  * impllicit wait 모두 제거
+
 ### 알려진 이슈
 
 

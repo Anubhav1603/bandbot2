@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+ARG NO_CACHE_LINE=start_from_scratch
+
 RUN apt-get -qqy update && \
     apt-get -qqy install unzip git wget python3.8 python3.8-dev python3-pip
 
@@ -34,7 +36,7 @@ RUN CD_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RE
     mv /tmp/chromedriver /usr/bin/chromedriver && \
     chmod 755 /usr/bin/chromedriver
 
-ARG NO_CACHE_LINE=4dsaf12fdsa
+ARG NO_CACHE_LINE=4dsaf12fdsafdsa
 
 RUN git clone https://github.com/kohs100/bandbot2
 RUN chmod -R 777 /bandbot2
