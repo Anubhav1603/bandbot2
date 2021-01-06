@@ -5,9 +5,9 @@ import bandchat
 
 URL = "https://band.us/band/55800178/chat/C6HumD"
 
-bot = bandchat.Client(URL, cli_login=False, user_data="%localappdata%\\Google\\Chrome\\User Data")
+# bot = bandchat.Client(URL, cli_login=False, user_data="%localappdata%\\Google\\Chrome\\User Data")
 
-# bot = bandchat.Client(URL)
+bot = bandchat.Client(URL)
 
 f = open('redirection.json', 'r', encoding='utf-8')
 primitive_db = json.load(f)
@@ -19,10 +19,12 @@ for item in primitive_db:
 
 loadedModules = extnModules()
 loadedMods = extnMods()
+enabled = True
 
 def parser(params, usr_i):
     global loadedMods
     global loadedModules
+    global enabled
 
     params = list(filter(lambda x: x != "", params))
     paramnum = len(params)

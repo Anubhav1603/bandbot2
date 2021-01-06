@@ -11,6 +11,10 @@ from seleniumwire.webdriver import Chrome
 from seleniumwire.webdriver import ChromeOptions
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 class BandchatException(Exception):
     def __init__(self, msg = "Bandchat module error"):
         super().__init__(msg)
@@ -38,6 +42,7 @@ class Client():
         self.chatURL = url
         self.chat_per_refresh = chat_per_refresh
         self.get_rate = get_rate
+        self.timeout = timeout
         
         self.on_chat = lambda x,y: []
         self.on_ready = lambda : []
@@ -86,52 +91,71 @@ class Client():
                 raise LoginFailure
 
             try:
-                self.driver.find_element_by_css_selector(
-                    ".uBtn.-icoType.-phone").click()
+                self._locate_by_css_selector(".uBtn.-icoType.-phone").click()
+
+                phone_box = self._locate_by_id("input_local_phone_number")
                 print("Get PhonenumberPage completed.")
 
-                Phonenumber = input("Phone number: +82")
-                self.driver.find_element_by_id(
-                    "input_local_phone_number").send_keys(Phonenumber)
-                self.driver.find_element_by_css_selector(
-                    ".uBtn.-tcType.-confirm").click()
+                phone = input("Phone number: +82")
+                phone_box.send_keys(phone)
+                self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
+
+                pw_box = self._locate_by_id("pw")
                 print("Get PasswordPage completed.")
 
-                Password = input("Password: ")
-                self.driver.find_element_by_id("pw").send_keys(Password)
-                self.driver.find_element_by_css_selector(
-                    ".uBtn.-tcType.-confirm").click()
+                pw = input("Password: ")
+                self._locate_by_id("pw").send_keys(pw)
+                self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
+                
                 print("Get SMSPage completed.")
             except NoSuchElementException:
                 raise LoginFailure
             
             try:
-                print(self.driver.find_element_by_id("hintNumberDiv").text)
-                sleep(20)
-            except NoSuchElementException:
+                print("Trying to get hintNumberDiv...")
+                hint = self._locate_by_id("hintNumberDiv")
+                print("Hintnumber:", hint.text)
+                input("Press Enter to continue...")
+            except Exception as e:
+                print("Retrieving SMS authcode...")
+                code_box = self._locate_by_id("code")
+                print("codebox grabbed")
                 pw_band = input("SMS authcode: ")
-                self.driver.find_element_by_id("code").send_keys(str(pw_band))
-                self.driver.find_element_by_css_selector(
+                code_box.send_keys(str(pw_band))
+                self._locate_by_css_selector(
                     "button.uBtn.-tcType.-confirm").click()
-                print("Driver get completed.")
+                print("Login completed.")
         else:
             self.driver.get(self.chatURL)
             input("Please login from GUI.\nPress Enter to Continue...")
 
         self._refresh()
+        self._clear_log()
 
-    def _get_msgbox(self):
-        self.msgWrite = self.driver.find_element_by_class_name("commentWrite")
-        print("Messagebox grabbed")
-
+    def _clear_log(self):
+        self.driver.get_log('performance')
+        
     def _refresh(self):
         self.driver.get(self.chatURL)
-        self._get_msgbox()
+        self.msgWrite = self._locate_by_class("commentWrite")
+        print("Messagebox grabbed")
+    
+    def _locate_by_id(self, id_name):
+        return WebDriverWait(self.driver, self.timeout).until(
+            EC.presence_of_element_located((By.ID, id_name)))
+    
+    def _locate_by_class(self, class_name):
+        return WebDriverWait(self.driver, self.timeout).until(
+            EC.presence_of_element_located((By.CLASS_NAME, class_name)))
+    
+    def _locate_by_css_selector(self, css):
+        return WebDriverWait(self.driver, self.timeout).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, css)))
 
     def _send_image(self, rPath):
         try:
             absPath = os.path.abspath(rPath)
-            img_up = self.driver.find_element_by_css_selector(
+            img_up = self._locate_by_css_selector(
                 "input[data-uiselector='imageUploadButton']")
             img_up.send_keys(absPath)
             sleep(2)
@@ -141,12 +165,14 @@ class Client():
 
     def _send_chat(self, str_i):
         lines = str_i.split("\n")
+        last_index = len(lines) - 1
 
-        for chat in lines:
+        for i, chat in enumerate(lines):
             self.msgWrite.send_keys(chat)
-            self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+            if i != last_index:
+                self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
+        WebDriverWait(self.driver, 5).until(lambda x: self.msgWrite.get_attribute('value') == str_i)
         self.msgWrite.send_keys(Keys.ENTER)
-        sleep(2)
 
     def _parse_response(self, res_lst):
         try:

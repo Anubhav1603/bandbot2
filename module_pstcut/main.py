@@ -9,8 +9,8 @@ from matplotlib import pyplot as plt
 from matplotlib import font_manager as fm
 
 URL = "https://api.matsurihi.me/mltd/v1/events"
-BURL = "https://api.matsurihi.me/mltd/v1/events/%d/rankings/logs/eventPoint/2500"
-CPATH = "module_pstcut/cache_%s/%s.csv"
+BURL = "https://api.matsurihi.me/mltd/v1/events/%d/rankings/logs/eventPoint/%d"
+CPATH = "module_pstcut/cache_%s_%d/%s.csv"
 
 RESCENT_NUM = 10
 
@@ -18,9 +18,8 @@ def PickFilename(fPath):
     pos = fPath.rfind("/") + 1
     return fPath[pos:]
 
-def UpdateCSV(PSType, id):
-    print(BURL%id)
-    res = requests.get(BURL % id)
+def UpdateCSV(PSType, PSBorder, id):
+    res = requests.get(BURL % (id, PSBorder))
     data = res.json()[0]["data"]
     data = list(data)
 
@@ -28,13 +27,13 @@ def UpdateCSV(PSType, id):
     for i, row in enumerate(data):
         data[i]["summaryTime"] = API.time.DeltaTimeISO(timeInit, row["summaryTime"])
 
-    with open(CPATH % (PSType, id), mode = "w", newline='') as f:
+    with open(CPATH % (PSType, PSBorder, id), mode = "w", newline='') as f:
         fc = csv.writer(f)
         for border in data:
             fc.writerow((border["summaryTime"], int(border["score"])))
     
-def UpdateCache(PSType):
-    caches = glob.glob(CPATH.format(PSType, "*"))
+def UpdateCache(PSType, PSBorder):
+    caches = glob.glob(CPATH % (PSType, PSBorder, "*"))
     caches = list(caches)
     for i, elem in enumerate(caches):
         caches[i] = elem.replace("\\", "/")
@@ -46,11 +45,11 @@ def UpdateCache(PSType):
 
     for elem in resRecent:
         if not str(elem["id"]) + ".csv" in caches:
-            UpdateCSV(PSType, elem["id"])
+            UpdateCSV(PSType, PSBorder, elem["id"])
         elif elem == resRecent[-1]:
-            UpdateCSV(PSType, elem["id"])
+            UpdateCSV(PSType, PSBorder, elem["id"])
 
-def PlotBorder(PSType):
+def PlotBorder(PSType, PSBorder):
     reqBody = {"type" : PSType}
     res = requests.get(URL, reqBody).json()
     resRecent = res[-RESCENT_NUM:]
@@ -86,7 +85,7 @@ def PlotBorder(PSType):
             eventName = parse.parse("{}～{}～", event["name"])[1]
             event["purename"] = eventName
 
-            with open(CPATH % (PSType, event["id"])) as f:
+            with open(CPATH % (PSType, PSBorder, event["id"])) as f:
                 fc = list(csv.reader(f))
                 fc_T = list(zip(*fc))
                 x_vals = [float(x) for x in fc_T[0]]
@@ -128,7 +127,7 @@ def PlotBorder(PSType):
             eventName = parse.parse("{}～{}～", event["name"])[1]
             event["purename"] = eventName
 
-            with open(CPATH % (PSType, event["id"])) as f:
+            with open(CPATH % (PSType, PSBorder, event["id"])) as f:
                 fc = list(csv.reader(f))
                 fc_T = list(zip(*fc))
                 x_vals = [float(x) for x in fc_T[0]]
@@ -155,4 +154,4 @@ def PlotBorder(PSType):
 
     maxTick = int(max_x) // 24 + 1
     plt.xticks([24 * x for x in range(maxTick)])
-    plt.savefig("module_pstcut/border_%s.png" % PSType, dpi = 150, bbox_inches='tight')
+    plt.savefig("module_pstcut/border_%s_%d.png" % (PSType, PSBorder), dpi = 150, bbox_inches='tight')
