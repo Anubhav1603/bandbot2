@@ -13,13 +13,23 @@ class Module(ModuleBase):
     commands = ["밀리역대컷"]
 
     def __init__(self):
-        print("Decompressing JP fonts...")
-        f_src = gzip.open("module_pstcut/NotoSansCJKjp.otf.gz", "rb")
-        f_dst = open("module_pstcut/NotoSansCJKjp.otf", "wb")
-        f_dst.write(f_src.read())
-        f_src.close()
-        f_dst.close()
-        print("Decompressed NotoSansCJKjp.otf")
+        # print("Decompressing JP fonts...")
+        # f_src = gzip.open("module_pstcut/NotoSansCJKjp.otf.gz", "rb")
+        # f_dst = open("module_pstcut/NotoSansCJKjp.otf", "wb")
+        # f_dst.write(f_src.read())
+        # f_src.close()
+        # f_dst.close()
+        # print("Decompressed NotoSansCJKjp.otf")
+        
+        URL = "https://github.com/googlefonts/noto-cjk/raw/master/NotoSansCJKjp-Regular.otf"
+        print("Downloading JP fonts...")
+        res = requests.get(URL)
+        f = open('module_pstcut/NotoSansCJKjp.otf', 'wb')
+        for chunk in res.iter_content(chunk_size = 512 * 1024):
+            if chunk:
+                f.write(chunk)
+        f.close()
+        print("Downloaded NotoSansCJKjp.otf")
 
     def run(self, params, usr_i):
         paramnum = len(params)

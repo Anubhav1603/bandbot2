@@ -15,22 +15,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class BandchatException(Exception):
-    def __init__(self, msg = "Bandchat module error"):
-        super().__init__(msg)
-
-class ChatLoadException(BandchatException):
-    def __init__(self):
-        super().__init__("Chat load error")
-
-class LoginFailure(BandchatException):
-    def __init__(self):
-        super().__init__("Login failed")
-
-class InvalidEventException(BandchatException):
-    def __init__(self):
-        super().__init__("Invalid on_event name")
-
 class Client():
     def __init__(self, url,
                  get_rate=0.5,
@@ -84,39 +68,32 @@ class Client():
         print("Driver initialized.")
 
         if cli_login:
-            try:
-                self.driver.get(self.chatURL)
-                print("Get login page completed.")
-            except requests.exceptions.ConnectionError:
-                raise LoginFailure
+            self.driver.get(self.chatURL)
+            print("Get login page completed.")
+            self._locate_by_css_selector(".uBtn.-icoType.-phone").click()
 
-            try:
-                self._locate_by_css_selector(".uBtn.-icoType.-phone").click()
+            phone_box = self._locate_by_id("input_local_phone_number")
+            print("Get PhonenumberPage completed.")
 
-                phone_box = self._locate_by_id("input_local_phone_number")
-                print("Get PhonenumberPage completed.")
+            phone = input("Phone number: +82")
+            phone_box.send_keys(phone)
+            self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
 
-                phone = input("Phone number: +82")
-                phone_box.send_keys(phone)
-                self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
+            pw_box = self._locate_by_id("pw")
+            print("Get PasswordPage completed.")
 
-                pw_box = self._locate_by_id("pw")
-                print("Get PasswordPage completed.")
-
-                pw = input("Password: ")
-                self._locate_by_id("pw").send_keys(pw)
-                self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
-                
-                print("Get SMSPage completed.")
-            except NoSuchElementException:
-                raise LoginFailure
+            pw = input("Password: ")
+            self._locate_by_id("pw").send_keys(pw)
+            self._locate_by_css_selector(".uBtn.-tcType.-confirm").click()
             
+            print("Get SMSPage completed.")
+
             try:
                 print("Trying to get hintNumberDiv...")
                 hint = self._locate_by_id("hintNumberDiv")
                 print("Hintnumber:", hint.text)
                 input("Press Enter to continue...")
-            except Exception as e:
+            except:
                 print("Retrieving SMS authcode...")
                 code_box = self._locate_by_id("code")
                 print("codebox grabbed")
@@ -138,7 +115,7 @@ class Client():
     def _refresh(self):
         self.driver.get(self.chatURL)
         self.msgWrite = self._locate_by_class("commentWrite")
-        print("Messagebox grabbed")
+        print("Refresh completed")
     
     def _locate_by_id(self, id_name):
         return WebDriverWait(self.driver, self.timeout).until(
@@ -171,7 +148,8 @@ class Client():
             self.msgWrite.send_keys(chat)
             if i != last_index:
                 self.msgWrite.send_keys(Keys.SHIFT, Keys.ENTER)
-        WebDriverWait(self.driver, 5).until(lambda x: self.msgWrite.get_attribute('value') == str_i)
+        locator = lambda x: self.msgWrite.get_attribute('value') == str_i
+        WebDriverWait(self.driver, 5).until(locator)
         self.msgWrite.send_keys(Keys.ENTER)
 
     def _parse_response(self, res_lst):
@@ -195,8 +173,6 @@ class Client():
             self.on_chat = ifunction
         elif ifunction.__name__ == "on_ready":
             self.on_ready = ifunction
-        else:
-            raise InvalidEventException
 
     def run(self):
         self._refresh()

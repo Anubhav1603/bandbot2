@@ -13,7 +13,7 @@ class Module(ModuleBase):
                 return event.get_info_formatted()
             elif params[1] == '밀리이벤컷':
                 event = Event()
-                return event.get_cut_formatted()
+                return event.get_cut_formatted(100, 2500)
             else:
                 return "events.py: 잘못된 명령어"
 

@@ -110,7 +110,7 @@ class Event():
         
         return response
     
-    def get_cut_formatted(self):
+    def get_cut_formatted(self, *borders):
         res = r.get(URL + BORDER_SUFFIX % self.eid)
         print(res.request.url)
         res = jsonify(res)
@@ -132,7 +132,8 @@ class Event():
             data = border['data']
             if 50 <= rank <= 50000:
                 if data:
-                    score = int(data[-1]['score'])
-                    response += f"{rank}위: {score}\n"
+                    if rank in borders:
+                        score = int(data[-1]['score'])
+                        response += f"{rank}위: {score}\n"
         
         return response[:-1]
